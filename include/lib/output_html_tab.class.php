@@ -276,7 +276,7 @@ class Output_Html_Tab
     }
 
     /**
-     * get the CSS class of tabs_selected
+     * @brief get the CSS class of tabs_selected
      * @return mixed
      */
     public function get_class_tab_selected()
@@ -285,7 +285,7 @@ class Output_Html_Tab
     }
 
     /**
-     * set the CSS class of tabs, default is tabs_selected
+     * @brief set the CSS class of tabs, default is tabs_selected
      * @param mixed $class_tab_selected
      */
     public function set_class_tab_selected($class_tab_selected)
@@ -295,7 +295,7 @@ class Output_Html_Tab
     }
 
     /**
-     * Build the javascript to change the class name of the selected tab, hide other div and show the selected one
+     * @brief Build the javascript to change the class name of the selected tab, hide other div and show the selected one
      * @param string $p_not_hidden id of the showed tab
      * @return javascript string
      */

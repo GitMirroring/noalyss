@@ -110,8 +110,8 @@ if ( isset($_GET['f_id']))
         
         ob_start();
         require_once NOALYSS_TEMPLATE.'/history_top.php';
-	$detail_card=HtmlInput::card_detail($fiche->strAttribut(ATTR_DEF_QUICKCODE),$fiche->getName()." ".$fiche->strAttribut(ATTR_DEF_FIRST_NAME,0));
-	echo h2(  $fiche->getName().'['.$fiche->strAttribut(ATTR_DEF_QUICKCODE).']',' class="title" ');
+	$detail_card=HtmlInput::card_detail($fiche->get_attribute(ATTR_DEF_QUICKCODE),$fiche->getName()." ".$fiche->get_attribute(ATTR_DEF_FIRST_NAME,0));
+	echo h2(  $fiche->getName().'['.$fiche->get_attribute(ATTR_DEF_QUICKCODE).']',' class="title" ');
 	echo '<p style="text-align:center;">'.$detail_card.'</p>';
  
 	if (   $result ==-1){

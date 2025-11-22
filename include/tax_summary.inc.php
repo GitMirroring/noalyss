@@ -32,6 +32,7 @@ $end = $http->request("end_date", "date", $limit[1]);
 
 $start_periode = new IDate("start_date", $start);
 $end_periode = new IDate("end_date", $end);
+echo '<div class="content">';
 echo '<FORM METHOD="GET">';
 echo HtmlInput::array_to_hidden(['gDossier','ac'],$_GET);
 echo HtmlInput::hidden("do","display");
@@ -89,3 +90,4 @@ if ( $http->get("do","string","no") == "display")
         echo '</span>';
     }
 }
+echo '</div>';

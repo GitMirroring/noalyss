@@ -32,7 +32,6 @@
 class Acc_Ledger_History_Purchase extends Acc_Ledger_History
 {
 
-
     /**
      * @param mixed $data
      */

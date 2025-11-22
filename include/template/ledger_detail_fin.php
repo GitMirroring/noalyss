@@ -3,6 +3,13 @@
 //see licence.txt
 $str_anc="";
 global $g_parameter,$g_user;
+//@var $dossier_id (int) folder id 
+$dossier_id=Dossier::id();
+
+//@var $jr_id (int) jrn.jr_id
+//@var $obj (Acc_Operation) current operation detail 
+
+//* @var $div (string) current DIV ID 
 ?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
 <div class="content" style="padding:0;">
 <?php
@@ -75,17 +82,21 @@ echo td(_('Pièce')).td($itext->input());
                     <table style="width:99%;height:8rem;vertical-align:top;">
                         <tr style="height: 5%">
                             <td style="text-align:center;vertical-align: top">
-                                Note
-                            </td></tr>
-                        <tr>
-                            <td style="text-align:center;vertical-align: top">
-                                <?php
+                                  <?php
                                 $inote = new ITextarea('jrn_note');
+                                $inote->set_enrichText("minimal");
+                                $inote->id="jrn_note{$div}";
                                 $inote->style=' class="itextarea" style="width:90%;height:100%;"';
-                                $inote->value = strip_tags($obj->det->note);
+                                $inote->value = $obj->det->note_html;
+                                $inote->heigh=200;
                                 echo $inote->input();
+                               
                                 ?>
-
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="note_html<?=$div?>" style="text-align:center;vertical-align: top">
+                                <?=$obj->det->note_html?>
                             </td>
                         </tr>
                         <tr>
@@ -152,10 +163,10 @@ if ($obj->det->currency_id!=0)
    /* Analytic accountancy */
     if ( $owner->MY_ANALYTIC != "nu" /*&& $div == 'popup'*/)
       {
-	$poste=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+	$poste=$fiche->get_attribute(ATTR_DEF_ACCOUNT);
 	if (  $g_parameter->match_analytic($q[$e]['j_poste']))
 	  {
-            $qcode=$fiche->strAttribut(ATTR_DEF_QUICKCODE);
+            $qcode=$fiche->get_attribute(ATTR_DEF_QUICKCODE);
 	    $anc_op=new Anc_Operation($cn);
 	    $anc_op->j_id=$q[$e]['j_id'];
 	    $anc_op->in_div=$div;

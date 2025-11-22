@@ -623,7 +623,7 @@ class Noalyss_User
       [uj_priv]
       @endverbatim
      */
-    function get_ledger($p_type='ALL', $p_access=3, $disable=TRUE)
+    function get_ledger($p_type='ALL', $p_access=3, $all=TRUE)
     {
         $p_type=strtoupper($p_type);
         if (!in_array($p_type, ["FIN", "ALL", "ODS", "VEN", 'ACH']))
@@ -631,7 +631,7 @@ class Noalyss_User
             record_log(sprintf("UGL1, p_type %s", $p_type));
             throw new Exception("UGL1"._("Type incorrecte"));
         }
-        if ($disable==TRUE)
+        if ($all==TRUE)
         {
             $sql_enable="";
         }

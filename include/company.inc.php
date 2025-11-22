@@ -17,7 +17,7 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-/* !
+/*!
  * \file
  * \brief Manage the company setting  : address, vat number, Check period, VAT,
  * CA ....
@@ -35,11 +35,12 @@ if (isset($_POST['record_company']))
     $m->MY_TVA=$http->post("p_tva");
     $m->MY_STREET=$http->post("p_street");
     $m->MY_NUMBER=$http->post("p_no");
-    $m->MY_CP=$http->post("p_cp");
-    $m->MY_COMMUNE=$http->post("p_commune");
-    $m->MY_TEL=$http->post("p_tel");
+    $m->MY_POSTCODE=$http->post("p_cp");
+    $m->MY_CITY=$http->post("p_commune");
+    $m->MY_PHONE=$http->post("p_tel");
     $m->MY_FAX=$http->post("p_fax");
-    $m->MY_PAYS=$http->post("p_pays");
+    $m->MY_COUNTRY=$http->post("p_pays");
+    $m->MY_COUNTRY_CODE=$http->post("p_country_code");
     $m->MY_CHECK_PERIODE=$http->post("p_check_periode");
     $m->MY_DATE_SUGGEST=$http->post("p_date_suggest");
     $m->MY_ANALYTIC=$http->post("p_compta");
@@ -54,6 +55,7 @@ if (isset($_POST['record_company']))
     $m->MY_DEFAULT_ROUND_ERROR_CRED=$http->post("p_round_error_cred");
     $m->MY_ANC_FILTER=$http->post("p_anc_filter");
     $m->MY_REPORT=$http->post("p_report");
+    $m->MY_INVOICE_FORMAT=$http->post("invoice_format");
     try
     {
         $m->update();
@@ -137,6 +139,13 @@ $report->value = array(
 );
 $report->selected=$my->MY_REPORT;
 
+// invoice format 
+$select_format_invoice=$my->input_select_format();
+
+
+
+
+
 // other parameters
 $all=new IText();
 $all->table=1;
@@ -165,7 +174,7 @@ $all->style=' class="input_text"';
                 $all->style=' class="input_text"';
                 ?>
                 <label class="w-20" for="p_tel"><?= _("Téléphone") ?></label>
-                <?= $all->input("p_tel", $my->MY_TEL) ?>
+                <?= $all->input("p_tel", $my->MY_PHONE) ?>
             </div>
             <div class="form-group">
                 <?php
@@ -201,7 +210,7 @@ $all->style=' class="input_text"';
                 $all->style=' class="input_text"';
                 ?>
                 <label class="w-20" for="p_cp"><?= _("Code Postal") ?></label>
-                <?= $all->input("p_cp", $my->MY_CP) ?>
+                <?= $all->input("p_cp", $my->MY_POSTCODE) ?>
             </div>
             <div class="form-group">
                 <?php
@@ -209,8 +218,8 @@ $all->style=' class="input_text"';
                 $all->table=1;
                 $all->style=' class="input_text"';
                 ?>
-                <label class="w-20" for="p_commune"><?= _("Localité") ?></label>
-                <?= $all->input("p_commune", $my->MY_COMMUNE) ?>
+                <label class="w-20" for="p_commune"><?= _("Localité - Ville") ?></label>
+                <?= $all->input("p_commune", $my->MY_CITY) ?>
             </div>
             <div class="form-group">
                 <?php
@@ -219,7 +228,20 @@ $all->style=' class="input_text"';
                 $all->style=' class="input_text"';
                 ?>
                 <label class="w-20" for="p_pays"><?= _("Pays") ?></label>
-                <?= $all->input("p_pays", $my->MY_PAYS) ?>
+                <?= $all->input("p_pays", $my->MY_COUNTRY) ?>
+            </div>
+             <div class="form-group">
+                <?php
+                $country_code=new ISelect();
+                $x=$cn->get_array("select cc_code,format('%s %s',cc_code,cc_name) str_name from country_code_ref order by 2,1");
+                $code= array_column($x, "str_name","cc_code");
+                $country_code->transform($code);
+                $country_code->selected=$my->MY_COUNTRY_CODE;
+                $all->table=1;
+                $all->style=' class="input_text"';
+                ?>
+                <label class="w-20" for="p_country_code"><?= _("Code Pays") ?></label>
+                <?= $country_code->input("p_country_code" ) ?>
             </div>
             <div class="form-group">
                 <?php
@@ -321,7 +343,7 @@ echo Icon_Action::tips($anc_filter->title);
 
             <div class="form-group">
                 <label class="w-20" for="p_alphanum">
-<?= _('Utilisez des postes comptables alphanumérique') ?>
+<?= _('Utilisez des postes comptables alphanumériques') ?>
                 </label>
                     <?= $alpha_num->input('p_alphanum') ?>
             </div>
@@ -347,7 +369,12 @@ echo Icon_Action::tips($anc_filter->title);
                     <?= $default_error_cred->input() ?>
             </div>
 
-
+     <div class="form-group">
+                <label class="" for="invoice_format">
+                <?= _("Format de facture par défaut") ?>
+                </label>
+                    <?= $select_format_invoice->input() ?>
+            </div>
                 <div class="col-4"></div>
 
                 <div class="col-4">

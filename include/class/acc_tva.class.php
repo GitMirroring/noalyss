@@ -30,7 +30,10 @@
 		 "label"=>"tva_label",
 		 "rate"=>"tva_rate",
 		 "comment"=>"tva_comment",
-		 "account"=>"tva_poste");
+		 "account"=>"tva_poste"
+                  tva_peppol_code
+                 'vx_code' 
+ * );
 
 */
 class Acc_Tva
@@ -42,7 +45,11 @@ class Acc_Tva
                                    "account"=>"tva_poste",
                                     "both_side"=>'tva_both_side',
                                     'tva_reverse_account'=>'tva_reverse_account',
-                                    'tva_code'=>'tva_code');
+                                    'tva_code'=>'tva_code',
+                                    "tva_peppol_code"=>"tva_peppol_code",
+                                    'vx_code'=>'vx_code'
+        
+                                );
     public $tva_id,
         $tva_label,
         $tva_rate,
@@ -50,16 +57,19 @@ class Acc_Tva
         $tva_poste,
         $tva_both_side,
         $tva_code,
-        $tva_reverse_account;
+        $tva_reverse_account,
+        $tva_peppol_code,
+        $vx_code
+            ;
 
     private $cn; //!< Database connection
 
     private Tva_Rate_SQL $tva_rate_sql;
 
-    function __construct ($p_init,$p_tva_id=-1)
+    function __construct (Database $cn,$p_tva_id=-1)
     {
-        $this->cn=$p_init;
-        $this->tva_rate_sql=new Tva_Rate_SQL($p_init,$p_tva_id);
+        $this->cn=$cn;
+        $this->tva_rate_sql=new Tva_Rate_SQL($cn,$p_tva_id);
         $this->tva_id=$p_tva_id;
         $this->tva_label=&$this->tva_rate_sql->tva_label;
         $this->tva_rate=&$this->tva_rate_sql->tva_rate;
@@ -68,6 +78,8 @@ class Acc_Tva
         $this->tva_both_side=&$this->tva_rate_sql->tva_both_side;
         $this->tva_code=&$this->tva_rate_sql->tva_code;
         $this->tva_reverse_account=&$this->tva_rate_sql->tva_reverse_account;
+        $this->tva_peppol_code=&$this->tva_rate_sql->tva_peppol_code;
+        $this->vx_code=&$this->tva_rate_sql->vx_code;
 
     }
     /**
@@ -103,7 +115,7 @@ class Acc_Tva
         {
             $idx=self::$variable[$p_string];
             $this->$idx=$p_value;
-        }
+            }
         else
             throw new Exception("ACC108"."Attribut inexistant $p_string",EXC_INVALID);
 

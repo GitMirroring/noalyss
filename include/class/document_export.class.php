@@ -91,7 +91,7 @@ class Document_Export
         $zip=new Zip_Extended();
         $res=$zip->open("{$this->store_pdf}/result.zip",ZipArchive::CREATE);
         if ($res !== true) {
-            error_log("ERR-DE89 cannot create zip file");
+            record_log("ERR-DE89 cannot create zip file");
             record_log($this);
             throw new Exception ("ERR-DE89 cannot recreate zip");
         }
@@ -99,7 +99,7 @@ class Document_Export
         // addGmpn
         $res=$zip->add_file_pattern($this->store_pdf,"/.*pdf/");
         if ($res == 0) {
-            error_log("ERR-DE96 aucun fichier trouvé");
+            record_log("ERR-DE96 aucun fichier trouvé");
             record_log($this);
             throw new Exception ( "ERR-DE96 cannot recreate zip");
         }

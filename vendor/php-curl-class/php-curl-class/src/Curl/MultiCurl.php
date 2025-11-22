@@ -24,7 +24,7 @@ class MultiCurl extends BaseCurl
     private $rateLimit = null;
     private $rateLimitEnabled = false;
     private $rateLimitReached = false;
-    private $maxRequests = null;
+    private $maxRequestsPerInterval = null;
     private $interval = null;
     private $intervalSeconds = null;
     private $unit = null;
@@ -579,12 +579,12 @@ class MultiCurl extends BaseCurl
             '';
         if (!preg_match($rate_limit_pattern, $rate_limit, $matches)) {
             throw new \UnexpectedValueException(
-                'rate limit must be formatted as $max_requests/$interval(s|m|h) ' .
+                'rate limit must be formatted as $max_requests_per_interval/$interval(s|m|h) ' .
                 '(e.g. "60/1m" for a maximum of 60 requests per 1 minute)'
             );
         }
 
-        $max_requests = (int)$matches['1'];
+        $max_requests_per_interval = (int)$matches['1'];
         if ($matches['2'] === '') {
             $interval = 1;
         } else {
@@ -602,9 +602,9 @@ class MultiCurl extends BaseCurl
             $interval_seconds = $interval * 3600;
         }
 
-        $this->rateLimit = (string)$max_requests . '/' . (string)$interval . $unit;
+        $this->rateLimit = (string)$max_requests_per_interval . '/' . (string)$interval . $unit;
         $this->rateLimitEnabled = true;
-        $this->maxRequests = $max_requests;
+        $this->maxRequestsPerInterval = $max_requests_per_interval;
         $this->interval = $interval;
         $this->intervalSeconds = $interval_seconds;
         $this->unit = $unit;
@@ -687,7 +687,7 @@ class MultiCurl extends BaseCurl
                 // pending requests to have more accurate start times. Without a shorter timeout, it can be nearly a
                 // full second before available request quota is rechecked and pending requests can be initialized.
                 if (curl_multi_select($this->multiCurl, 0.2) === -1) {
-                    usleep(100000);
+                    usleep(100_000);
                 }
 
                 curl_multi_exec($this->multiCurl, $active);
@@ -919,23 +919,22 @@ class MultiCurl extends BaseCurl
         // Calculate if there's request quota since ratelimiting is enabled.
         if ($this->rateLimitEnabled) {
             // Determine if the limit of requests per interval has been reached.
-            if ($this->currentRequestCount >= $this->maxRequests) {
+            if ($this->currentRequestCount >= $this->maxRequestsPerInterval) {
                 $micro_time = microtime(true);
                 $elapsed_seconds = $micro_time - $this->currentStartTime;
                 if ($elapsed_seconds <= $this->intervalSeconds) {
-                    $this->rateLimitReached = true;
+                    // Rate limit reached.
                     return false;
-                } elseif ($this->rateLimitReached) {
-                    $this->rateLimitReached = false;
+                } else {
+                    // Rate limit not reached. Rate limit interval has passed,
+                    // reset counters.
                     $this->currentStartTime = $micro_time;
                     $this->currentRequestCount = 0;
                 }
             }
-
-            return true;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     /**
@@ -945,27 +944,28 @@ class MultiCurl extends BaseCurl
      */
     private function waitUntilRequestQuotaAvailable()
     {
-        $sleep_until = (float)($this->currentStartTime + $this->intervalSeconds);
-        $sleep_seconds = $sleep_until - microtime(true);
+        $sleep_until = TimeUtil::getSleepUntilMicrotime(
+            $this->currentStartTime,
+            $this->intervalSeconds,
+        );
 
-        // Avoid using time_sleep_until() as it appears to be less precise and not sleep long enough.
-        // Avoid using usleep(): "Values larger than 1000000 (i.e. sleeping for
-        //   more than a second) may not be supported by the operating system.
-        //   Use sleep() instead."
-        $sleep_seconds_int = (int)$sleep_seconds;
-        if ($sleep_seconds_int >= 1) {
-            sleep($sleep_seconds_int);
+        $current_microtime = microtime(true);
+        $sleep_seconds = TimeUtil::getSleepSecondsUntilMicrotime(
+            $sleep_until,
+            $current_microtime,
+        );
+
+        list($whole_seconds, $microseconds_remainder) = TimeUtil::getWholeAndRemainderSeconds($sleep_seconds);
+
+        if ($whole_seconds >= 1) {
+            sleep($whole_seconds);
         }
 
-        // Ensure that enough time has passed as usleep() may not have waited long enough.
+        if ($microseconds_remainder > 0) {
+            usleep($microseconds_remainder);
+        }
+
         $this->currentStartTime = microtime(true);
-        if ($this->currentStartTime < $sleep_until) {
-            do {
-                usleep(1000000 / 4);
-                $this->currentStartTime = microtime(true);
-            } while ($this->currentStartTime < $sleep_until);
-        }
-
         $this->currentRequestCount = 0;
     }
 

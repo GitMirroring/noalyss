@@ -28,7 +28,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 require DIRTEST . '/global.php';
 
 /**
@@ -44,7 +44,7 @@ class Http_InputTest extends TestCase {
 
      * @return array
      */
-    function dataHttpInput() {
+    static function dataHttpInput() {
         return array(
             [ ['value'=>'<script'], '<.script']
             , [['value'=>'Test <script'], 'Test <.script']
@@ -63,6 +63,7 @@ class Http_InputTest extends TestCase {
      * @dataProvider dataHttpInput
      * @global $g_connection
      */
+     #[DataProvider('dataHttpInput')]
     function testRemoveHarmingString($array,$result) {
         $http=new \HttpInput();
 //        print "value = ".print_r($value,true);

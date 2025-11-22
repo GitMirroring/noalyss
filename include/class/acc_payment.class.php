@@ -275,7 +275,7 @@ class Acc_Payment
                     $fiche->get_by_qcode($row->mp_qcode);
                     $f=HtmlInput::hidden('e_mp_qcode_'.$row->mp_id,$row->mp_qcode);
 
-                    //	  $f.=$fiche->strAttribut(ATTR_DEF_NAME);
+                    //	  $f.=$fiche->get_attribute(ATTR_DEF_NAME);
                 }
                 $check=( $p_select == $row->mp_id)?" checked " : "unchecked";
                 $r.='<li><input type="radio" name="e_mp" value="'.$row->mp_id.'" '.$check.'>';

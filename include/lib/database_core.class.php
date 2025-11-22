@@ -35,14 +35,19 @@ require_once NOALYSS_INCLUDE . '/lib/ac_common.php';
 class DatabaseCore
 {
 
-    private $db;
+    protected $db;
     /**< database connection */
-    private $ret;
+    protected $ret;
     /**< return value  */
-    private $is_open;                   /*!< true is connected */
+    protected $is_open;                   /*!< true is connected */
     public $sql;     //!< last SQL stmt executed
     public $array;
-    /*** Connect to a database return an connx to db or false if it fails
+    protected $dbname; ///!< $dbname (string) Database name
+    protected $dbport;///!< $dbport (int) Database port
+    protected $dbhost;///!< $dbhost(string) Database host
+    protected $dbuser;///!< $dbuser(string) Database user
+    /*** 
+     * @brief Connect to a database return an connx to db or false if it fails
      *
      * @param string $p_user Username
      * @param type $p_password User's password
@@ -74,13 +79,31 @@ class DatabaseCore
                 throw new Exception(_('Erreur Connexion'));
             }
         }
-
+        $this->dbport=$p_port;
+        $this->dbname=$p_dbname;
+        $this->dbhost=$p_host;
+        $this->dbuser=$p_user;
         $this->is_open = TRUE;
         $this->sql="";
 
     }
+    public function get_dbname() {
+        return $this->dbname;
+    }
 
-    /**
+    public function get_dbport() {
+        return $this->dbport;
+    }
+
+    public function get_dbhost() {
+        return $this->dbhost;
+    }
+
+    public function get_dbuser() {
+        return $this->dbuser;
+    }
+
+        /**
      * return the name of the current database
      * @return false|string
      */
@@ -216,7 +239,7 @@ class DatabaseCore
             record_log($p_array);
             $this->rollback();
 
-            throw ($a);
+            throw new \Exception("exec_sql fails",242,$a);
         }
 
         return $this->ret;
@@ -383,14 +406,15 @@ class DatabaseCore
 
     /**
      * @brief fetch the $p_indice array from the last query
+     * @param $p_mode is PGSQL_ASSOC,  PGSQL_BOTH or PGSQL_NUM  (default PGSQL_ASSOC)
      * @param $p_indice index
      *
      */
-    function fetch($p_indice)
+    function fetch($p_indice,$p_mode= PGSQL_ASSOC)
     {
         if ($this->ret == false)
             throw new Exception('this->ret is empty');
-        return pg_fetch_array($this->ret, $p_indice,PGSQL_ASSOC);
+        return pg_fetch_array($this->ret, $p_indice,$p_mode);
     }
 
     /**
@@ -466,16 +490,17 @@ class DatabaseCore
      * in a array
      * \param $p_sql sql query
      * \param $p_array if not null we use ExecSqlParam
+     * \param $p_mode is PGSQL_ASSOC,  PGSQL_BOTH or PGSQL_NUM  (default PGSQL_ASSOC) 
      * \return false if nothing is found
      */
 
-    function get_array($p_sql, $p_array = null)
+    function get_array($p_sql, $p_array = null,$p_mode=PGSQL_ASSOC)
     {
-        $r = $this->exec_sql($p_sql, $p_array);
+        $r = $this->exec_sql($p_sql, $p_array,$p_mode);
 
         if (pg_num_rows($r) == 0)
             return array();
-        $array = pg_fetch_all($r);
+        $array = pg_fetch_all($r,$p_mode);
         return $array;
     }
 
@@ -693,27 +718,39 @@ class DatabaseCore
     }
 
     /***
-     * \brief Save a document into the database , it just puts the file in the database
+     * \brief Save one or several documents into the database , it just puts the file in the database
      * and returns the corresponding OID , the mimetype , size ... of the document
      * must be set in the calling function.
      *
      * \param name of the variable in $_FILES
+     * \param $only_oid (bool) (default :true) false : return filename and oid in an array , true only OID, 
      * \return $oid of the lob file if success
      *         false if a error occurs or if there is no file to upload
+     *         array(oid, filename) if $only_oid is true
      *
      */
 
-    function upload($p_name)
+    function upload($p_name,$only_oid = false)
     {
+
+          //var $a : 0 we're in a transaction, 1 we are not in a transaction
+        $a=0;
+        if ( $this->status() !== PGSQL_TRANSACTION_INTRANS ) {
+            $a=1;
+            $this->start();
+        }
+            
         /* there is          no file to          upload */
         if ($_FILES[$p_name]["error"] == UPLOAD_ERR_NO_FILE) {
+            \record_log("DC759: error upload file".var_export($_FILES, true));
+            if ( $a==1) { $this->rollback(); }
             return false;
         }
 
         $new_name = tempnam($_ENV['TMP'], $p_name);
         if ($_FILES[$p_name]["error"] > 0) {
-            print_r($_FILES);
-            echo_error(__FILE__ . ":" . __LINE__ . "Error: " . $_FILES[$p_name]["error"]);
+            \record_log("DC740: error upload file".var_export($_FILES, true));
+            if ( $a==1) { $this->rollback(); }
             return false;
         }
         if (strlen($_FILES[$p_name]['tmp_name']) != 0) {
@@ -721,18 +758,100 @@ class DatabaseCore
                 // echo "Image saved";
                 $oid = pg_lo_import($this->db, $new_name);
                 if ($oid == false) {
-                    echo_error(__FILE__, __LINE__, "cannot upload document");
+                    \record_log("DC747: error upload file".var_export($_FILES, true). "SQL MESSAGE". pg_last_error($this->db));
                     $this->rollback();
                     return false;
                 }
-                return $oid;
+                if ( $a == 1 ) { $this->commit(); }
+                if ($only_oid ){
+                    return $oid;
+                }else {
+                    return ["oid"=>$oid,'filename'=>$new_name];
+                }
             } else {
-                echo "<H1>Error</H1>";
+                \record_log("DC754: move_uploaded fails".var_export($_FILES, true));
                 $this->rollback();
                 return false;
             }
         }
+
+        \record_log("DC576: Files error names empty".var_export($_FILES, true));
+        if ( $a == 1) { $this->commit(); }
         return false;
+    }
+    /**
+     * @brief large_object writee: create a Large object if oid is not given 
+     * with data content in a binaray
+     * @param $binary_data (raw data) binary
+     * @returns $oid of the LO, false if it fails
+     */
+    function lo_write($binary_data)
+    {
+        //var $a : 0 where in a transaction, 1 we are not in a transaction
+        $a=0;
+        if ( $this->status() !== PGSQL_TRANSACTION_INTRANS ) {
+            $a=1;
+            $this->start();
+        }
+
+        $oid= pg_lo_create($this->db);
+        
+        if ( ($handle=pg_lo_open($this->db,$oid,"w")) == false  ) { return false ;}
+        pg_lo_write($handle, $binary_data);
+        pg_lo_close($handle);
+        if ( $a==1) { $this->commit(); }
+        return $oid;
+        
+    }
+     /**
+     * @brief read a Large object with data content in a binary
+     * @param $oid (int8) oid of the large object
+     * @returns $binary_data (raw data) binary
+     */
+    function lo_read($oid)
+    {
+        //var $a : 0 where in a transaction, 1 we are not in a transaction
+        $a=0;
+        if ( $this->status() !== PGSQL_TRANSACTION_INTRANS ) {
+            $a=1;
+            $this->start();
+        }
+
+        $handle=pg_lo_open($this->db,$oid,"r");
+        if ( $handle == false ) { return false ;}
+        // set position end of the LO
+        pg_lo_seek($handle, 0, PGSQL_SEEK_END);
+        // get the size 
+        $size= pg_lo_tell($handle);
+        // set position to start
+        pg_lo_seek($handle, 0, PGSQL_SEEK_SET);
+        // read the comùplete LOB
+        $binary_data = pg_lo_read($handle,$size );
+        pg_lo_close($handle);
+        if ( $a==1) { $this->commit(); }
+        return $binary_data;
+    }
+     /**
+     * @brief replace  a Large object with data content in a binary
+     * @param $oid (int8) oid of the large object
+     * @param $binary_data (raw data) binary
+     * @returns $oid of the LO, false if it fails
+     */
+    function lo_replace($binary_data, $oid) {
+        $a = 0;
+        if ($this->status() !== PGSQL_TRANSACTION_INTRANS) {
+            $a = 1;
+            $this->start();
+        }
+        $handle = pg_lo_open($this->db, $oid, "w");
+        if ( $handle == false ) { return false ;}
+        pg_lo_truncate($handle, 0);
+        pg_lo_write($handle, $binary_data);
+        pg_lo_close($handle);
+        if ($a == 1) {
+            $this->commit();
+        }
+        return $oid;
     }
 
     /**
@@ -750,7 +869,7 @@ class DatabaseCore
      * \brief wrapper for the function pg_fetch_array
      * \param $ret is the result of a pg_exec
      * \param $p_indice is the index
-     * \param $p_indice is the index
+     * \param $p_mode is PGSQL_ASSOC,  PGSQL_BOTH or PGSQL_NUM  (default PGSQL_ASSOC)
      * \return $array of column
      */
 
@@ -762,12 +881,13 @@ class DatabaseCore
     /**
      * \brief wrapper for the function pg_fetch_all
      * \param $ret is the result of pg_exec (exec_sql)
+     * \param $p_mode is PGSQL_ASSOC,  PGSQL_BOTH or PGSQL_NUM  (default PGSQL_ASSOC)
      * \return double array (row x col ) or false
      */
 
-    static function fetch_all($ret)
+    static function fetch_all($ret,$p_mode= PGSQL_ASSOC)
     {
-        return pg_fetch_all($ret,PGSQL_ASSOC);
+        return pg_fetch_all($ret,$p_mode);
     }
 
     /**
@@ -797,7 +917,7 @@ class DatabaseCore
     /**
      * \brief wrapper for the function pg_lo_unlink
      * \param $p_oid is the of oid
-     * \return return the result of the operation
+     * \return return the result of the operation : false == fails
      */
 
     function lo_unlink($p_oid)

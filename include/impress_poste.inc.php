@@ -144,7 +144,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
         // thanks the qcode we found the poste account
         $fiche=new Fiche($cn);
         $qcode=$fiche->get_by_qcode($http->get('f_id'));
-        $p=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+        $p=$fiche->get_attribute(ATTR_DEF_ACCOUNT);
         if ( $p != NOTFOUND)
         {
             $go=2;

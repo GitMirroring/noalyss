@@ -48,7 +48,7 @@ class noalyssAppearanceTest extends TestCase
         $this->object->load();
         $this->assertEquals("#554433",$this->object->get_color("FOLDER"));
         $this->object->reset();
-        $this->assertEquals("#ffffff",$this->object->get_color("FOLDER"));
+        $this->assertEquals("#fafafa",$this->object->get_color("FOLDER"));
     }
 
     /**

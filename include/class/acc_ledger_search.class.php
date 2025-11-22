@@ -35,10 +35,10 @@ class Acc_Ledger_Search
 
     protected $cn; //!< Database Connection
     private $type; //!< type of ledger : FIN,ODS,VEN,ACH
-    private $all; //!< Flag to indicate if all ledgers must searched (1 for yes)
-    private $div; //! prefix for id of DOM id
-    //! id of the ledger
-    var $id ;
+    private $all; //!< Flag to indicate if all ledgers must be searched (1 for yes)
+    private $div; //!< prefix for id of DOM id
+    var $id ;    //!< id of the ledger
+
     /**
      * @brief return a HTML string with the form for the search
      * @param  $p_type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN: uppercase !
@@ -47,9 +47,9 @@ class Acc_Ledger_Search
      *         - 1 means all the ledger of this type
      *         - 0 No have the "Tous les journaux" availables
      * @param  $div is the div (for reconciliation)
-     * @param type $p_type
-     * @param type $p_all
-     * @param type $p_div
+     * @param string $p_type ACH, VEN , ODS or FIN
+     * @param int $p_all 1 means all the ledger
+     * @param string $p_div prefix of the DOM ID
      *
      * @todo the parameter $all_type_ledger is useless : ALL means all the ledgers, VEN all the ledger of sales...
      */
@@ -196,7 +196,7 @@ class Acc_Ledger_Search
         $f_qcode->javascript=sprintf(' onchange="fill_data_onchange(%s);" ',
                 $f_qcode->name);
         $f_qcode->value=$http->request($this->div.'qcode',"string","");
-
+        $f_qcode->setAfter_clean("");
         /*        $f_txt_qcode=new IText('qcode');
           $f_txt_qcode->value=(isset($_REQUEST['qcode']))?$_REQUEST['qcode']:'';
          */
@@ -258,7 +258,7 @@ class Acc_Ledger_Search
     }
 
     /**
-     * Build the button for managing the filter for search
+     * @brief Build the button for managing the filter for search
      * @param type $p_div id prefix of the div, button, table ..
      * @param  $this->type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN
      * @param  $all_type_ledger
@@ -343,6 +343,7 @@ class Acc_Ledger_Search
              p_closed,
              jr_pj_number,
              n_text,
+             n_html,
              (select string_agg(a,' ')
                 from (select '<span style=\"font-size:80%\" class=\"tagcell tagcell-color'||t.t_color::text||'\">'||t_tag||'</span>' a 
                         from operation_tag ot join tags t on(ot.tag_id=t.t_id)
@@ -943,7 +944,14 @@ class Acc_Ledger_Search
             if ( $row['analytic_op'] != "")
                 $r.=sprintf('<span style="float:right;background:black;color:white;">&ni;</span>');
             $r.="</TD>";
-            $r.=td(h($row['n_text']), ' style="font-size:0.87em%"');
+            // Note
+            $r.='<td>';
+            $r.='<span id="als_note'.$row['jr_id'].'" class="font-small">';
+            $r.= substr($row['n_text']??"",0,120);
+            $r.='<span>';
+            $r.='</span>';
+            $r.='</td>';
+            
             // Amount
             // If the ledger is financial :
             // the credit must be negative and written in red
@@ -1241,22 +1249,21 @@ class Acc_Ledger_Search
         return array($count, $r);
     }
      /**
-     * return the html code to create an hidden div and a button
+     * @brief return the html code to create an hidden div and a button
      * to show this DIV. This contains all the available ledgers
      * for the user in READ or RW
      *@param $p_selected is an array of checkbox
-     *@param $p_div div suffix for the list of ledgers
+     *@param $p_div div suffix for the list of ledgers,  base for building the DOMID of elements from the DIV
      *@note the choosen ledger are stored in the array r_jrn (_GET)
      */
     function select_ledger($p_selected,$p_div)
     {
         global $g_user;
-	$r = '';
-	/* security : filter ledger on user */
-	$p_array = $g_user->get_ledger($this->type, 3,FALSE);
-        
+        $r = '';
+        /* security : filter ledger on user */
+        $p_array = $g_user->get_ledger($this->type, 3,false);
         ob_start();
-        
+
 
         /* create a hidden div for the ledger */
         echo '<div id="div_jrn'.$p_div.'" >';
@@ -1291,7 +1298,7 @@ class Acc_Ledger_Search
         for ($e=0;$e<$nb_array;$e++)
         {
             $row=$p_array[$e];
-//            if ( $row['jrn_enable']==0) continue;
+
             $r=new ICheckBox($p_div.'r_jrn'.$e,$row['jrn_def_id']);
             $r->set_attribute("ledger_type", $row['jrn_def_type']);
             $idx=$row['jrn_def_id'];

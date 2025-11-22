@@ -63,7 +63,7 @@ class INum extends IText
         $r='<INPUT '.$style.' TYPE="TEXT" id="'.
                 $this->id.'"'.
                 'NAME="'.$this->name.'" VALUE="'.$this->value.'"  '.
-                'SIZE="'.$this->size.'" '.$this->javascript." $readonly $this->extra >";
+                'SIZE="'.$this->size.' " '.$this->javascript." $readonly $this->extra >";
 
         /* add tag for column if inside a table */
         if ($this->table==1)

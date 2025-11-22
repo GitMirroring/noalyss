@@ -62,9 +62,6 @@ $http=new HttpInput();
 IDate::set_firstDate($g_user->get_first_week_day());
 ITva_Popup::set_vat_code($g_user->get_vat_code_preference());
 
-// check that the current user is saved into PostgreSQL setting in order to use it in PLPGSQL
-\Noalyss\Dbg::echo_var(1,sprintf("current user is [%s]",$cn->get_value("select current_setting('noalyss.user_login')")));
-
 /*
  * check that the database is not empty
  */
@@ -85,6 +82,10 @@ if ($g_user->get_access_mode()=='MOBILE') { require NOALYSS_HOME."/mobile.php"; 
 $style_user=$http->post("style_user","string",$_SESSION[SESSION_KEY.'g_theme']);
 
 html_page_start($style_user);
+
+// check that the current user is saved into PostgreSQL setting in order to use it in PLPGSQL
+\Noalyss\Dbg::echo_var(1,sprintf("current user is [%s]",$cn->get_value("select current_setting('noalyss.user_login')")));
+
 if ( DEBUGNOALYSS > 1 ) {
     /**
      * Debug Design
@@ -180,8 +181,10 @@ window.onload=function ()
 {
     create_anchor_up();
     init_scroll();
+
     sorttable.init
 }
+
 </script>
 <?php
 
@@ -276,7 +279,8 @@ if (isset($_REQUEST['ac']))
         // Show module and highligt selected one
         show_module($module_id);
         
-        
+        global $level;
+        $level = 0;
         show_menu( $amenu_id[0]['pm_id_v3']);
 
         show_menu( $amenu_id[0]['pm_id_v2']);
@@ -294,7 +298,7 @@ if (isset($_REQUEST['ac']))
         }
         else {
             alert($e->getMessage());
-            record_log($e->getTraceAsString());
+            record_log($e);
             throw $e;
         }
     }
@@ -326,8 +330,7 @@ else
     {
         echo $exc->getMessage();
         record_log("No user profile ");
-        record_log($exc->getMessage());
-        record_log($exc->getTraceAsString());
+        record_log($exc);
         throw $exc;
     }
 

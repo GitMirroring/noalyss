@@ -20,11 +20,13 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* !\file
+/*!
+ *\file
  * \brief letter the accounting entry (row level)
  */
 
 /**
+ * @class
  * @brief mother class for the lettering by account and by card
  * use the tables jnt_letter, letter_deb and letter_cred
  * - "account"=>"account",       => the accounting of the j_id (use by Lettering_Account)
@@ -32,11 +34,18 @@
  * - "start"=>"start",	   => date of the first day
  * - "end"=>"end",		   => date of the last day
  * - "sql_ledger"=>"sql_ledger"  => the sql clause to filter on the available ledgers
+ *
+ * @see unit-test/include/class/acc_letterTest.php
+ * @see test scenario scenario/XML/ajax_display_letter.php
  */
+
+
+
+#[\AllowDynamicProperties]
 class Lettering
 {
-    ///@todo Lettering must be rewritten and use __set and __get
-    /// instead of an array + data_member
+ ///@todo Lettering must be rewritten and use __set and __get
+ /// instead of an array + data_member
     protected $variable=array("account"=>"account", /* the accounting of the j_id (use by Lettering_Account) */
         "quick_code"=>"quick_code", /* the quick_code of the j_id (used by Lettering_Card) */
         "start"=>"start", /* date of the first day */
@@ -54,7 +63,7 @@ class Lettering
     var $fil_amount_min;
     var $fil_deb;
     var $linked;
-    
+
     /**
      * constructor
      * @param $p_init resource to database
@@ -299,7 +308,7 @@ class Lettering
         catch (Exception $exc)
         {
             echo $exc->getMessage();
-            error_log($exc->getTraceAsString());
+            record_log($exc);
             $this->db->rollback();
             return;
         }
@@ -356,7 +365,7 @@ class Lettering
     }
 
     /**
-     * show only the lettered records from jrnx
+     * @brief show only the lettered records from jrnx
      * it fills the array $this->content
      */
     protected function show_lettered()
@@ -371,7 +380,7 @@ class Lettering
     }
 
     /**
-     * show only the lettered records from jrnx
+     * @brief show only the lettered records from jrnx
      * it fills the array $this->content
      */
     protected function show_lettered_diff()
@@ -386,7 +395,7 @@ class Lettering
     }
 
     /**
-     * show only the not lettered records from jrnx
+     * @brief show only the not lettered records from jrnx
      * it fills the array $this->content
      */
     protected function show_not_lettered()
@@ -484,8 +493,12 @@ class Lettering
 }
 
 /**
- * only for operation retrieved thanks a account (jrnx.j_poste)
+ *@class
+ * @brief only for operation retrieved thanks a account (jrnx.j_poste)
  * manage the accounting entries for a given account
+ *
+ * @see unit-test/include/class/acc_letterTest.php
+ *
  */
 class Lettering_Account extends Lettering
 {
@@ -498,7 +511,7 @@ class Lettering_Account extends Lettering
     }
 
     /**
-     * fills the this->content, datas are filtered thanks
+     * @brief fills the this->content, datas are filtered thanks
      * - fil_deb poss values t (debit), f(credit), ' ' (everything)
      * - fil_amount_max max amount
      * - fil_amount_min min amount
@@ -553,7 +566,7 @@ class Lettering_Account extends Lettering
     }
 
     /**
-     * fills this->content with all the operation for the this->account(jrnx.j_poste)
+     * @brief fills this->content with all the operation for the this->account(jrnx.j_poste)
      */
     public function get_all()
     {
@@ -582,7 +595,7 @@ class Lettering_Account extends Lettering
     }
 
     /**
-     * same as get_all but only for lettered operation
+     * @brief same as get_all but only for lettered operation
      */
     public function get_letter()
     {
@@ -611,7 +624,7 @@ class Lettering_Account extends Lettering
     }
 
     /**
-     * same as get_all but only for lettered operation
+     *@brief same as get_all but only for lettered operation
      */
     public function get_letter_diff()
     {
@@ -642,7 +655,7 @@ class Lettering_Account extends Lettering
     }
 
     /**
-     * same as get_all but only for unlettered operation
+     *@brief  same as get_all but only for unlettered operation
      */
     public function get_unletter()
     {
@@ -668,7 +681,8 @@ class Lettering_Account extends Lettering
 }
 
 /**
- * only for operation retrieved thanks a quick_code
+ * @class
+ * @brief only for operation retrieved thanks a quick_code
  * manage the accounting entries for a given card
  */
 class Lettering_Card extends Lettering
@@ -688,7 +702,7 @@ class Lettering_Card extends Lettering
     }
 
     /**
-     * fills the this->content, datas are filtered thanks
+     *@brief  fills the this->content, datas are filtered thanks
      * - fil_deb poss values t (debit), f(credit), ' ' (everything)
      * - fil_amount_max max amount
      * - fil_amount_min min amount
@@ -748,7 +762,7 @@ class Lettering_Card extends Lettering
     }
 
     /**
-     * fills this->content with all the operation for the this->quick_code(j_qcode)
+     * @brief fills this->content with all the operation for the this->quick_code(j_qcode)
      */
     public function get_all()
     {
@@ -778,7 +792,7 @@ class Lettering_Card extends Lettering
     }
 
     /**
-     * same as get_all but only for lettered operation
+     * @brief  same as get_all but only for lettered operation
      */
     public function get_letter()
     {
@@ -806,6 +820,10 @@ class Lettering_Card extends Lettering
         $this->content=$this->db->get_array($sql, array($this->quick_code, $this->start, $this->end));
     }
 
+    /**
+     * @brief  lettered operation with a different amount
+     * @return void
+     */
     public function get_letter_diff()
     {
         $sql="
@@ -834,7 +852,7 @@ class Lettering_Card extends Lettering
     }
 
     /**
-     * same as get_all but only for unlettered operation
+     * @brief  same as get_all but only for unlettered operation
      */
     public function get_unletter()
     {
@@ -857,7 +875,7 @@ class Lettering_Card extends Lettering
     }
 
     /**
-     * fill $this->content with the rows from this query
+     * @brief fill $this->content with the rows from this query
      * Columns are 
      *  - j_id, id of jrnx
      *  - j_date, date opeation (yyyy.mm.dd)

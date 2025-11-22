@@ -49,7 +49,7 @@ class Fiche
     var $tot_deb;
     var $ledger_name; ///!< this variable is a mistake, it shouldn't exist, need code rewrite
     var $ledger_description; ///!< this variable is a mistake, it shouldn't exist, need code rewrite
-
+    
     function __construct($p_cn,$p_id=0)
     {
         $this->cn=$p_cn;
@@ -136,7 +136,7 @@ class Fiche
      */
     static function cmp_name(Fiche $o1,Fiche $o2)
     {
-        return strcmp($o1->strAttribut(ATTR_DEF_NAME),$o2->strAttribut(ATTR_DEF_NAME));
+        return strcmp($o1->get_attribute(ATTR_DEF_NAME),$o2->get_attribute(ATTR_DEF_NAME));
     }
 
   /**
@@ -159,7 +159,7 @@ class Fiche
             $t=new Fiche($this->cn,$avail[$i]['jrn_def_bank']);
             $t->ledger_name=$avail[$i]['jrn_def_name'];
             $t->ledger_description=$avail[$i]['jrn_def_description'];
-            $t->getAttribut();
+            $t->load_attribute();
             $all[$i]=$t;
 
         }
@@ -192,20 +192,27 @@ class Fiche
 
 
         if ( $p_all )
-            $this->getAttribut();
+            $this->load_attribute();
         return 0;
     }
     /**
+     * @brief replace by set_attribute
+     * @deprecated since version 9.3.0.12
+     */
+    function setAttribut($p_ad_id,$p_value) {
+        $this->set_attribute($p_ad_id, $p_value);
+    }
+    /**
      *@brief set an attribute by a value, if the attribut array is empty
-     * a call to getAttribut is performed
+     * a call to load_attribute is performed
      *@param int  AD_ID attr_def.ad_id
      *@param int value value of this attribute
      *@see constant.php table: attr_def
      */
-    function setAttribut($p_ad_id,$p_value)
+    function set_attribute($p_ad_id,$p_value)
     {
         if ( $this->fiche_def == 0) throw new Exception ("FICHE.179 Invalid category",EXC_INVALID);
-        if ( sizeof($this->attribut)==0 ) $this->getAttribut();
+        if ( sizeof($this->attribut)==0 ) $this->load_attribute();
         
         for ($e=0;$e <sizeof($this->attribut);$e++)
         {
@@ -217,10 +224,18 @@ class Fiche
         }
     }
     /**
+     * @brief replace by load_attribute
+     * @deprecated since version 9.3.0.12
+     * @return type
+     */
+    function getAttribut() {
+        return  Card_Property::load($this);
+    }
+    /**
      *\brief  get all the attribute of a card, add missing ones
      *         and sort the array ($this-\>attribut) by ad_id
      */
-    function getAttribut()
+    function load_attribute()
     {
         Card_Property::load($this);
     }
@@ -298,22 +313,32 @@ class Fiche
         "<TR> <TD>".
         $this->attribut_def."</TD></TR>";
     }
+    /**
+     * @brief use get_attribute instead
+     * @deprecated since version 9.3.12
+     * @param int  $p_ad_id  AD_ID from attr_def.ad_id
+     * @param int $p_return 1 return NOTFOUND otherwise an empty string
+     */
+    function strAttribut($p_ad_id,$p_return=1)
+    {
+        return $this->get_attribute($p_ad_id,$p_return);
+    }
     /***
      * @brief  return the string of the given attribute
      *        (attr_def.ad_id)
      * @param int  $p_ad_id  AD_ID from attr_def.ad_id
      * @param int $p_return 1 return NOTFOUND otherwise an empty string
      * @see constant.php
-     * @return string
+     * @return string 
      * @note reread data from database and so it reset previous unsaved change
      */
-    function strAttribut($p_ad_id,$p_return=1)
+    function get_attribute($p_ad_id,$p_return=1)
     {
         $return=($p_return==1)?NOTFOUND:"";
         if ( empty ($this->attribut)  )
         {
 
-          $this->getAttribut();
+          $this->load_attribute();
         }
 
         foreach ($this->attribut as $e)
@@ -332,7 +357,7 @@ class Fiche
     {
         $a_return=[];
         if ( empty ($this->attribut)) {
-            $this->getAttribut();
+            $this->load_attribute();
         }
         foreach ($this->attribut as $attr)
         {
@@ -354,7 +379,7 @@ class Fiche
         // array = array of attribute object sorted on ad_id
         $fiche_def=new Fiche_Def($this->cn,$p_fiche_def);
         $fiche_def->get();
-        $array=$fiche_def->getAttribut();
+        $array=$fiche_def->load_attribute();
         $r="";
         $r.='<table style="width:98%;margin:1%">';
         foreach ($array as $attr)
@@ -396,7 +421,7 @@ class Fiche
      */
     function Display($p_readonly,$p_in="")
     {
-        $this->GetAttribut();
+        $this->load_attribute();
         $attr=$this->attribut;
         $ret="";
         $ret.='<span style="margin-right:5px;float:right;font-size:80%">'.
@@ -499,13 +524,23 @@ class Fiche
             {
                 $p_array["av_text".ATTR_DEF_QUICKCODE]="";
             }
+            // by default the quick_code is the base account of the class + first letters of the name
+            if ( $p_array["av_text".ATTR_DEF_QUICKCODE] =="")
+            {
+                $base_acc=$this->cn->get_value("select fd_class_base from fiche_def where fd_id = $1",
+                        [$p_fiche_def]);
+                $p_array["av_text".ATTR_DEF_QUICKCODE]=sprintf("%s%s"
+                            , substr($base_acc,0, 3)
+                            , substr($p_array["av_text".ATTR_DEF_NAME], 0, 4)
+                        );
+            }
             $sql=sprintf("select insert_quick_code(%d,'%s')", $fiche_id,
                     sql_string($p_array['av_text'.ATTR_DEF_QUICKCODE]));
             $this->cn->exec_sql($sql);
             // get the card properties for this card category
             $fiche_def=new Fiche_Def($this->cn, $p_fiche_def);
             
-            $this->attribut=$fiche_def->getAttribut();
+            $this->attribut=$fiche_def->load_attribute();
 
             if (empty($this->attribut))
             {
@@ -517,20 +552,20 @@ class Fiche
                 $key='av_text'.$property->ad_id;
                 if (isset($p_array[$key]))
                 {
-                    $this->setAttribut($property->ad_id, $p_array[$key]);
+                    $this->set_attribute($property->ad_id, $p_array[$key]);
                 }
             }
             // For accounting 
             
             Card_Property::update($this);
             // reread from database
-            $this->getAttribut();
+            $this->load_attribute();
         }
         catch (Exception $e)
         {
-            record_log("FIC603".$e->getMessage()." ".$e->getTraceAsString());
+            record_log($e);
             $this->cn->rollback();
-            throw ($e);
+            throw (new \Exception ("F561 ". __CLASS__.".".__FUNCTION__,561,$e));
             return;
         }
         return;
@@ -565,7 +600,7 @@ class Fiche
         
         
         // get the card properties for this card category
-        $this->getAttribut();
+        $this->load_attribute();
         
         if ( empty ($this->attribut) ) {
             throw new Exception("FICHE.UPDATE02"._("Aucun attribut ")."($this->fiche_def)",EXC_INVALID);
@@ -574,7 +609,7 @@ class Fiche
         foreach($this->attribut as $property) {
             $key='av_text'.$property->ad_id;
             if ( isset($p_array[$key])) {
-                $this->setAttribut($property->ad_id, $p_array[$key]);
+                $this->set_attribute($property->ad_id, $p_array[$key]);
             }
         }
         if ( isset($p_array['f_enable'])) {
@@ -584,7 +619,7 @@ class Fiche
         }
         // save all
         Card_Property::update($this);
-        $this->quick_code=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $this->quick_code=$this->get_attribute(ATTR_DEF_QUICKCODE);
     }
 
     /*!\brief  remove a card, check if not used first, must be synchro with is_used
@@ -634,17 +669,17 @@ class Fiche
         return $r[0]['ad_value'];
     }
 
-    /*!\brief Synonum of fiche::getAttribut
+    /*!\brief Synonum of fiche::load_attribute
      */
     function Get()
     {
-        $this->getAttribut();
+        $this->load_attribute();
     }
-    /*!\brief Synonum of fiche::getAttribut
+    /*!\brief Synonum of fiche::load_attribute
      */
     function load() :void
     {
-        $this->getAttribut();
+        $this->load_attribute();
     }
     /*!
      * \brief get all the card thanks the fiche_def_ref
@@ -692,7 +727,7 @@ class Fiche
         {
             $row=Database::fetch_array($Ret,$i);
             $t=new Fiche($this->cn,$row['f_id']);
-            $t->getAttribut();
+            $t->load_attribute();
             $all[$i]=clone $t;
 
         }
@@ -772,7 +807,7 @@ class Fiche
             break;
         }
 
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
         $this->row=$this->cn->get_array("
             with sqlletter as 
             (select j_id,jl_id from letter_cred union all select j_id , jl_id from   letter_deb )
@@ -851,7 +886,7 @@ class Fiche
             echo_error("class_fiche",__LINE__,"id is 0");
             return;
         }
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
         $periode=sql_filter_per($this->cn,$p_from,$p_to,'p_id','jr_tech_per');
 
         $this->row=$this->cn->get_array("select j_date,
@@ -909,7 +944,7 @@ class Fiche
 
         if ( count($this->row ) == 0 )
             return;
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
 
         $rep="";
         $already_seen=array();
@@ -998,14 +1033,14 @@ class Fiche
         "<TH style=\"text-align:left\">"._('Poste')." </TH>".
         "<TH style=\"text-align:left\">"._('Interne')." </TH>".
         "<TH style=\"text-align:left\">"._('Tiers')." </TH>".
-        "<TH style=\"text-align:left\">"._('Description')." </TH>".
-        "<TH style=\"text-align:left\">"._('Type')."</TH>".
-        "<TH style=\"text-align:left\">"._('ISO')."</TH>".
-        "<TH style=\"text-align:right\">"._('Dev.')."</TH>".
+        "<TH class=\"visible_gt800\" style=\"text-align:left\">"._('Description')." </TH>".
+        "<TH class=\"visible_gt800\"  style=\"text-align:left\">"._('Type')."</TH>".
+        "<TH class=\"visible_gt800\"  style=\"text-align:left\">"._('ISO')."</TH>".
+        "<TH class=\"visible_gt800\"  style=\"text-align:right\">"._('Dev.')."</TH>".
         "<TH style=\"text-align:right\">"._('Débit')."  </TH>".
         "<TH style=\"text-align:right\">"._('Crédit')." </TH>".
         th('Prog.','style="text-align:right"').
-        th('Let.','style="text-align:right"');
+        th('Let.','class="visible_gt800"  style="text-align:right"');
         "</TR>"
         ;
 	$old_exercice="";$sum_deb=0;$sum_cred=0;
@@ -1035,19 +1070,20 @@ class Fiche
 		    $progress=bcsub($sum_deb,$sum_cred);
 			$side="&nbsp;".$this->get_amount_side($progress);
 		    echo "<TR class=\"highlight\">".
-		       "<TD>$old_exercice</TD>".
-		     td('').
-		      td('').
-		      "<TD></TD>".td().
-		      "<TD>Totaux</TD>".
+                            td($op['p_exercice']).
+                            td("",' class="visible_gt800" ').
+                            td("",' class="visible_gt800" ').
+                            td("",' class="visible_gt800" ').
                             td().
-                            td().
-                            td().
-		      "<TD style=\"text-align:right\">".nbm($sum_deb)."</TD>".
-		      "<TD style=\"text-align:right\">".nbm($sum_cred)."</TD>".
-		      td(nbm(abs($progress)).$side,'style="text-align:right"').
-		      td('').
-		      "</TR>";
+                            td(_('Totaux')).
+                            td("",' class="visible_gt800" ').
+                            td("",' class="" ').
+                            "<TD></TD>".
+                            "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
+                            "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
+                            td(nbm(abs($progress)).$side,'style="text-align:right"').
+                           td("",' class="visible_gt800" ').
+                            "</TR>";
 		    $sum_cred=0;
 		    $sum_deb=0;
 		    $progress=0;
@@ -1067,23 +1103,23 @@ class Fiche
 	      td(h($op['jr_pj_number'])).
                td($op['j_poste']).
             "<TD>".$vw_operation."</TD>".
-            td($tiers).
-            "<TD>".h($op['description']).$op_analytic."</TD>".
+            td($tiers, ' class="visible_gt800" ').
+            "<TD  class=\"visible_gt800\" >".h($op['description']).$op_analytic."</TD>".
                     td($op['jr_optype']);
             
             /// If the currency is not the default one , then show the amount
             if ( $op['currency_id'] > 0 && $op['oc_amount'] != 0)
             {
-             echo   td($op['cr_code_iso']).
-                    td(nbm($op['oc_amount'],4),'style="text-align:right;padding-left:10px;"');
+             echo   td($op['cr_code_iso'], ' class="visible_gt800" ').
+                    td(nbm($op['oc_amount'],4),' class="visible_gt800"  style="text-align:right;padding-left:10px;"');
             } else {
-                echo td().td();
+                echo td("",' class="visible_gt800" ').td("",' class="visible_gt800" ');
             }
             
             echo "<TD style=\"text-align:right\">".nbm($op['deb_montant'])."</TD>".
 	      "<TD style=\"text-align:right\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
-            td($html_let, ' style="text-align:right"') .
+            td($html_let, ' style="text-align:right"  class="visible_gt800" ') .
 			"</TR>";
 	    $old_exercice=$op['p_exercice'];
 
@@ -1094,18 +1130,18 @@ class Fiche
         echo '<tfoot>';
        echo "<TR class=\"highlight\">".
                td($op['p_exercice']).
-               td().
-               td().
-               td().
+                td("",' class="visible_gt800" ').
+                td("",' class="visible_gt800" ').
+                td("",' class="visible_gt800" ').
                td().
         td(_('Totaux')).
-               td().
-               td().
+                td("",' class="visible_gt800" ').
+                td("",' class="" ').
         "<TD></TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 	 "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
-	  "<TD style=\"text-align:right\">".nbm($diff)."</TD>".
-            td($solde_side).
+	  "<TD style=\"text-align:right\">".nbm($diff).$solde_side."</TD>".
+            td("",' class="visible_gt800" ').
         "</TR>";
         echo "<TR style=\"font-weight:bold\">".
         "<TD>$solde_type</TD>".
@@ -1203,7 +1239,7 @@ class Fiche
     function get_solde_detail($p_cond="")
     {
         if ( $this->id == 0 ) return array('credit'=>0,'debit'=>0,'solde'=>0);
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
 
         if ( $p_cond != "") $p_cond=" and ".$p_cond;
         $Res=$this->cn->exec_sql("select coalesce(sum(deb),0) as sum_deb,
@@ -1255,7 +1291,7 @@ class Fiche
     function get_bk_balance($p_cond="")
     {
         if ( $this->id == 0 ) throw  new Exception('fiche->id est nul');
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
 
         if ( $p_cond != "") $p_cond=" and ".$p_cond;
 	$sql="select sum(deb) as sum_deb, sum(cred) as sum_cred from
@@ -1319,16 +1355,17 @@ class Fiche
         bcscale(4);
         $gDossier=dossier::id();
         $p_search=sql_string($p_search);
-        $script=$_SERVER['PHP_SELF'];
+        $script=$_SERVER['PHP_SELF']??"";
         // Creation of the nav bar
         // Get the max numberRow
         $filter_amount='';
-        global $g_user;
 
         $filter_year="  j_tech_per in (select p_id from parm_periode ".
                      "where p_exercice='".$g_user->get_exercice()."')";
 
-        if ( $p_amount) $filter_amount=' and f_id in (select f_id from jrnx where  '.$filter_year.')';
+        if ($p_amount) {
+            $filter_amount = ' and f_id in (select f_id from jrnx where  ' . $filter_year . ')';
+        }
 
         $all_tiers=$this->count_by_modele($this->fiche_def_ref,"",$p_sql.$filter_amount);
         // Get offset and page variable
@@ -1357,10 +1394,11 @@ class Fiche
             <TR >
             <TH>'._('Quick Code').Icon_Action::infobulle(17).'</TH>'.
             '<th>'._('Poste comptable').'</th>'.
-            '<th  class="sorttable_sorted">'._('Nom').'</span>'.'</th>
-            <th>'._('Adresse').'</th>
-            <th>'._('site web').'</th>
-            <th style="text-align:right">'._('Total débit').'</th>
+            '<th  class="sorttable_sorted">'._('Nom').'</span>'.'</th>'.
+            '<th>'._('Compte en banque').'</th>'.
+            '<th>'._('Adresse').'</th>'.
+            '<th>'._('site web').'</th>'.
+            '<th style="text-align:right">'._('Total débit').'</th>
             <th style="text-align:right">'._('Total crédit').'</th>
             <th style="text-align:right">'._('Solde').'</th>';
         $r.='</TR>';
@@ -1387,7 +1425,7 @@ class Fiche
 
             $odd="";
              $odd  = ($i % 2 == 0 ) ? ' odd ': ' even ';
-             $accounting=$tiers->strAttribut(ATTR_DEF_ACCOUNT,0);
+             $accounting=$tiers->get_attribute(ATTR_DEF_ACCOUNT,0);
              if ( ! empty($accounting) && $p_action == 'bank'
                      && $amount['debit'] <  $amount['credit']
                      &&
@@ -1409,14 +1447,15 @@ class Fiche
             $e=sprintf('<A HREF="%s" title="Détail" class="line"> ',
                        $url_detail);
 
-            $r.="<TD> $e".$tiers->strAttribut(ATTR_DEF_QUICKCODE)."</A></TD>";
+            $r.="<TD> $e".$tiers->get_attribute(ATTR_DEF_QUICKCODE)."</A></TD>";
             $r.="<TD sorttable_customkey=\"text{$accounting}\"> $e".$accounting."</TD>";
-            $r.="<TD>".h($tiers->strAttribut(ATTR_DEF_NAME))."</TD>";
-            $r.="<TD>".h($tiers->strAttribut(ATTR_DEF_ADRESS,0).
-                         " ".$tiers->strAttribut(ATTR_DEF_CP,0).
-                         " ".$tiers->strAttribut(ATTR_DEF_PAYS,0)).
+            $r.="<TD>".h($tiers->get_attribute(ATTR_DEF_NAME))."</TD>";
+            $r.=td($tiers->get_attribute(ATTR_DEF_BQ_NO,0));
+            $r.="<TD>".h($tiers->get_attribute(ATTR_DEF_ADRESS,0).
+                         " ".$tiers->get_attribute(ATTR_DEF_POSTCODE,0).
+                         " ".$tiers->get_attribute(ATTR_DEF_COUNTRY,0)).
                 "</TD>";
-            $r.='<td>'.linkTo($tiers->strAttribut(ATTR_DEF_WEBSITE,0)).'</td>';
+            $r.='<td>'.linkTo($tiers->get_attribute(ATTR_DEF_WEBSITE,0)).'</td>';
             $str_deb=(($amount['debit']==0)?0:nbm($amount['debit']));
             $str_cred=(($amount['credit']==0)?0:nbm($amount['credit']));
             $str_solde=nbm($amount['solde']);
@@ -1461,27 +1500,29 @@ class Fiche
         $sql='select fd_id from fiche where f_id=$1';
         $R=$this->cn->get_value($sql, array($this->id));
         if ( $R == "" )
-            $this->fd_id=0;
+            $this->fiche_def=0;
         else
-            $this->fd_id=$R;
-        return $this->fd_id;
+            $this->fiche_def=$R;
+        return $this->fiche_def;
     }
     /*!
-     ***************************************************
-     * \brief   Check if a fiche is used by a jrn
+     * \brief   Check if a card can be  used and then belong tp a specific ledger, it the card 
+     * 
      *  return 1 if the  fiche is in the range otherwise 0, the quick_code
      *  or the id  must be set
      *
      *
-     * \param   $p_jrn journal_id
-     * \param   $p_type : deb or cred default empty
+     * \param   $jrn_def_id journal_id (JRN.JRN_DEF_ID)
+     * \param   $side : deb or cred , default empty = both
      *
-     * \return 1 if the fiche is in the range otherwise < 1
-     *        -1 the card doesn't exist
-     *        -2 the ledger has no card to check
+     * \return 1 if the card belongs to the ledger, 
+     *         0 the card doesn't belong, 
+     *        -1 the card doesn't exist,
+     *        -2 the ledger has no card to check,
+     *        -3 there is no category of card for this ledger
      *
      */
-    function belong_ledger($p_jrn,$p_type="")
+    function belong_ledger($jrn_def_id,$side="")
     {
         // check if we have a quick_code or a f_id
         if (($this->quick_code==null || $this->quick_code == "" )
@@ -1491,41 +1532,38 @@ class Fiche
         }
 
         //retrieve the quick_code
-        if ( $this->quick_code=="")
-            $this->quick_code=$this->get_quick_code();
-
-
-        if ( $this->quick_code==null)
-            return -1;
-
-        if ( $this->id == 0 )
-            if ( $this->get_by_qcode(null,false) == 1)
-                return -1;
-
-        $get="";
-        if ( $p_type == 'deb' )
-        {
-            $get='jrn_def_fiche_deb';
-        }elseif ( $p_type == 'cred' )
-        {
-            $get='jrn_def_fiche_cred';
+        if ($this->quick_code == "") {
+            $this->quick_code = $this->get_quick_code();
         }
-        if ( $get != "" )
+
+
+        if ($this->quick_code == null) {
+            return -1;
+        }
+
+        if ($this->id == 0 && $this->get_by_qcode(null, false) == 1) {
+            return -1;
+        }
+
+        if ( $side == 'deb' )
         {
-            $Res=$this->cn->exec_sql("select $get as fiche from jrn_def where jrn_def_id=$p_jrn");
+            $Res=$this->cn->exec_sql("select jrn_def_fiche_deb as fiche from jrn_def where jrn_def_id=$1",[$jrn_def_id]);
+        }elseif ( $side == 'cred' )
+        {
+            $Res=$this->cn->exec_sql("select jrn_def_fiche_cred as fiche from jrn_def where jrn_def_id=$1",[$jrn_def_id]);
         }
         else
         {
             // Get all the fiche type (deb and cred)
             $Res=$this->cn->exec_sql(" select jrn_def_fiche_cred as fiche
-                                     from jrn_def where jrn_def_id=$p_jrn
+                                     from jrn_def where jrn_def_id=$1
                                      union
                                      select jrn_def_fiche_deb
-                                     from jrn_def where jrn_def_id=$p_jrn"
+                                     from jrn_def where jrn_def_id=$1",
+                                          [$jrn_def_id]
                                     );
         }
-        $Max=Database::num_row($Res);
-        if ( $Max==0)
+        if ( Database::num_row($Res)==0)
         {
             return -2;
         }
@@ -1554,32 +1592,46 @@ class Fiche
              fd_id in (".$str_list.") and f_id= ".$this->id;
 
         $Res=$this->cn->exec_sql($sql);
-        $Max=Database::num_row($Res);
-        if ($Max==0 )
+        if (Database::num_row($Res) == 0) {
             return 0;
-        else
-            return 1;
+        }
+        return 1;
+        
     }
-    /*!\brief  get all the card from a categorie
+    /*!
+     * \brief  get all the card from a categorie
      *\param $p_cn database connx
-     *\param $pFd_id is the category id
+     *\param $card_category_id is the category id
      *\param $p_order for the sort, possible values is name_asc,name_desc or nothing
+     * \param $inactive int possible values : 1  = inactive included, 0 = only active ones (default 1)
      *\return an array of card, but only the fiche->id is set
      */
-    static function get_fiche_def($p_cn,$pFd_id,$p_order='')
+    static function get_fiche_def($p_cn,$card_category_id,$p_order='',$inactive=1)
     {
+        // var $cond_active string SQL cond for filtering active or not
+        $cond_active=($inactive == 1)?"":" and f_enable='1' ";
+
         switch ($p_order)
         {
         case 'name_asc':
-            $sql='select f_id,ad_value from fiche join fiche_detail using (f_id) where ad_id=1 and fd_id=$1 order by 2 asc';
+            $sql="select f_id,ad_value from fiche join fiche_detail using (f_id) 
+                     where 
+                         ad_id=1
+                       and fd_id=$1 
+                       $cond_active
+                     order by 2 asc";
             break;
         case 'name_desc':
-            $sql='select f_id,ad_value from fiche join fiche_detail using (f_id) where ad_id=1 and fd_id=$1 order by 2 desc';
+            $sql="select f_id,ad_value from fiche join fiche_detail using (f_id) 
+                     where ad_id=1 
+                       and fd_id=$1
+                     $cond_active 
+                     order by 2 desc";
             break;
         default:
-            $sql='select f_id from fiche  where fd_id=$1 ';
+            $sql="select f_id from fiche  where fd_id=$1 $cond_active ";
         }
-        $array=$p_cn->get_array($sql,array($pFd_id));
+        $array=$p_cn->get_array($sql,array($card_category_id));
 
 	return $array;
     }
@@ -1589,7 +1641,7 @@ class Fiche
     function is_used()
     {
         /* retrieve first the quickcode */
-        $qcode=$this->strAttribut(ATTR_DEF_QUICKCODE);
+        $qcode=$this->get_attribute(ATTR_DEF_QUICKCODE);
         $sql='select count(*) as c from jrnx where j_qcode=$1';
         $count=$this->cn->get_value($sql,array($qcode));
 	        if ( $count > 0 ) return TRUE;
@@ -1789,15 +1841,15 @@ class Fiche
 
         $fiche->set_fiche_def($fiche_def->id);
 
-        $fiche->setAttribut(ATTR_DEF_NAME,$name);
-        $fiche->setAttribut(ATTR_DEF_ACCOUNT,$fiche_def->class_base.$name);
+        $fiche->set_attribute(ATTR_DEF_NAME,$name);
+        $fiche->set_attribute(ATTR_DEF_ACCOUNT,$fiche_def->class_base.$name);
 
         echo p(print_r($fiche->to_array(),false));
         $fiche->insert(1,$fiche->to_array());
-        assert($name == $fiche->strAttribut(ATTR_DEF_NAME));
+        assert($name == $fiche->get_attribute(ATTR_DEF_NAME));
 
-        echo p("fiche ATTR_DEF_ACCOUNT after insert ",$fiche->strAttribut(ATTR_DEF_ACCOUNT));
-        $accounting=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+        echo p("fiche ATTR_DEF_ACCOUNT after insert ",$fiche->get_attribute(ATTR_DEF_ACCOUNT));
+        $accounting=$fiche->get_attribute(ATTR_DEF_ACCOUNT);
         $acc_accounting=new Acc_Account($cn,$accounting);
 
         echo p("accounting id",$acc_accounting->get_parameter("id"));
@@ -1807,7 +1859,7 @@ class Fiche
 
 	function get_gestion_title()
 	{
-		$r = "<h2 id=\"gestion_title\">" . h($this->getName()) . " " . h($this->strAttribut(ATTR_DEF_FIRST_NAME,0)) . '[' . $this->get_quick_code() . ']</h2>';
+		$r = "<h2 id=\"gestion_title\">" . h($this->getName()) . " " . h($this->get_attribute(ATTR_DEF_FIRST_NAME,0)) . '[' . $this->get_quick_code() . ']</h2>';
 		return $r;
 	}
 	function get_all_account()
@@ -1893,7 +1945,7 @@ class Fiche
      */
     function display_row()
     {
-        $this->getAttribut();
+        $this->load_attribute();
         foreach($this->attribut as $attr) {
             $sort="";
 
@@ -1926,12 +1978,12 @@ class Fiche
     }
     /**
      * @brief create a card from a qcode and returns a card
-     * @param string $p_qcode qcode of the card
+     * @param $cn Database cnx
+     * @param $p_qcode (string) qcode of the card
      */
-    static function from_qcode($p_qcode)
+    static function from_qcode(Database $cn,string $p_qcode)
     {
-        $cn=Dossier::connect();
-        $card=new Card($cn);
+        $card=new Fiche($cn);
         $card->get_by_qcode($p_qcode);
         return $card;
     }

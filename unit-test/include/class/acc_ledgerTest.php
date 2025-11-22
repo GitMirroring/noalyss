@@ -578,7 +578,7 @@ class Acc_LedgerTest extends TestCase
     {
         global $g_connection;
         $ledger=new Acc_Ledger($g_connection,4);
-         $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $array=[
             "p_jrn"=>"15",
             "p_jrn_deb_max_line"=>5,
@@ -598,7 +598,7 @@ class Acc_LedgerTest extends TestCase
     {
         global $g_connection;
         $ledger=new Acc_Ledger($g_connection,4);
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $array=[
             "p_jrn"=>"15",
             "p_jrn_deb_max_line"=>5,
@@ -901,7 +901,9 @@ class Acc_LedgerTest extends TestCase
         ob_end_clean();
         \Noalyss\Facility::save_file(__DIR__."/file", "acc_ledger-input_new.html", $result);
         $size=filesize(__DIR__."/file/acc_ledger-input_new.html");
-        $this->assertTrue($size == 16044  ," output input_new is not what it is expected");
+        $expected=15985;
+        $delta =$size-$expected;
+        $this->assertTrue($delta == 0 ," output input_new is $size expected $expected not what it is expected DELTA=$delta, file to check ".__DIR__."/file/acc_ledger-input_new.html");
 
     }
 

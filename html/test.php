@@ -24,26 +24,28 @@
  * 
  *  - first do not forget to create the authorized_debug file in the html folder
  *  - secund the test must be adapted to this page : if you do a post (or get) from a test, you won't get any result
- * if the $_REQUEST[test_select] is not set, so set it . 
+ * if the $_REQUEST[test_select] is not set, so set it .
+ *
+ *
  */
 
 
 
 include_once("../include/constant.php");
 include_once("lib/ac_common.php");
-require_once('class/database.class.php');
-require_once ('class/dossier.class.php');
-require_once('lib/html_input.class.php');
-require_once('lib/icon_action.class.php');
-require_once ('lib/function_javascript.php');
-require_once 'class/noalyss_user.class.php';
-require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+
+
+
 html_page_start();
 global $http;
-
+define ('TEST_UNIT',1);
 $http=new HttpInput();
 
-
+if (  ini_get('zend.assertions') != 1 ) {
+ echo_warning(_('Attention zend.assertions devrait être activé'));
+ echo p('Il faut changer dans votre fichier .htaccess ou php.ini');
+ echo 'voir <a href="https://www.php.net/manual/fr/ini.core.php#ini.zend.assertions">https://www.php.net/manual/fr/ini.core.php#ini.zend.assertions</a>';    
+}
 $gDossier=$http->request('gDossier',"number", -1);
 if ($gDossier==-1)
 {
@@ -64,25 +66,29 @@ if (!file_exists('authorized_debug'))
     exit();
 }
 define('ALLOWED', 1);
+
+global $aAvaible_module;
+
+/*
+ * Find all the folders
+ */
+$directory=NOALYSS_BASE."/scenario";
+$folder=scandir($directory);
+$nb_folder=count($folder);
+
+for ($i=0; $i<$nb_folder;$i++)
+{
+    if (is_dir("{$directory}/".$folder[$i]) && $folder[$i] != '.' && $folder[$i] !='..')
+    {
+        $aAvaible_module[]=$folder[$i];
+
+    }
+}
+
 load_all_script();
 
-// To enable assert , set "zend.assertions" in the php.ini file
-// deprecated PHP8.3
-//ini_set("assert.active",1);
-//assert_options(ASSERT_ACTIVE, 1);
-//assert_options(ASSERT_WARNING, 1);
-//removed in PHP8 assert_options(ASSERT_QUIET_EVAL, 1);
-//
-//function my_assert_handler($file, $line, $code)
-//{
-//    echo "<hr>Assert Failed :
-//        File '$file'<br />
-//        Line '$line'<br />
-//        Code '$code'<br /><hr />";
-//}
-//assert_options(ASSERT_CALLBACK, 'my_assert_handler');
 /******************************************************************************************************************/
-/*  Utilities 
+/*  Utilities */
 /******************************************************************************************************************/
 
 /** 
@@ -100,34 +106,81 @@ function get_card_with_activity() {
 }
 
 /*
- * Loading of all scenario
+ * Loading of all scenario HTML + XML
  */
-$scan=scandir('../scenario/');
-$maxscan=count($scan);
-$cnt_scenario=0;$scenario=array();
+function retrieve_files($directory) :array
+{
+    $scan=scandir($directory);
+    $maxscan=count($scan);
+    $cnt_scenario=0;$scenario=array();
 
-for ($e_scan=0; $e_scan<$maxscan; $e_scan++)
-    {
-        if (is_file('../scenario/'.$scan[$e_scan])&&strpos($scan[$e_scan], '.php')==true)
+    for ($e_scan=0; $e_scan<$maxscan; $e_scan++)
         {
-            $description="";
-            $a_description=file('../scenario/'.$scan[$e_scan]);
-            $max_description=count($a_description);
-            for ($w=0; $w<$max_description; $w++)
+            if (is_file("{$directory}/".$scan[$e_scan])&&strpos($scan[$e_scan], '.php')==true)
             {
-                if (strpos($a_description[$w], '@description:')==true)
+                $description="";
+                $a_description=file("{$directory}/".$scan[$e_scan]);
+                $max_description=count($a_description);
+                for ($w=0; $w<$max_description; $w++)
                 {
-                    $description=$a_description[$w];
-                    $description=noalyss_str_replace('//@description:', '', $description);
+                    if (strpos($a_description[$w], '@description:')==true)
+                    {
+                        $description=$a_description[$w];
+                        $description=noalyss_str_replace('//@description:', '', $description);
+                    }
                 }
+                $scenario[$cnt_scenario]['file']="{$directory}/".$scan[$e_scan];
+                $scenario[$cnt_scenario]['desc']=$description;
+                $cnt_scenario++;
+
+
             }
-            $scenario[$cnt_scenario]['file']=$scan[$e_scan];
-            $scenario[$cnt_scenario]['desc']=$description;
-            $cnt_scenario++;
-            
-            
         }
+    return $scenario;
+}
+function display_test($title,$gDossierLogInput,$aHtml_files)
+{
+
+    echo h1($title);
+
+    $get='test.php?'.http_build_query(array('script'=>"all", 'gDossier'=>$gDossierLogInput, 'description'=>"Tous les scripts",'module'=>$title));
+
+    echo '<table style="collapse: false;border-spacing: 1rem">';
+    echo '<tr>';
+    echo '<td>';
+    echo '<a href="'.$get.'" target="_blank">';
+    echo "Tous les tests du module $title ";
+    echo '</a>';
+    echo '</td>';
+    echo '<td>';
+    echo '<a href="'.$get.'" target="_blank">';
+    echo 'Tous les scripts';
+    echo '</a>';
+    echo '</td>';
+    echo '</tr>';
+    $nb_html=count($aHtml_files);
+    for ($e=0; $e<$nb_html; $e++)
+    {
+
+        $get='test.php?'.http_build_query(array('script'=>$aHtml_files[$e]['file'], 'gDossier'=>$gDossierLogInput, 'description'=>$aHtml_files[$e]['desc']));
+        echo '<tr>';
+        echo '<td>';
+        echo $e;
+        echo '</td>';
+        echo '<td>';
+        echo '<a href="'.$get.'" target="_blank">';
+        echo basename($aHtml_files[$e]['file']);
+        echo '</a>';
+        echo '</td>';
+        echo '<td>'.$aHtml_files[$e]['desc'].'</td>';
+        echo '</tr>';
+
     }
+    echo '</table>';
+}
+
+
+
 $script=$http->request('script', "string",'');
 $min=$cn->get_value("select p_id from parm_periode order by p_start asc limit 1");
 $max=$cn->get_value("select p_id from parm_periode order by p_start desc limit 1");
@@ -140,81 +193,76 @@ if ($script=="")
      * cherche pour fichier a include, s'il y en a alors les affiche
      * avec une description
      */
-    
 
-    echo '<table>';
     $get='test.php?'.http_build_query(array('script'=>"all", 'gDossier'=>$gDossierLogInput, 'description'=>"Tous les scripts"));
-    echo '<tr>';
-    echo '<td>';
-    echo '<a href="'.$get.'" target="_blank">';
-    echo "Tous ";
-    echo '</a>';
-    echo '</td>';
-    echo '<td>Tous les scripts</td>';
-    echo '</tr>';
+    print '<p class="alert-primary p-2 w-50">';
+    printf( '<a href="%s" target="_blank"> Tous les test </a>',$get);
+    print '</p>';
+    foreach ($aAvaible_module as $mod) {
+        $html_files = retrieve_files(NOALYSS_BASE . '/scenario/' . $mod);
+        display_test($mod,$gDossierLogInput,$html_files);
 
-    for ($e=0; $e<$cnt_scenario; $e++)
-    {
-
-            $get='test.php?'.http_build_query(array('script'=>$scenario[$e]['file'], 'gDossier'=>$gDossierLogInput, 'description'=>$scenario[$e]['desc']));
-            echo '<tr>';
-            echo '<td>';
-            echo $e;
-            echo '</td>';
-            echo '<td>';
-            echo '<a href="'.$get.'" target="_blank">';
-            echo $scenario[$e]['file'];
-            echo '</a>';
-            echo '</td>';
-            echo '<td>'.$scenario[$e]['desc'].'</td>';
-            echo '</tr>';
-        
     }
-    echo '</table>';
+
+
 }
 else if ($script=='all')
 {
-    $nb=$http->get('nb_script', "number",0);
-    
+            $nb=$http->get('nb_script', "number",1);
+
             $start_mem=memory_get_usage();
             $start_time=microtime(true);
-            $script=noalyss_str_replace('../', '', $script);
-    
-            echo '<h1>'.$nb." ".$scenario[$nb]['file']."</h1>";
-            echo '<h2> description = '.$scenario[$nb]["desc"].'</h2>';
-            include '../scenario/'.$scenario[$nb]['file'];
-            echo '</div>';
-            echo '</div>';
-            $end_mem=memory_get_usage();
-            $end_time=microtime(true);
+            $module=$http->get('module','string','all');
+            $scenario=[];
+            if ($module=='all') {
+                foreach ($aAvaible_module as $mod) {
+                    $html_files = retrieve_files(NOALYSS_BASE . '/scenario/' . $mod);
+                    $scenario = array_merge($html_files, $scenario);
+                }
+            } elseif (in_array($module, $aAvaible_module) ) {
+                $scenario=retrieve_files(NOALYSS_BASE.'/scenario/'.$module);
 
-            echo "<p>start mem : ".$start_mem;
-            echo '</p>';
-            echo "<p>end mem : ".$end_mem;
-            echo '</p>';
-            echo "<p>Diff = ".($end_mem-$start_mem)." bytes ";
-            echo "<p>Diff = ".(round(($end_mem-$start_mem)/1024, 2))." kbytes ";
-            echo "<p>Diff = ".(round(($end_mem-$start_mem)/1024/1024, 2))." Mbytes ";
-            echo '</p>';
-            echo "<p>Execution script ".$script." time = ".(round(($end_time-$start_time), 4))." secondes</p>";
-            $nb++;
-            if      ( $nb == $maxscan ) {
-                echo "Dernier test";
-            } else {
-            $get='test.php?'.http_build_query(array('script'=>"all", 'gDossier'=>$gDossierLogInput, 'nb_script'=>$nb));
-             echo '<a href="'.$get.'" target="_blank">';
-            echo $scenario[$nb]['file'];
+            }
+
+            $maxscan=$http->get('nb_script', "number",count($scenario)-1);
+            $maxscan++;
+            for ($i=$nb;$i< $maxscan;$i++) {
+                echo '<h1>'.$nb." ".$scenario[$nb]['file']."</h1>";
+                echo '<h2> description = '.$scenario[$nb]["desc"].'</h2>';
+                include $scenario[$nb]['file'];
+                echo '</div>';
+                echo '</div>';
+                $end_mem=memory_get_usage();
+                $end_time=microtime(true);
+
+                echo "<p>start mem : ".$start_mem;
+                echo '</p>';
+                echo "<p>end mem : ".$end_mem;
+                echo '</p>';
+                echo "<p>Diff = ".($end_mem-$start_mem)." bytes ";
+                echo "<p>Diff = ".(round(($end_mem-$start_mem)/1024, 2))." kbytes ";
+                echo "<p>Diff = ".(round(($end_mem-$start_mem)/1024/1024, 2))." Mbytes ";
+                echo '</p>';
+                echo "<p>Execution script ".$script." time = ".(round(($end_time-$start_time), 4))." secondes</p>";
+                $nb++;
+                if      ( $nb == $maxscan ) {
+                    echo "Dernier test";
+                } else {
+                $get='test.php?'.http_build_query(array('script'=>"all", 'gDossier'=>$gDossierLogInput, 'nb_script'=>$nb));
+                 echo '<a href="'.$get.'" target="_blank">';
+                echo $scenario[$nb]['file'];
+                echo '</a>';
+                }
             }
 }
 else
 {
     $start_mem=memory_get_usage();
     $start_time=microtime(true);
-    $script=noalyss_str_replace('../', '', $script);
     $description=$http->get("description","string", "aucune description");
     echo '<h1>'.$script."</h1>";
     echo '<p> description = '.$description.'<p>';
-    include '../scenario/'.$script;
+    include $script;
 
     $end_mem=memory_get_usage();
     $end_time=microtime(true);

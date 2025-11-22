@@ -56,7 +56,7 @@ $from=$http->request("ac","string","");
             if ( !empty ($contact['contact_company']) ) {
                 $l_company=new Fiche($cn);
                 $l_company->get_by_qcode(trim($contact['contact_company']),false);
-                $l_company_name=$l_company->strAttribut(ATTR_DEF_NAME,0);
+                $l_company_name=$l_company->get_attribute(ATTR_DEF_NAME,0);
 
                 // add popup for detail if the company does exist
                 if ( $l_company_name !="")

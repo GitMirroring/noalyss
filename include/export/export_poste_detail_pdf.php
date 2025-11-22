@@ -66,6 +66,7 @@ if ( count($a_poste) == 0 )
 $size=array(13,25,13,65,12,20,20,20);
 $align=array('L','C','C','L','R','R','R','R');
  $operation=new Acc_Operation($cn);
+
 foreach ($a_poste as $poste)
 {
     $Poste=new Acc_Account_Ledger($cn,$poste['pcm_val']);
@@ -83,21 +84,21 @@ foreach ($a_poste as $poste)
 
     $pdf->SetFont('DejaVuCond','',8);
     $l=0;
-    $pdf->write_cell($size[$l],6,_('Date'),0,0,'L');
+    $pdf->write_cell($size[$l],8,_('Date'),0,0,'L');
     $l++;
-    $pdf->write_cell($size[$l],6,_('Ref'),0,0,'C');
+    $pdf->write_cell($size[$l],8,_('Ref'),0,0,'C');
     $l++;
-    $pdf->write_cell($size[$l],6,_('Journal'),0,0,'C');
+    $pdf->write_cell($size[$l],8,_('Journal'),0,0,'C');
     $l++;
-    $pdf->LongLine($size[$l],6,_('Libellé'),0,'L');
+    $pdf->write_multi($size[$l],8,_('Libellé'),0,'L');
     $l++;
-    $pdf->write_cell($size[$l],6,_('Let'),0,0,'R');
+    $pdf->write_cell($size[$l],8,_('Let'),0,0,'R');
     $l++;
-    $pdf->write_cell($size[$l],6,_('Debit'),0,0,'R');
+    $pdf->write_cell($size[$l],8,_('Debit'),0,0,'R');
     $l++;
-    $pdf->write_cell($size[$l],6,_('Credit'),0,0,'R');
+    $pdf->write_cell($size[$l],8,_('Credit'),0,0,'R');
     $l++;
-    $pdf->write_cell($size[$l],6,_('Prog'),0,0,'R');
+    $pdf->write_cell($size[$l],8,_('Prog'),0,0,'R');
     $l++;
     $pdf->line_new();
     $tot_deb=0;
@@ -129,12 +130,12 @@ foreach ($a_poste as $poste)
                     $str_diff_solde=sprintf("%12.2f ",$diff_solde);
 
                     $pdf->SetFont('DejaVu','B',8);
-                    $pdf->write_cell(15,6,_('totaux'),0,0,'L');
-                    $pdf->write_cell(15,6,$current_exercice,0,0,'L');
-                    $pdf->write_cell(40,6,$solde,0,'L');
-                    $pdf->write_cell(40,6,$str_debit,0,0,'R');
-                    $pdf->write_cell(40,6,$str_credit,0,0,'R');
-                    $pdf->write_cell(40,6,$str_diff_solde,0,0,'R');
+                    $pdf->write_cell(15,8,_('totaux'),0,0,'L');
+                    $pdf->write_cell(15,8,$current_exercice,0,0,'L');
+                    $pdf->write_cell(40,8,$solde,0,'L');
+                    $pdf->write_cell(40,8,$str_debit,0,0,'R');
+                    $pdf->write_cell(40,8,$str_credit,0,0,'R');
+                    $pdf->write_cell(40,8,$str_diff_solde,0,0,'R');
                     $pdf->line_new();
                     /*
                     * reset total and current_exercice
@@ -147,26 +148,26 @@ foreach ($a_poste as $poste)
         $l=0;
         $diff=bcsub($row['deb_montant'],$row['cred_montant']);
         $prog=bcadd($prog,$diff);
-
+        $fill=(isset($_GET['oper_detail']))?$pdf->is_fill(0):$pdf->is_fill($e);
         $date=shrink_date($row['j_date_fmt']);
-        $pdf->write_cell($size[$l],6,$date,0,0,$align[$l]);
+        $pdf->write_cell($size[$l],8,$date,0,0,$align[$l],fill:$fill);
         $l++;
 	if ( $row['jr_pj_number'] == '')
-	  $pdf->write_cell($size[$l],6,$row['jr_internal'],0,0,$align[$l]);
+	  $pdf->write_cell($size[$l],8,$row['jr_internal'],0,0,$align[$l],fill:$fill);
 	else
-	  $pdf->write_cell($size[$l],6,$row['jr_pj_number'],0,0,$align[$l]);
+	  $pdf->write_cell($size[$l],8,$row['jr_pj_number'],0,0,$align[$l],fill:$fill);
         $l++;
-        $pdf->write_cell($size[$l],6,mb_substr($row['jrn_def_code'],0,14),0,0,$align[$l]);
+        $pdf->write_cell($size[$l],8,mb_substr($row['jrn_def_code'],0,14),0,0,$align[$l],fill:$fill);
         $l++;
         $tiers=$operation->find_tiers($row['jr_id'], $row['j_id'], $row['j_qcode']);
         $description=($tiers=="")?$row["description"]:"[".$tiers."]".$row['description'];
-        $pdf->LongLine($size[$l],6,  $description,0,$align[$l]);
+        $pdf->write_multi($size[$l],8,  $description,0,$align[$l],fill:$fill);
         $l++;
-        $pdf->write_cell($size[$l],6,(($row['letter']!=-1)?$row['letter']:''),0,0,$align[$l]);
+        $pdf->write_cell($size[$l],8,(($row['letter']!=-1)?$row['letter']:''),0,0,$align[$l],fill:$fill);
         $l++;
-        $pdf->write_cell($size[$l],6,(sprintf('% 12.2f',$row['deb_montant'])),0,0,$align[$l]);
+        $pdf->write_cell($size[$l],8,(sprintf('% 12.2f',$row['deb_montant'])),0,0,$align[$l],fill:$fill);
         $l++;
-        $pdf->write_cell($size[$l],6,(sprintf('% 12.2f',$row['cred_montant'])),0,0,$align[$l]);
+        $pdf->write_cell($size[$l],8,(sprintf('% 12.2f',$row['cred_montant'])),0,0,$align[$l],fill:$fill);
         $l++;
         $solde="=";
         if ( $prog < 0 ) 
@@ -175,9 +176,9 @@ foreach ($a_poste as $poste)
         {
             $solde=_("D");
         }
-        $pdf->write_cell($size[$l],6,(sprintf('% 12.2f %s',abs($prog),$solde)),0,0,$align[$l]);
+        $pdf->write_cell($size[$l],8,(sprintf('% 12.2f %s',abs($prog),$solde)),0,0,$align[$l],fill:$fill);
         $l++;
-        $pdf->line_new();
+        $pdf->line_new(8);
         $tot_deb=bcadd($tot_deb,$row['deb_montant']);
         $tot_cred=bcadd($tot_cred,$row['cred_montant']);
         /* -------------------------------------- */
@@ -237,7 +238,7 @@ foreach ($a_poste as $poste)
     $str_diff_solde=sprintf("%12.2f ",$diff_solde);
 
     $pdf->SetFont('DejaVu','B',8);
-
+    $pdf->line_new();
     $pdf->write_cell(160,5,_("Débit"),0,0,'R');
     $pdf->write_cell(30,5,$str_debit,0,0,'R');
     $pdf->line_new();

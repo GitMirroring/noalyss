@@ -83,6 +83,7 @@ class print_ledger_simpleTest extends TestCase
         $ledger->export();
         $ledger->Output(__DIR__."/file/print_ledger_simple_purchase_paid.pdf", "F");
         $this->assertFileExists(__DIR__."/file/print_ledger_simple_purchase_paid.pdf");
+        print __DIR__."/file/print_ledger_simple_purchase_paid.pdf".PHP_EOL;
 
         // Unpaid
         //------------

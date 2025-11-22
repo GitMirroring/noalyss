@@ -290,7 +290,17 @@ EOF;
         $this->cn->commit();
         return $new;
     }
-
+    /**
+     *@brief load all the existing forecast
+     *@param $p_cn is an Database object
+     *@return array of f_id and f_name
+     */
+    public static function load_all($p_cn)
+    {
+        $sql="select f_id, f_name,f_start_date,f_end_date from forecast order by 2 desc";
+        $ret=$p_cn->get_array($sql);
+        return $ret;
+    }
 }
 
 ?>

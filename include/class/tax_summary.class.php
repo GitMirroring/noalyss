@@ -145,7 +145,9 @@ class Tax_Summary
         ", [$this->date_start, $this->date_end]);
         if ($cnt==0 && $cnt_ledger !=0)
         {
+
             throw new Exception('TX148:'._("Données manquantes"),100);
+
         }
         /* -------------Purchase --------------------------------- */
 

@@ -39,6 +39,13 @@ class Anc_Key
 {
 
     private $key; /*!  the distribution key */
+    protected $a_ledger ; /*!<  array of ledger (JRN_DEF.JRN_DEF_ID) for 
+                            * which the key is available*/
+    protected $a_activity; /*!<  array of activity for 
+                            * which the key is available*/
+    protected $a_row;  /*!<  array of row from key_distribution_detail
+                        * , detail of the key*/
+    
     /**
      *@brief  Return the number of keys available.
      *  Return the number of keys available for the ledger given in parameter

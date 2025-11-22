@@ -19299,7 +19299,7 @@ msgstr "List depreciable property"
 #: include/database.item.php:90 include/database.item.php:74
 #: include/database.item.php:72
 msgid "Liste des changements manuels des stocks"
-msgstr "List of books stock changes"
+msgstr "History "
 
 #: include/database.item.php:98 include/database.item.php:101
 #: include/database.item.php:95 include/database.item.php:93
@@ -19324,7 +19324,7 @@ msgstr "List of contacts"
 #: include/ext/tva/index.php:38 include/ext/tva/index.php:39
 #: include/ext/tva/index.php:46
 msgid "Liste des déclarations TVA"
-msgstr "List of VAT returns"
+msgstr "History VAT forms"
 
 #: include/template/operation_exercice-list_draft.php:40
 #, fuzzy
@@ -19340,7 +19340,7 @@ msgstr "Folders"
 
 #: include/impress_jrn.inc.php:147 include/impress_jrn.inc.php:140
 msgid "Liste détaillées opérations "
-msgstr "List of detailled entries"
+msgstr "Detailled  List "
 
 #: include/search.inc.php:118 include/search.inc.php:119
 #: include/ajax/ajax_search_operation.php:119

@@ -9,6 +9,13 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php';
  $periode_id=new Periode($cn,$obj->det->jr_tech_per);
  $exercice=$periode_id->get_exercice();
 $owner = new Noalyss_Parameter_Folder($cn);
+//* @var $div (string) current DIV 
+//@var $dossier_id (int) folder id 
+$dossier_id=Dossier::id();
+
+//@var $jr_id (int) jrn.jr_id
+//@var $obj (Acc_Operation) current operation detail 
+
 ?>
 <?php 
 ?>
@@ -71,18 +78,16 @@ $owner = new Noalyss_Parameter_Folder($cn);
                     <table style="width:99%;height:8rem;vertical-align:top;">
                         <tr style="height: 5%">
                             <td style="text-align:center;vertical-align: top">
-                                Note
-                            </td></tr>
-                        <tr>
-                            <td style="text-align:center;vertical-align: top">
-                                <?php
+                                  <?php
                                 $inote = new ITextarea('jrn_note');
+                                $inote->set_enrichText("minimal");
+                                $inote->id="jrn_note{$div}";
                                 $inote->style=' class="itextarea" style="width:90%;height:100%;"';
-                                $inote->value = strip_tags($obj->det->note);
+                                $inote->value = $obj->det->note_html;
+                                $inote->heigh=200;
                                 echo $inote->input();
+                               
                                 ?>
-
-                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -161,7 +166,7 @@ $amount_idx=0; $sum_prod_currency=0;
       // nom de la fiche
       $ff=new Fiche($cn);
       $ff->get_by_qcode( $q[$e]['j_qcode']);
-      $l_lib=$ff->strAttribut(ATTR_DEF_NAME);
+      $l_lib=$ff->get_attribute(ATTR_DEF_NAME);
     } else {
       // libellé du compte
       $name=$cn->get_value('select pcm_lib from tmp_pcmn where pcm_val=$1',array($q[$e]['j_poste']));

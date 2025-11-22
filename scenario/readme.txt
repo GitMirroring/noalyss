@@ -37,6 +37,23 @@ L'objectif étant de pouvoir tester et de rejouer facilement les actions que vou
 
 Il est aussi possible de faire vos tests unitaire ici , autrement qu'avec PHPUNIT (voir répertiore php-unit)
 
+Vous pouver l'utiliser pour les sorties ajax, mises au point de librarie, scénario , cela permet de tester les
+fichiers à include (.inc.php) , les exports , les réponses ajax et appeler les fonctions test_me dans les classes
+(static function test_me() ).
+
+Dans votre code, vous pouvez ajouter des portions de code ainsi
+
+    if (defined ('TEST_UNIT')) {
+        // exécuté uniquement si appelé pour les tests unitaires
+
+    }
+
+Les répertoires :
+----------------
+HTML  : vérification pour les fichiers inclus
+LIB   : concerne les libraries
+XML   : réponse de script ajax, réponse souvent en XML
+LOCAL : vos propres scripts, pour vos développements, ne seront pas dans GIT
 
 -----------------------
      ENGLISH
@@ -55,5 +72,18 @@ You point  you browser  noalyss/html/test.php an you click on the link with the 
 
 and you can rerun the file , it works also for ajax.
 
-It is useful to test ajax answer , unit test or testing a class
+It is useful to test ajax answer , unit test or testing a class (with static function test_me() )
 
+In your code, you can do
+
+    if (defined ('TEST_UNIT')) {
+        // executed only if calling script  is test.php,
+
+    }
+
+FOLDERS
+----------------
+HTML  : test the files to include
+LIB   : concerns  libraries
+XML   : ajax script response often XML or JSON
+LOCAL : Your own scripts for developping , not included in GIT

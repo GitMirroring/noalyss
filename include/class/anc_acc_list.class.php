@@ -32,6 +32,8 @@
 
 class Anc_Acc_List extends Anc_Acc_Link
 {
+   var $arow; //!< $arow array of row from 
+   var $card_poste;
   /**
    *@brief display form to get the parameter
    *  - card_poste 1 by card, 2 by account

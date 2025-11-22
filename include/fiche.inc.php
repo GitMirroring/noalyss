@@ -33,30 +33,46 @@ global $g_user, $g_failed;
 /**
  * Show first the form
  */
-/* category */
+/* var categorie ISelect select card category */
 $categorie = new ISelect('cat');
 $categorie->value = $cn->make_array("select fd_id,fd_label||' ('||(select count(*) from fiche where fiche.fd_id=fiche_def.fd_id)::text||')' from fiche_def order by fd_label");
 $categorie->selected = $http->get('cat','number',0);
+
+// var $str_categorie  string
 $str_categorie = $categorie->input();
 $ac = $http->request('ac');
+
+// var $icall ICheckBox : all card or only the current category
 $icall = new ICheckBox("allcard", 1);
 $icall->selected = (isset($_GET['allcard'])) ? 1 : 0;
+// var $str_icall string
 $str_icall = $icall->input();
-/* periode */
+
+/* var $exercice string current exercice (depending of user's period preferences) */
 $exercice = $g_user->get_exercice();
 $iperiode = new Periode($cn);
 list ($first, $last) = $iperiode->get_limit($exercice);
 
+/*
+ * var $periode_start IDate start date
+ * var $periode_end IDate end date
+*/
 $periode_start = new IDate('start');
 $periode_end = new IDate('end');
 
 $periode_start->value =  $http->get('start',"date",$first->first_day());
 $periode_end->value =  $http->get('end','date', $last->last_day());
 
+/*
+ * var $str_start string date dd.mm.yyyy
+ * var $str_end string date dd.mm.yyyy
+ */
 $str_start = $periode_start->input();
 $str_end = $periode_end->input();
 
-/* histo ou summary */
+
+
+/* var $histo ISelect choice  */
 $histo = new ISelect('histo');
 $histo->value = array(
 	array('value' => -1, 'label' => _('Liste')),
@@ -76,6 +92,11 @@ $histo->javascript = 'onchange="if (this.value==3 || this.value==-1) {
 
 $histo->selected =  $http->get('histo',"number", -1);
 $str_histo = $histo->input();
+
+// $inactive checkbox include inactive cards
+$inactive = new ICheckbox ('inactive',1);
+$inactive->selected=$http->request('inactive','string',0);
+$str_inactive=$inactive->input();
 ?>
 <div class="content">
 
@@ -103,7 +124,6 @@ if (!isset($_GET['cat_display']))
 
 $fd_id =$categorie->selected ;
 
-$array = Fiche::get_fiche_def($cn,$categorie->selected , 'name_asc');
 
 $h_add_card_b = new IButton('add_card');
 $h_add_card_b->label = _('Créer une nouvelle fiche');
@@ -121,6 +141,8 @@ if ( $allcard == 0 ){
 	echo h1($fiche_def->label,"");
 	echo h2($fiche_def->fd_description,"");
 }
+$array = Fiche::get_fiche_def($cn,$categorie->selected , 'name_asc');
+
 // if no card found , stop here
 if ($array == null && $allcard == 0 && $histo->selected != 3 )
 {
@@ -138,7 +160,9 @@ echo '<div class="content">';
  * ***************************************************************************************************************/
 if ($histo->selected   == -1)
 {
-	$write = $g_user->check_action(FICADD);
+    $array = Fiche::get_fiche_def($cn,$categorie->selected , 'name_asc',inactive: $inactive->selected);
+
+    $write = $g_user->check_action(FICADD);
 	/**
 	 * If ask for move or delete
 	 */
@@ -152,7 +176,7 @@ if ($histo->selected   == -1)
 			 */
 			if (isset($_POST['move'])&& $_POST['move'] == 1)
 			{
-                                $move_to=$http->post("move_to","number");
+                $move_to=$http->post("move_to","number");
 				for ($i = 0; $i < count($ack); $i++)
 				{
 					$fiche = new Fiche($cn, $ack[$i]);
@@ -170,7 +194,7 @@ if ($histo->selected   == -1)
 					$fiche = new Fiche($cn, $ack[$i]);
 					if ( $fiche->remove(true) == 1 )
 					{
-						$msg.="\n ".$fiche->strAttribut(ATTR_DEF_QUICKCODE);
+						$msg.="\n ".$fiche->get_attribute(ATTR_DEF_QUICKCODE);
 					}
 				}
 				if ($msg != "")
@@ -188,15 +212,29 @@ if ($histo->selected   == -1)
 		}
 	}
 	$sql = "select f_id from fiche ";
-	if ($allcard == 1)
+
+    // build SQL : all cards or only the selected category , with inactive cards included or only active
+	if ($allcard == 1 && $inactive->selected == 1)
 	{
+        // all categories , including inactive cards
 		$cond = "";
-	}
-	else
+	}elseif ($allcard == 1 && $inactive->selected== 0)
+    {
+        // all categories and only active cards
+        $cond = " where f.f_enable = '1' ";
+    }
+	elseif ($allcard == 0 && $inactive->selected == 1)
 	{
+        // one categorie , including inactive cards
             $p_cat=$http->get("cat","number");
             $cond = " where f.fd_id = " . sql_string($p_cat);
-	}
+	}elseif ($allcard == 0 && $inactive->selected == 0) {
+        // one categorie , without inactive cards
+        $p_cat=$http->get("cat","number");
+        $cond = " where f.fd_id = " . sql_string($p_cat);
+        $cond .= " and f.f_enable='1'";
+    }
+
 	// Create nav bar
 	$max = $cn->get_value("select count(*) from fiche as f " . $cond);
 
@@ -226,17 +264,19 @@ if ($histo->selected   == -1)
  * ******************************************************************************************************************************** */
 if ($histo->selected  == 3)
 {
-	$cat_card = new Fiche_Def($cn);
+    $array = Fiche::get_fiche_def($cn,$categorie->selected , 'name_asc',inactive: $inactive->selected);
+
+    $cat_card = new Fiche_Def($cn);
 	$cat_card->id =$http->get('cat','number');
-	$aHeading = $cat_card->getAttribut();
-        $str_add_card="";
-        if ( $allcard == 0 ) {
-            $h_add_card_b = new IButton('add_card');
-            $h_add_card_b->label = _('Créer une nouvelle fiche');
-            $h_add_card_b->javascript = "dis_blank_card({gDossier:$gDossier,fd_id:$fd_id,after_save:1,ref:2})";
-            $str_add_card=$h_add_card_b->input();
-        }
-        echo $str_add_card;
+	$aHeading = $cat_card->load_attribute();
+    $str_add_card="";
+    if ( $allcard == 0 ) {
+        $h_add_card_b = new IButton('add_card');
+        $h_add_card_b->label = _('Créer une nouvelle fiche');
+        $h_add_card_b->javascript = "dis_blank_card({gDossier:$gDossier,fd_id:$fd_id,after_save:1,ref:2})";
+        $str_add_card=$h_add_card_b->input();
+    }
+    echo $str_add_card;
 	require_once NOALYSS_TEMPLATE.'/result_cat_card_summary.php';
 
 	$hid = new IHidden();
@@ -245,13 +285,16 @@ if ($histo->selected  == 3)
         echo 
             HtmlInput::submit('bt_csv', _("Export CSV")) .
             HtmlInput::hidden('act', "CSV:fiche") .
+            HtmlInput::hidden('inactive', $inactive->selected) .
             $hid->input("type", "fiche") .
             $hid->input("ac", $http->request('ac')) .
             $hid->input("fd_id", $http->request('cat',"number"));
+
 	echo "</form>";
 
 	return;
 }
+
 $cat=$http->get("cat","number");
 $phisto=$http->get("histo","number");
 
@@ -329,7 +372,7 @@ if ( $histo->selected  == 8)
 if ( $histo->selected  == 7)
 {
     $bal=new Balance_Age($cn);
-    
+
     $cat=$http->get("cat","number");
        $export_csv = '<FORM METHOD="get" ACTION="export.php" style="display:inline">';
     $export_csv .=HtmlInput::request_to_hidden(array('gDossier','ac','p_let','p_date_start'));
@@ -433,9 +476,9 @@ if ($histo->selected  == 4 || $histo->selected  == 5)
                         $sum_deb=bcadd($sum_deb,$solde['debit']);
                         $sum_solde=bcsub($sum_deb,$sum_cred);
 			echo tr(
-					td(HtmlInput::history_card($oCard->id, $oCard->strAttribut(ATTR_DEF_QUICKCODE))) .
-					td($oCard->strAttribut(ATTR_DEF_NAME)) .
-					td(HtmlInput::history_account($oCard->strAttribut(ATTR_DEF_ACCOUNT),$oCard->strAttribut(ATTR_DEF_ACCOUNT))).
+					td(HtmlInput::history_card($oCard->id, $oCard->get_attribute(ATTR_DEF_QUICKCODE))) .
+					td($oCard->get_attribute(ATTR_DEF_NAME)) .
+					td(HtmlInput::history_account($oCard->get_attribute(ATTR_DEF_ACCOUNT),$oCard->get_attribute(ATTR_DEF_ACCOUNT))).
 					td(nbm($solde['debit']), 'class="sorttable_numeric" sorttable_customkey="'.$solde['debit'].'" style="text-align:right"') .
 					td(nbm($solde['credit']), 'class="sorttable_numeric" sorttable_customkey="'.$solde['debit'].'" style="text-align:right"') .
 					td(nbm(abs($solde['solde'])), 'class="sorttable_numeric" sorttable_customkey="'.$solde['solde'].'" style="text-align:right"') .
@@ -498,7 +541,7 @@ for ($e = 0; $e < count($afiche); $e++)
 	{
 		$row = new Fiche($cn, $card['f_id']);
 		$letter = new Lettering_Card($cn);
-		$letter->set_parameter('quick_code', $row->strAttribut(ATTR_DEF_QUICKCODE));
+		$letter->set_parameter('quick_code', $row->get_attribute(ATTR_DEF_QUICKCODE));
 		$letter->set_parameter('start', $periode_start->value );
 		$letter->set_parameter('end', $periode_end->value );
 		// all
@@ -524,11 +567,11 @@ for ($e = 0; $e < count($afiche); $e++)
 		/* skip if nothing to display */
 		if (count($letter->content) == 0)
 			continue;
-		$detail_card = HtmlInput::card_detail($row->strAttribut(ATTR_DEF_QUICKCODE), $row->strAttribut(ATTR_DEF_NAME));
+		$detail_card = HtmlInput::card_detail($row->get_attribute(ATTR_DEF_QUICKCODE), $row->get_attribute(ATTR_DEF_NAME));
 
 		echo '<h2 class="h-section">' . $detail_card ;
                 echo "poste "
-                        . ":".HtmlInput::history_account($row->strAttribut(ATTR_DEF_ACCOUNT),$row->strAttribut(ATTR_DEF_ACCOUNT),'display:inline').Icon_Action::infobulle(27).'</h2>';
+                        . ":".HtmlInput::history_account($row->get_attribute(ATTR_DEF_ACCOUNT),$row->get_attribute(ATTR_DEF_ACCOUNT),'display:inline').Icon_Action::infobulle(27).'</h2>';
 
 		echo '<table class="result">';
 		echo '<tr>';

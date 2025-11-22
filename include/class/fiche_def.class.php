@@ -39,10 +39,10 @@ class Fiche_Def
     var $attribut;		//!< get from attr_xxx tables
     var $fd_description; //!< Description  of the Card Category
 
-    function __construct($p_cn,$p_id = 0)
+    function __construct($cn,$id = 0)
     {
-        $this->cn=$p_cn;
-        $this->id=$p_id;
+        $this->cn=$cn;
+        $this->id=$id;
         
         
     }
@@ -59,13 +59,20 @@ class Fiche_Def
 
         return;
     }
-
+    /**
+     * @brief replace by load_attribute
+     * @deprecated since version 9.3.12
+     * @return type
+     */
+    function getAttribut() {
+        return $this->load_attribute();
+    }
     /*!
-     *  \brief  Get attribut of a fiche_def
+     *  \brief  Get attribute of a fiche_def
      *
      * \return array of Card_Property 
      */
-    function getAttribut()
+    function load_attribute()
     {
         $sql="select * from jnt_fic_attr ".
              " natural join attr_def where fd_id= $1".
@@ -337,16 +344,18 @@ $order
      * \brief Get all the card where the fiche_def.fd_id is given in parameter
      * \param $step = 0 we don't use the offset, page_size,...
      *        $step = 1 we use the jnr_bar_nav
-     *
+     * \param $inactive int possible values : 1  = inactive included, 0 = only active ones (default 1)
      * \return array ('f_id'=>..,'ad_value'=>..)
      *\see fiche
      */
-    function get_by_type($step=0)
+    function get_by_type($step=0,$inactive=1)
     {
+        // var $cond_active string SQL cond for filtering active or not
+        $cond_active=($inactive == 1)?"":" and f_enable='1' ";
         $sql="select f_id,ad_value
              from
              fiche join fiche_detail using(f_id)
-             where ad_id=1 and fd_id=$1 order by 2";
+             where ad_id=1 and fd_id=$1 $cond_active order by 2";
 
         // we use navigation_bar
         if ($step == 1  && $_SESSION[SESSION_KEY.'g_pagesize'] != -1   )
@@ -361,18 +370,24 @@ $order
         return $Ret;
     }
     /*!
-     * \brief Get all the card where the fiche_def.frd_id is given in parameter
-     * \return array of fiche or null is nothing is found
+     * \brief Get all the card where the fiche_def.frd_id is given in parameter, it is the template for category
+     *\param $inactive int possible values : 1  = inactive included, 0 = only active ones (default 1)
+     * \param $template_category int FICHE_DEF_REF.FRD_ID
+     * \return array of Fiche or null is nothing is found
+     *
      */
-    function get_by_category($p_cat)
+    function get_by_category($template_category,$inactive=1)
     {
+        // var $cond_active string SQL cond for filtering active or not
+        $cond_active=($inactive == 1)?"":" and f_enable='1' ";
         $sql="select f_id,ad_value
              from
              fiche join fiche_def  using(fd_id)
 	     join fiche_detail using(f_id)
-             where ad_id=1 and frd_id=$1 order by 2 ";
+             where ad_id=1 and frd_id=$1 $cond_active 
+             order by 2 ";
 
-        $Ret=$this->cn->exec_sql($sql,array($p_cat));
+        $Ret=$this->cn->exec_sql($sql,array($template_category));
         if ( ($Max=Database::num_row($Ret)) == 0 )
             return null;
         $all[0]=new Fiche($this->cn);
@@ -381,7 +396,7 @@ $order
         {
             $row=Database::fetch_array($Ret,$i);
             $t=new Fiche($this->cn,$row['f_id']);
-            $t->getAttribut();
+            $t->load_attribute();
             $all[$i]=$t;
 
         }
@@ -613,7 +628,7 @@ $order
     {
         if ( $this->id == 0 ) return;
         /* ORDER */
-        $this->GetAttribut();
+        $this->load_attribute();
         $order=$p_order;
         if ( $p_order == -1 ) {
             $order = $this->cn->get_value("select ad_default_order from attr_def where ad_id=$1",[$p_ad_id]);
@@ -659,7 +674,7 @@ $order
     function save_order($p_array)
     {
         extract($p_array, EXTR_SKIP);
-        $this->GetAttribut();
+        $this->load_attribute();
         foreach ($this->attribut as $row)
         {
             if ( $row->ad_id == 1 ) continue;
@@ -770,7 +785,7 @@ $order
 		// Save the label
 
 		$this->get();
-		$this->GetAttribut();
+		$this->load_attribute();
 		$r.= '<H2 class="info">' . $this->id . " " . h($this->label) . '</H2>';
 		$r.='<fieldset><legend>'._('Données générales').'</legend>';
 
@@ -801,7 +816,7 @@ $order
         $r.=HtmlInput::submit('remove_cat', _('Effacer'));
         $r.='</form>';
 
-		require NOALYSS_TEMPLATE.'/fiche_def-input_detail.php';
+
 
 		$r.='</fieldset>';
         $r.='<hr>';

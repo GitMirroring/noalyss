@@ -32,7 +32,6 @@
 class Acc_Ledger_History_Sale extends Acc_Ledger_History
 {
 
-     
     
     public function __construct(\Database $cn, $pa_ledger, $p_from, $p_to,
             $p_mode)

@@ -38,7 +38,7 @@ class Anc_Group_Operation
     var $a_operation;						/*!< array of operations */
     var $date;							/*!< date of the operations */
     var $pa_id;							/*!< the concerned pa_id */
-
+    var $nMaxRow;   /*!< $nMaxRow (int) max row to display */
     /*!\brief constructor */
     function __construct($p_cn,$p_id=0)
     {

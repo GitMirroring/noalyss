@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  * @coversDefaultClass Acc_Ledger_Sale
  */
+#[\AllowDynamicProperties]
 class Acc_Ledger_SaleTest extends TestCase
 {
 
@@ -143,7 +144,7 @@ class Acc_Ledger_SaleTest extends TestCase
         $g_connection->exec_sql("alter sequence  s_jrn_pj2 restart with 40");
         // set TVA_RATE by default
         $g_connection->exec_sql("update tva_rate set tva_poste='41142,45142' where tva_id=5");
-        $g_connection->exec_sql("update tva_rate set tva_reverse_account=null where tva_id=5");
+        $g_connection->exec_sql("update tva_rate d set tva_reverse_account=null where tva_id=5");
 
 
     }
@@ -155,7 +156,15 @@ class Acc_Ledger_SaleTest extends TestCase
         $this->object->verify_operation($this->array);
         $this->assertTrue(TRUE);
     }
-
+    static function tearDownAfterClass():void
+    {
+       
+        global $g_connection;
+        $g_connection->exec_sql("delete from jrnx where j_poste=$1",
+                ['4119999']);
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val=$1",
+                ['4119999']);
+    }
     /**
      * @covers Acc_Ledger_Sale::insert
      */

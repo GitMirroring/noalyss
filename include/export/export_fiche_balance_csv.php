@@ -82,9 +82,9 @@ if ( $_GET['histo'] == 4 || $_GET['histo'] == 5)
 			if (bcsub($solde['credit'], $solde['debit']) > 0)
 				$side = 'Cred.';
 
-                        $export->add($oCard->strAttribut(ATTR_DEF_QUICKCODE));
-                        $export->add($oCard->strAttribut(ATTR_DEF_NAME));
-                        $export->add($oCard->strAttribut(ATTR_DEF_ACCOUNT));
+                        $export->add($oCard->get_attribute(ATTR_DEF_QUICKCODE));
+                        $export->add($oCard->get_attribute(ATTR_DEF_NAME));
+                        $export->add($oCard->get_attribute(ATTR_DEF_ACCOUNT));
                         $export->add($solde['debit'],"number"); 
                         $export->add($solde['credit'],"number"); 
                         $export->add(abs($solde['solde']),"number");
@@ -114,7 +114,7 @@ else
 		{
 			$row = new Fiche($cn, $card['f_id']);
 			$letter = new Lettering_Card($cn);
-			$letter->set_parameter('quick_code', $row->strAttribut(ATTR_DEF_QUICKCODE));
+			$letter->set_parameter('quick_code', $row->get_attribute(ATTR_DEF_QUICKCODE));
 			$letter->set_parameter('start', $_GET['start']);
 			$letter->set_parameter('end', $_GET['end']);
 			// all
@@ -140,9 +140,9 @@ else
 			/* skip if nothing to display */
 			if (count($letter->content) == 0)
 				continue;
-			$export->add($row->strAttribut(ATTR_DEF_QUICKCODE));
-                        $export->add( $row->strAttribut(ATTR_DEF_NAME));
-                        $export->add($row->strAttribut(ATTR_DEF_ACCOUNT));
+			$export->add($row->get_attribute(ATTR_DEF_QUICKCODE));
+                        $export->add( $row->get_attribute(ATTR_DEF_NAME));
+                        $export->add($row->get_attribute(ATTR_DEF_ACCOUNT));
                         $export->write();
 
 			

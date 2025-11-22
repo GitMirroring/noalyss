@@ -90,7 +90,7 @@ elseif ($action=="send_email") :
             $user_password=$exist_request[0]['password'];
             /* if too many request , there is a bug somewhere , so record an warning */
             if ( count($exist_request)> 1 ){
-                error_log("WRE109 Trop de request pour ".var_export($exist_request,true));
+                record_log("WRE109 Trop de request pour ".var_export($exist_request,true));
             }
             
         }

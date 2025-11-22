@@ -164,7 +164,6 @@ class Sendmail_Core
             // message PLAIN
             $this->content .= "--" . $separator . $eol;
             $this->content .= "Content-Type: text/plain; charset=UTF-8" . $eol;
-
             $this->content .= "Content-Transfer-Encoding: 8bit" . $eol.$eol ;
             $this->content .= $this->message . $eol ;
         } elseif ($this->format == 'HTML') {
@@ -200,7 +199,6 @@ eof;
             $this->content .= $this->message. $eol ;
             $this->content .="  </body> </html>".$eol;
             $this->content .= "--" . $separator_second."--" . $eol;
-
     
         }else {
             throw new \Exception('SC172 : unknow format ');            

@@ -24,6 +24,10 @@
  * @file
  * @brief user's bookmark
  */
+/**
+ * @var $cn Database inherited
+ * @var $g_user User_Noalyss inherited
+ */
 if ( ! defined ('ALLOWED')) die('Appel direct ne sont pas permis');
 echo HtmlInput::title_box(_("Favoris"), "bookmark_div");
 if (! isset($_GET['ac'])) {
@@ -32,7 +36,10 @@ if (! isset($_GET['ac'])) {
      */
     $_GET['ac']= find_default_module();
 }
+//-------------------------------------------------------------------------------------------
+//
 // Add bookmark
+//-------------------------------------------------------------------------------------------
 if (isset($_GET['bookmark_add'])){
     $count=$cn->get_value("select count(*) from bookmark"
             . " where b_action=$1 and login=$2",
@@ -47,7 +54,10 @@ if (isset($_GET['bookmark_add'])){
         echo create_script($js);
     }     
 }
+//-------------------------------------------------------------------------------------------
 // remove bookmark
+//
+//-------------------------------------------------------------------------------------------
 if (isset($_GET['bookmark_delete']) && isset ($_GET['book'])){
     $a_book=$_GET['book'];
     for ($e=0;$e<count($a_book);$e++)
@@ -64,12 +74,16 @@ $bookmark_sql="select distinct b_id,b_action,b_order,me_code,me_description, jav
         . "login=$1 order by me_code";
 $a_bookmark=$cn->get_array($bookmark_sql,array($g_user->login));
 $url="do.php?gDossier=".Dossier::id()."&ac=";
+//-------------------------------------------------------------------------------------------
+// Display content
+//-------------------------------------------------------------------------------------------
 ?>
 <div class="content">
-<form id="bookmark_del_frm" method="get" onsubmit="remove_bookmark();return false">
+    <?=\HtmlInput::filter_table("bookmark_tb","1,2",0)?>
+<form id="bookmark_del_frm" method="get" onsubmit="bookmark.remove();return false">
 <?php    echo HtmlInput::array_to_hidden(array("gDossier",'ac'), $_REQUEST); ?>
 
-    <table class="result">
+    <table id="bookmark_tb" class="result">
         <?php for ($i=0;$i<count($a_bookmark);$i++): ?>
         <?php
         /*
@@ -104,7 +118,7 @@ if ( count($a_bookmark) > 0) :
 endif;
     ?>
 </form>
-<form id="bookmark_frm" method="get" onsubmit="save_bookmark();return false">
+<form id="bookmark_frm" method="get" onsubmit="bookmark.save();return false">
 <?php
 echo _("Menu actuel")." : ".hb($_GET['ac']);
 echo HtmlInput::array_to_hidden(array("gDossier","ac"), $_REQUEST); 

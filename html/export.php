@@ -92,6 +92,8 @@ if ( LOGINPUT)
     fwrite($file_loginput,"\n");
     fwrite($file_loginput,' $_REQUEST=array_merge($_GET,$_POST);');
     fwrite($file_loginput,"\n");
+    fwrite($file_loginput,' require_once NOALYSS_INCLUDE."/export/'.$prfile.'";');
+    fwrite($file_loginput,"\n");
     fclose($file_loginput);
 }
 

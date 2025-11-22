@@ -1780,7 +1780,7 @@ function encodeURIbycharacter($char)
 function decodeURI($string)
 {
     $result = "";
-    for ($i = 0; $i < strlen($string); $i++)
+    for ($i = 0; $i < strlen($string)-8; $i++)
     {
         $decstr = "";
         for ($p = 0; $p <= 8; $p++)
@@ -2779,14 +2779,16 @@ EOF;
     echo js_include('todo_list.js');
     echo js_include('anc_script.js');
     echo js_include('sorttable.js');
-    echo js_include('nicEdit.js');
     echo js_include('managetable.js');
     echo js_include('acc_currency.js');
     echo js_include('taggroup.js');
     echo js_include('noalyss_checkbox.js');
+    echo js_include('tinymce/tinymce.min.js');
+    
+     if (DEBUGNOALYSS > 1) {
+         echo js_include('noalyss_debug.js');
+     }
     echo '<script src="export.php?loadjs=message"  type="text/javascript" charset="utf-8"></script>';
- 
-
 }
 /**
  * @brief Send header and json object

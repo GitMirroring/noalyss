@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
  * @coversDefaultClass Print_Ledger_Detail
  */
 require DIRTEST.'/global.php';
-
+#[\AllowDynamicProperties]
 class Print_Ledger_DetailTest extends TestCase
 {
 

@@ -272,7 +272,7 @@ class Icon_Action
      */
     static function trash($p_id,$p_javascript) 
     {
-        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="smallicon icon">&#xe80f;</span>';
+        $r='<span id="'.$p_id.'" onclick="'.$p_javascript.'" class="bt-error  smallicon icon">&#xe80f;</span>';
         return $r;
     }
     /**
@@ -507,6 +507,16 @@ class Icon_Action
         $r=sprintf('<i id="%s" onclick="%s" class="smallicon icon   icon-down-open-2" style="margin-left:5px"></i>',
             $p_id,$javascript
             );
+        return $r;
+    }
+    static function refresh($p_id,$javascript)
+    {
+        $javascript=str_replace('"', '&quot;',$javascript);
+        //icon-arrows-cw
+        $r=sprintf('<i id="%s" onclick="%s" class="smallicon icon  icon-arrows-cw" style="margin-left:5px"></i>',
+            $p_id,$javascript
+        );
+
         return $r;
     }
 

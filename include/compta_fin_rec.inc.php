@@ -74,8 +74,9 @@ bcscale(2);
         }
         var check = (aName[from].checked) ? true : false;
         for (x = from; x <= end; x++) {
+            if ( window.getComputedStyle(aName[x].parentNode.parentNode).display == "none" ) { continue; }
             aName[x].checked = check;
-            if( x < end && x > from ) {
+            if( x < end && x > from   ) {
                 Bank_Reconciliation.update_selected(aName[x],aName[x].getAttribute('amount_operation'));
                 Bank_Reconciliation.update_remain(aName[x],aName[x].getAttribute('amount_operation'));
             }
@@ -135,7 +136,8 @@ bcscale(2);
             var i=0;
             for (i=0;i<form.length;i++) {
                 var e=form.elements[i];
-                if (e.type=='checkbox') {
+                if (e.type=='checkbox' &&  window.getComputedStyle(e.parentNode.parentNode).display != "none" ) 
+                {
                         e.click();
                 }
             }

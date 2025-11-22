@@ -58,6 +58,24 @@ class Document
         // counter for MARCH_NEXT
         $this->counter=0;
     }
+    
+    function __toString(): string
+    {
+        return "Document[db=" . $this->db
+                . ", d_id=" . $this->d_id
+                . ", ag_id=" . $this->ag_id
+                . ", d_mimetype=" . $this->d_mimetype
+                . ", d_filename=" . $this->d_filename
+                . ", d_lob=" . $this->d_lob
+                . ", d_description=" . $this->d_description
+                . ", d_number=" . $this->d_number
+                . ", md_id=" . $this->md_id
+                . ", f_id=" . $this->f_id
+                . ", counter=" . $this->counter
+                . ", d_name=" . $this->d_name
+                . ", md_type=" . $this->md_type
+                . "]";
+    }
 
     /**
      * @brief insert a minimal document and set the d_id
@@ -109,16 +127,20 @@ class Document
     /*!
      * \brief Generate the document, Call $this-\>replace to replace
      *        tag by value
-     * @param p_array contains the data normally it is the $_POST
-     * @param $p_filename contains the new filename
+     * @param p_array contains the data normally it is the $_POST (see Acc_Ledger_Sale or 
+     * Acc_Ledger_Purchase)
+     * @see Acc_Ledger_Sale
+     * @see Acc_Ledger_Purchase
+     * @param $p_filename contains the new filename, if not given the filename will be generated
      * \return an string : the url where the generated doc can be found, the name
      * of the file and his mimetype
      */
 
     function generate($p_array, $p_filename="")
     {
+
         try {
-            // create a temp directory in /tmp to unpack file and to parse it
+            ///@var $dirname (string) temp directory in /tmp to unpack file and to parse it
             $dirname=tempnam($_ENV['TMP'], 'doc_');
             if  ($dirname == false) {
                 throw new Exception ('DC117 cannot create tmp file',5000);
@@ -128,6 +150,31 @@ class Document
             if (  mkdir($dirname) == false ) {
                 throw new Exception ("DC121 cannot create $dirname directory",5000);
             }
+           /**
+            * md_id == -2 : INVOICE_STD is the standard PDF invoice, you don't parse or compute 
+            * it
+            */
+           if ( $this->md_id == INVOICE_STD)
+           {
+                $file_to_parse=str_replace(
+                           array('/', '*', '<', '>', ';', ',', '\\', '.', ':', '(', ')', ' ', '[', ']')
+                           , "-"
+                           , "inv-std-".$p_array['e_pj']).".pdf";
+               
+               $this->d_number=$this->db->get_next_seq("seq_doc_type_stdinv");
+               $this->d_filename=$file_to_parse;
+               $this->d_mimetype="application/pdf";
+               $this->d_name=$file_to_parse;
+               $standard_invoice=new \Noalyss\Invoice_PDF($this->db,$dirname,$file_to_parse);
+               $standard_invoice->set_data($p_array);
+               $standard_invoice->export();
+               $this->saveGenerated($dirname.DIRECTORY_SEPARATOR.$file_to_parse);
+                // Invoice
+                $href=http_build_query(array('gDossier'=>Dossier::id(), "d_id"=>$this->d_id, 'act'=>'RAW:document'));
+                $ret='<A class="mtitle" HREF="export.php?'.$href.'">'._('Document').'</A>';
+                return $ret;
+           }
+            
             // Retrieve the lob and save it into $dirname
             $this->db->start();
             $dm_info="select md_name,md_type,md_lob,md_filename,md_mimetype
@@ -149,7 +196,8 @@ class Document
                 record_log(sprintf('DOCUMENT.GENERATE.D1 ,  export failed %s %s',$dirname, $filename));
                 throw new Exception(sprintf(_("Export a échoué pour %s"), $filename));
             }
-
+            // $type (letter) type of document : OOo for openoffice otherwise n , with OOo the file
+            //              is a ZIP XML
             $type="n";
             // if the doc is a OOo, we need to unzip it first
             // and the name of the file to change is always content.xml
@@ -214,8 +262,7 @@ class Document
 
             return $ret;
         } catch (Exception $e) {
-            record_log($e->getMessage());
-            record_log($e->getTraceAsString());
+            record_log($e);
             return span(_("Génération du document a échoué"),'class="notice"');
         }
     }
@@ -252,7 +299,7 @@ class Document
         {
             if (mkdir($temp_dir)==false)
             {
-                $msg=sprintf("D221."._("Ne peut pas créer le répertoire %s", $temp_dir));
+                $msg=sprintf("D221."._("Ne peut pas créer le répertoire %s"), $temp_dir);
                 record_log("D221".$msg);
                 throw new Exception($msg);
             }
@@ -337,14 +384,12 @@ class Document
     }
 
     /*!
-     * \brief Save the generated Document
+     * \brief insert the generated Document into the database, update the $this->d_id
+     * that is the PK of document. and load the PDF into the database.
      * \param $p_file is the generated file
-     *
-     *
      * \return 0 if no error otherwise 1
      */
-
-    function saveGenerated($p_file)
+    protected function saveGenerated($p_file)
     {
         // We save the generated file
         $doc=new Document($this->db);
@@ -676,8 +721,8 @@ class Document
      *  - [DATE_LIMIT_CALC]
      *  - [NUMBER]
      *  - [MY_NAME]
-     *  - [MY_CP]
-     *  - [MY_COMMUNE]
+     *  - [MY_POSTCODE] 
+     *  - [MY_CITY]
      *  - [MY_TVA]
      *  - [MY_STREET]
      *  - [MY_NUMBER]
@@ -721,22 +766,22 @@ class Document
         $p_tag=noalyss_str_replace('=', '', $p_tag);
         $r="Tag inconnu";
         static $aComment=NULL;
-        static $counter_comment=1; /* <! counter for the comment , skip the first one which is the descrition */
+        static $counter_comment=1; /*<! counter for the comment , skip the first one which is the descrition */
 
         static $aRelatedAction=NULL;
-        static $counter_related_action=0; /* <! counter for the related action */
+        static $counter_related_action=0; /*<! counter for the related action */
 
         static $aRelatedOperation=NULL;
-        static $counter_related_operation=0; /* <! counter for the related operation */
+        static $counter_related_operation=0; /*<! counter for the related operation */
 
         static $aFileAttached=NULL;
-        static $counter_file=0; /* <! counter for the file */
+        static $counter_file=0; /*<! counter for the file */
 
         static $aOtherCard=NULL;
-        static $counter_other_card=0; /* <! counter for the other card */
+        static $counter_other_card=0; /*<! counter for the other card */
 
         static $aTag=NULL;
-        static $counter_tag=0; /* <! counter for the tags */
+        static $counter_tag=0; /*<! counter for the tags */
 
         static $aParameterExtra=NULL; // Extra parameter for the company
         switch ($p_tag)
@@ -766,11 +811,13 @@ class Document
             case 'MY_NAME':
                 $r=$g_parameter->MY_NAME;
                 break;
+            case 'MY_POSTCODE':
             case 'MY_CP':
-                $r=$g_parameter->MY_CP;
+                $r=$g_parameter->MY_POSTCODE;
                 break;
+            case 'MY_CITY':
             case 'MY_COMMUNE':
-                $r=$g_parameter->MY_COMMUNE;
+                $r=$g_parameter->MY_CITY;
                 break;
             case 'MY_TVA':
                 $r=$g_parameter->MY_TVA;
@@ -781,14 +828,16 @@ class Document
             case 'MY_NUMBER':
                 $r=$g_parameter->MY_NUMBER;
                 break;
+            case 'MY_PHONE':
             case 'MY_TEL':
-                $r=$g_parameter->MY_TEL;
+                $r=$g_parameter->MY_PHONE;
                 break;
             case 'MY_FAX':
                 $r=$g_parameter->MY_FAX;
                 break;
+            case 'MY_COUNTRY':
             case 'MY_PAYS':
-                $r=$g_parameter->MY_PAYS;
+                $r=$g_parameter->MY_COUNTRY;
                 break;
             
             
@@ -802,7 +851,7 @@ class Document
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $p=$tiers->strAttribut(ATTR_DEF_ACCOUNT,0);
+                $p=$tiers->get_attribute(ATTR_DEF_ACCOUNT,0);
                 // if exercice is open with a report, 1 day is 1st exercice's day
                 if ( $g_parameter->MY_REPORT == 'Y') {
                     // var $user_exercice (int) current user exercice (from his preference)
@@ -828,13 +877,13 @@ class Document
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NAME,0);
+                $r=$tiers->get_attribute(ATTR_DEF_NAME,0);
                 break;
             case 'CUST_ADDR_1':
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_ADRESS,0);
+                $r=$tiers->get_attribute(ATTR_DEF_ADRESS,0);
 
                 break;
             case 'CUST_CP':
@@ -842,7 +891,7 @@ class Document
 
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_CP,0);
+                $r=$tiers->get_attribute(ATTR_DEF_POSTCODE,0);
 
                 break;
             case 'CUST_CITY':
@@ -850,7 +899,7 @@ class Document
 
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_CITY,0);
+                $r=$tiers->get_attribute(ATTR_DEF_CITY,0);
 
                 break;
 
@@ -859,7 +908,7 @@ class Document
 
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_PAYS,0);
+                $r=$tiers->get_attribute(ATTR_DEF_COUNTRY,0);
 
                 break;
             // Marchandise in $p_array['e_march*']
@@ -869,25 +918,25 @@ class Document
 
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NUMTVA,0);
+                $r=$tiers->get_attribute(ATTR_DEF_NUMTVA,0);
                 break;
             case 'CUST_NUM':
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NUMBER_CUSTOMER,0);
+                $r=$tiers->get_attribute(ATTR_DEF_NUMBER_CUSTOMER,0);
                 break;
             case 'CUST_BANQUE_NO':
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_BQ_NO,0);
+                $r=$tiers->get_attribute(ATTR_DEF_BQ_NO,0);
                 break;
             case 'CUST_BANQUE_NAME':
                 $tiers=new Fiche($this->db);
                 $qcode=isset($p_array['qcode_dest'])?$p_array['qcode_dest']:$p_array['e_client'];
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_BQ_NAME,0);
+                $r=$tiers->get_attribute(ATTR_DEF_BQ_NAME,0);
                 break;
             /* -------------------------------------------------------------------------------- */
             /* BENEFIT (fee notes */
@@ -900,7 +949,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NAME,0);
+                $r=$tiers->get_attribute(ATTR_DEF_NAME,0);
                 break;
             case 'BENEF_ADDR_1':
                 $tiers=new Fiche($this->db);
@@ -911,7 +960,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_ADRESS,0);
+                $r=$tiers->get_attribute(ATTR_DEF_ADRESS,0);
 
                 break;
             case 'BENEF_CP':
@@ -924,7 +973,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_CP,0);
+                $r=$tiers->get_attribute(ATTR_DEF_POSTCODE,0);
 
                 break;
             case 'BENEF_CITY':
@@ -937,7 +986,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_CITY,0);
+                $r=$tiers->get_attribute(ATTR_DEF_CITY,0);
 
                 break;
 
@@ -951,7 +1000,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_PAYS,0);
+                $r=$tiers->get_attribute(ATTR_DEF_COUNTRY,0);
 
                 break;
             // Marchandise in $p_array['e_march*']
@@ -966,7 +1015,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NUMTVA,0);
+                $r=$tiers->get_attribute(ATTR_DEF_NUMTVA,0);
                 break;
             case 'BENEF_NUM':
                 $tiers=new Fiche($this->db);
@@ -977,7 +1026,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_NUMBER_CUSTOMER,0);
+                $r=$tiers->get_attribute(ATTR_DEF_NUMBER_CUSTOMER,0);
                 break;
             case 'BENEF_BANQUE_NO':
                 $tiers=new Fiche($this->db);
@@ -988,7 +1037,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_BQ_NO,0);
+                $r=$tiers->get_attribute(ATTR_DEF_BQ_NO,0);
                 break;
             case 'BENEF_BANQUE_NAME':
                 $tiers=new Fiche($this->db);
@@ -999,7 +1048,7 @@ class Document
                     break;
                 }
                 $tiers->get_by_qcode($qcode, false);
-                $r=$tiers->strAttribut(ATTR_DEF_BQ_NAME,0);
+                $r=$tiers->get_attribute(ATTR_DEF_BQ_NAME,0);
                 break;
 
             // Marchandise in $p_array['e_march*']
@@ -1072,7 +1121,7 @@ class Document
                 {
                     $f=new Fiche($this->db);
                     $f->get_by_qcode($p_array["e_march".$this->counter], false);
-                    $r=$f->strAttribut(ATTR_DEF_NAME,0);
+                    $r=$f->get_attribute(ATTR_DEF_NAME,0);
                 }
                 else
                     $r="";
@@ -1094,7 +1143,7 @@ class Document
                         {
                             $f=new Fiche($this->db);
                             $f->get_by_qcode($p_array[$id], false);
-                            $r=$f->strAttribut(ATTR_DEF_NAME,0);
+                            $r=$f->get_attribute(ATTR_DEF_NAME,0);
                         }
                         else
                             $r="";
@@ -1115,7 +1164,7 @@ class Document
                     {
                         $f=new Fiche($this->db);
                         $f->get_by_qcode($p_array[$id], false);
-                        $r=$f->strAttribut(ATTR_DEF_STOCK,0);
+                        $r=$f->get_attribute(ATTR_DEF_STOCK,0);
                         $r=($r==NOTFOUND)?'':$r;
                     }
                 }
@@ -1769,24 +1818,6 @@ class Document
             $this->db->lo_unlink($d_lob);
     }
 
-    /*!
-     * \brief Move a document from the table document into the concerned row
-     *        the document is not copied : it is only a link
-     *
-     * \param $p_internal internal code
-     *
-     */
-
-    function moveDocumentPj($p_internal)
-    {
-        $sql="update jrn set jr_pj=$1,jr_pj_name=$2,jr_pj_type=$3 where jr_internal=$4";
-
-        $this->db->exec_sql($sql, array($this->d_lob, $this->d_filename, $this->d_mimetype, $p_internal));
-        // clean the table document
-        $sql='delete from document where d_id='.$this->d_id;
-        $this->db->exec_sql($sql);
-    }
-
     /**
      * @brief replace a special tag *TAGxxxx with the value from fiche_detail, the xxxx
      * is the ad_value
@@ -1837,7 +1868,7 @@ class Document
     }
 
     /**
-     * replace a pattern with a value in the buffer , handle the change for OOo type file and amount
+     * @brief replace a pattern with a value in the buffer , handle the change for OOo type file and amount
      * 
      * @param string $p_buffer
      * @param string $_pattern
@@ -1891,14 +1922,14 @@ class Document
     function export_file($p_destination_file)
     {
         if ($this->d_id==0) {
-            return;
+            return false;
         }
          $this->db->start();
         $ret=$this->db->exec_sql(
                 "select d_id,d_lob,d_filename,d_mimetype from document where d_id=$1", [$this->d_id]);
         if (Database::num_row($ret)==0)
         {
-            return;
+            return false;
         }
         $row=Database::fetch_array($ret, 0);
         //the document  is saved into file $tmp
@@ -1917,15 +1948,14 @@ class Document
     }
     /**
      * @brief transform the current Document to a PDF, returns the full path of the PDF from the TMP folder
+     * if the file IS a pdf , then export it and return the path to the file.
+     * 
+     * @todo replace use of unoconv with a PHP lib to convert into PDF
      * @return string full path to the PDF file
      */
     function transform2pdf()
     {
-        if (GENERATE_PDF == 'NO' ) {
-            \record_log(__FILE__."D1857 PDF not available");
-            throw new \Exception("Cannot not transform to PDF",5000);
-        }
-            // Extract from public.document
+        // Extract from public.document
         $dirname=tempnam($_ENV['TMP'],"document");
         
         if ( $dirname == false ) {
@@ -1935,6 +1965,16 @@ class Document
         umask(0);
         if ( mkdir($dirname) == false ) {
             throw new Exception("D1868.cannot create tmp directory",5000);
+        }
+        if ( $this->d_mimetype == "application/pdf") {
+            $destination_file=$dirname."/".$this->d_filename;
+            $this->export_file($destination_file);
+            return $dirname."/".$destination_file;
+            return;
+        }
+        if (GENERATE_PDF == 'NO' ) {
+            \record_log(__FILE__."D1857 PDF not available");
+            throw new \Exception("Cannot not transform to PDF",5000);
         }
         
         $destination_file=$dirname."/".$this->d_filename;

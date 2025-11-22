@@ -20,9 +20,8 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* * \file
- *
- *
+/** 
+ * \file
  * \brief show bank saldo
  *
  */
@@ -118,7 +117,7 @@ for ($i=0; $i<$nb_array; $i++)
         echo "<tr class=\"$odd\">";
         echo "<TD >".
         IButton::history_card($array[$i]->id,
-                $array[$i]->strAttribut(ATTR_DEF_QUICKCODE)).
+                $array[$i]->get_attribute(ATTR_DEF_QUICKCODE)).
         "</TD>";
 
         $saldo_rec=noalyss_bcsub($saldo_reconcilied['debit'],
@@ -126,7 +125,7 @@ for ($i=0; $i<$nb_array; $i++)
         $diff=noalyss_bcsub($saldo_not_reconcilied['debit'],
                 $saldo_not_reconcilied['credit']);
         echo "<TD >".
-        $array[$i]->strAttribut(ATTR_DEF_NAME).
+        $array[$i]->get_attribute(ATTR_DEF_NAME).
         "</TD>".
         td(h($array[$i]->ledger_name)).
         td(h($array[$i]->ledger_description)).

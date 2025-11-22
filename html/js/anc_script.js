@@ -31,7 +31,7 @@
  */
 function add_row(p_table, p_seq)
 {
-    var mytable = g(p_table).tBodies[0];
+    var mytable = id$(p_table).tBodies[0];
   if (!mytable)
     {
         return;
@@ -120,14 +120,14 @@ function anc_refresh_remain(p_table, p_seq)
         var remain = tot_line - tot_table;
 
         remain = Math.round(remain * 100) / 100;
-        $('remain' + p_table).innerHTML = remain;
+        id$('remain' + p_table).innerHTML = remain;
         if (remain == 0)
         {
-            $('remain' + p_table).style.color = "green"
+            id$('remain' + p_table).style.color = "green"
         }
         else
         {
-            $('remain' + p_table).style.color = "red"
+            id$('remain' + p_table).style.color = "red"
         }
     } catch (a)
     {
@@ -152,7 +152,7 @@ function verify_ca(div)
         while (idx < 50)
         {
             var table = div + 't' + idx;
-            if (g(table))
+            if (document.getElementById(table))
             {
                 var total_amount = 0;
                 // table is found compute the different val[]
@@ -182,12 +182,12 @@ function verify_ca(div)
                 var diff = amount*100 - total_amount*100;
                 if (Math.round(diff/100) != 0.0)
                 {
-                    g(table).style.backgroundColor = 'red';
+                    id$(table).style.backgroundColor = 'red';
                     amount_error++;
                 }
                 else
                 {
-                    g(table).style.backgroundColor = 'lightgreen';
+                    id$(table).style.backgroundColor = 'lightgreen';
 
                 }
                 idx++;
@@ -216,7 +216,7 @@ function verify_ca(div)
  */
 function search_ca(p_dossier, p_target, p_source)
 {
-    var pa_id = g(p_source).value;
+    var pa_id = id$(p_source).value;
     waiting_box();
     removeDiv('search_anc');
     var qs = "op=openancsearch&gDossier=" + p_dossier + "&ctl=searchanc";
@@ -230,14 +230,14 @@ function search_ca(p_dossier, p_target, p_source)
                 onSuccess: function(req) {
                     try {
                         remove_waiting_box();
-                        var pos = fixed_position(250, 150) + ";width:30%;height:50%";
+                        var pos = fixed_position(250, 150) + ";width:30%;height:50%;z-index:"+get_next_layer();
                         add_div({
                             id: "searchanc",
                             drag: 1,
                             cssclass: "inner_box",
                             style: pos
                         });
-                        $('searchanc').innerHTML = req.responseText;
+                        id$('searchanc').innerHTML = req.responseText;
 
                     } catch (e) {
                         alert_box(e.message);
@@ -251,7 +251,7 @@ function search_anc_form(obj)
 {
     var qs = "op=resultancsearch&ctl=searchanc&";
     var name = obj.id;
-    qs += $(name).serialize(false);
+    qs += id$(name).serialize(false);
     waiting_box();
     var action = new Ajax.Request('ajax_misc.php',
             {
@@ -261,7 +261,7 @@ function search_anc_form(obj)
                 onSuccess: function(req) {
                     try {
                         remove_waiting_box();
-                        $('searchanc').innerHTML = req.responseText;
+                        id$('searchanc').innerHTML = req.responseText;
                         req.responseText.evalScripts();
 
                     } catch (e) {
@@ -281,16 +281,16 @@ function caod_checkTotal()
     }// Ajouter getElementById par document.all[str]
     var total_deb = 0.0;
     var total_cred = 0.0;
-    var nb_item = g('nbrow').value;
+    var nb_item = id$('nbrow').value;
 
     for (var i = 0; i < nb_item; i++)
     {
-        var doc_amount = g("pamount" + i);
+        var doc_amount = id$("pamount" + i);
         if (!doc_amount)
         {
             return;
         }
-        var side = g("pdeb" + i);
+        var side = id$("pdeb" + i);
         if (!side)
         {
             return;
@@ -316,22 +316,22 @@ function caod_checkTotal()
 
     var r_total_cred = Math.round(total_cred * 100) / 100;
     var r_total_deb = Math.round(total_deb * 100) / 100;
-    g('totalDeb').innerHTML = r_total_deb;
-    g('totalCred').innerHTML = r_total_cred;
+    id$('totalDeb').innerHTML = r_total_deb;
+    id$('totalCred').innerHTML = r_total_cred;
 
     if (r_total_deb != r_total_cred)
     {
-        g("totalDiff").style.color = "red";
-        g("totalDiff").style.fontWeight = "bold";
-        g("totalDiff").innerHTML = "Différence";
+        id$("totalDiff").style.color = "red";
+        id$("totalDiff").style.fontWeight = "bold";
+        id$("totalDiff").innerHTML = "Différence";
         var diff = total_deb - total_cred;
         diff = Math.round(diff * 100) / 100;
-        g("totalDiff").innerHTML = diff;
+        id$("totalDiff").innerHTML = diff;
 
     }
     else
     {
-        g("totalDiff").innerHTML = "0.0";
+        id$("totalDiff").innerHTML = "0.0";
     }
 }
 
@@ -352,7 +352,7 @@ function anc_remove_operation(p_dossier, p_oa_group)
             var queryString = encodeJSON(obj);
             var e = new Ajax.Request("ajax_misc.php",
                     {method: 'get', parameters: queryString,onSuccess:function req() {
-                            $("tr"+p_oa_group).remove();
+                            id$("tr"+p_oa_group).remove();
                     }
                     
              });
@@ -370,12 +370,12 @@ function anc_remove_operation(p_dossier, p_oa_group)
 function anc_add_row(tableid)
 {
     var style = 'class="input_text"';
-    var mytable = g(tableid).tBodies[0];
+    var mytable = id$(tableid).tBodies[0];
     var nNumberRow = mytable.rows.length;
     var oRow = mytable.insertRow(nNumberRow);
     var rowToCopy = mytable.rows[1];
     var nNumberCell = rowToCopy.cells.length;
-    var nb = g("nbrow");
+    var nb = id$("nbrow");
     var oNewRow = mytable.insertRow(nNumberRow);
     for (var e = 0; e < nNumberCell; e++)
     {
@@ -388,7 +388,7 @@ function anc_add_row(tableid)
         newCell.innerHTML = new_tt;
         new_tt.evalScripts();
     }
-    $("pamount" + nb.value).value = "0";
+    id$("pamount" + nb.value).value = "0";
     nb.value++;
 }
 /**
@@ -438,7 +438,7 @@ function anc_key_compute(p_dossier, p_table, p_amount, p_key_id)
 
                             var code_html = getNodeText(html[0]); // Firefox ne prend que les 4096 car.
                             code_html = unescape_xml(code_html);
-                            $(name_ctl).innerHTML = code_html;
+                            id$(name_ctl).innerHTML = code_html;
                             code_html.evalScripts();
                             removeDiv('div_anc_key_choice');
                         } catch (e)
@@ -489,9 +489,9 @@ function anc_key_choice(p_dossier, p_table, p_amount,p_ledger)
 
                             var code_html = getNodeText(html[0]); // Firefox ne prend que les 4096 car.
                             code_html = unescape_xml(code_html);
-                            var position=fixed_position(50,120);
+                            var position=fixed_position(50,120)+";z-index:"+get_next_layer();
                             add_div({id: name_ctl, cssclass: 'inner_box', style: position, drag: 1});
-                            $(name_ctl).innerHTML = code_html;
+                            id$(name_ctl).innerHTML = code_html;
                         } catch (e)
                         {
                             error_message(e.message);
@@ -540,7 +540,7 @@ function anc_key_clean(p_dossier, p_table, p_amount,p_ledger,p_jrnx_id,p_sequenc
 
                             var code_html = getNodeText(html[0]); // Firefox ne prend que les 4096 car.
                             code_html = unescape_xml(code_html);
-                            $(p_table+"t"+p_sequence).innerHTML=code_html;
+                            id$(p_table+"t"+p_sequence).innerHTML=code_html;
                         } catch (e)
                         {
                             error_message(e.message);
@@ -561,7 +561,7 @@ function anc_key_clean(p_dossier, p_table, p_amount,p_ledger,p_jrnx_id,p_sequenc
  */
 function add_row_key(p_table)
 {
-    var mytable = g(p_table).tBodies[0];
+    var mytable = id$(p_table).tBodies[0];
     if (!mytable)
     {
         return;
@@ -595,7 +595,7 @@ function add_row_key(p_table)
            cell.innerHTML = txt;
         }
     }
-    $('total_key').innerHTML="?";
+    id$('total_key').innerHTML="?";
 }
 function anc_key_compute_table()
 {
@@ -615,7 +615,7 @@ function anc_key_compute_table()
         }
         tot=tot+Math.round(value*100)/100;
     }
-    $('total_key').innerHTML=Math.round(tot*100)/100;
+    id$('total_key').innerHTML=Math.round(tot*100)/100;
 
 }
 
@@ -626,8 +626,8 @@ function anc_detail_op(p_oa_group,gDossier) {
                         method:"get",
                         parameters:{"gDossier":gDossier,"op":"anc_detail_op","oa_group":p_oa_group},
                         onSuccess:function (req) {
-                            add_div({"id":"anc_detail_op_div","cssclass":"inner_box","style":"position:fixed;top:5%"});
-                            $('anc_detail_op_div').update(req.responseText);
+                            add_div({"id":"anc_detail_op_div","cssclass":"inner_box","style":"position:fixed;top:5%;z-index:"+get_next_layer()});
+                            id$('anc_detail_op_div').update(req.responseText);
                             remove_waiting_box();
                         }
                     });

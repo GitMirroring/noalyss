@@ -37,7 +37,7 @@ class Print_Ledger_Detail extends Print_Ledger
     public function __construct (Database $p_cn , Acc_Ledger $ledger,$p_from,$p_to)
     {
 
-        parent::__construct($p_cn,'L', 'mm', 'A4',$ledger,$p_from,$p_to,'all');
+        parent::__construct($p_cn,'P', 'mm', 'A4',$ledger,$p_from,$p_to,'all');
         
     }
 
@@ -79,12 +79,12 @@ class Print_Ledger_Detail extends Print_Ledger
         $array=$this->get_ledger()->get_operation($this->get_from(),$this->get_to());
 
         $this->SetFont('DejaVu','BI',7);
-        $this->write_cell(215,7,'report Débit',0,0,'R');
+        $this->write_cell(155,7,'report Débit',0,0,'R');
         $this->write_cell(30,7,nbm($rap_deb),0,0,'R');
         $this->line_new(4);
-        $this->write_cell(215,7,'report Crédit',0,0,'R');
+        $this->write_cell(155,7,'report Crédit',0,0,'R');
         $this->write_cell(30,7,nbm($rap_cred),0,0,'R');
-        $this->line_new(4);
+        $this->line_new(10);
 
         // print all operation
         for ($i=0;$i< count($array);$i++)
@@ -92,13 +92,14 @@ class Print_Ledger_Detail extends Print_Ledger
             $this->SetFont('DejaVuCond','B',7);
             $row=$array[$i];
 
-            $this->LongLine(20,7,$row['pj']);
-            $this->write_cell(15,7,$row['date_fmt']);
-            $this->write_cell(20,7,$row['internal']);
-            $this->LongLine(170,7,$row['comment']);
-            $this->write_cell(20,7,nbm($row['montant']),0,0,'R');
+            $this->write_multi(20, 4,$row['pj'],'T');
+            $this->write_cell(15,4,$row['date_fmt'],'T');
+            $this->write_cell(20,4,$row['internal'],'T');
+            $this->write_multi(100,4,$row['comment'],'T');
+            $this->write_cell(40,4,nbm($row['montant']),'T',0,'R');
+            
 
-            $this->line_new();
+            $this->line_new(7);
             // get the entries
             $aEntry=$this->cn->get_array("select j_id,j_poste,j_qcode,j_montant,j_debit, j_text,".
 										 " case when j_text='' or j_text is null then pcm_lib else j_text end as desc,".
@@ -126,7 +127,7 @@ class Print_Ledger_Detail extends Print_Ledger
                 }
                 else
                     $name=$entry['desc'];
-                $this->write_cell(150,6,$name,0,0,'L');
+                $this->write_cell(100,6,$name,0,0,'L');
 
                 // print amount
                 $str_amount=nbm($entry['j_montant']);
@@ -134,6 +135,7 @@ class Print_Ledger_Detail extends Print_Ledger
                 {
                     $this->write_cell(20,6,$str_amount,0,0,'R');
                     $this->write_cell(20,6,'',0,0,'R');
+                    
                 }
                 else
                 {
@@ -142,6 +144,7 @@ class Print_Ledger_Detail extends Print_Ledger
                 }
                 $this->line_new(4);
             }
+            $this->line_new(3);
         }
     }
 }

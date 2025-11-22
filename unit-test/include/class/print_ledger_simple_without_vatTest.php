@@ -33,7 +33,7 @@ class Print_Ledger_Simple_Without_VatTest extends TestCase
      * @var 
      */
     protected $object;
- private $from,$to;
+    private $from,$to;
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.

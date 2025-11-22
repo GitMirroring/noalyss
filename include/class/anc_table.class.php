@@ -31,6 +31,10 @@
 
 class Anc_Table extends Anc_Acc_Link
 {
+    public $card_poste;
+    private $aheader;
+    private $sql;
+    private $arow;
     function __construct($p_cn)
     {
         parent::__construct($p_cn);

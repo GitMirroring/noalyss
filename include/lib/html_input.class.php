@@ -892,7 +892,7 @@ class HtmlInput
      * @return type
      */
     static function title_box($p_name, $p_div, $p_mod="close", $p_js="",
-            $p_draggable="n",$p_enlarge='n',$raw="")
+            $p_draggable="n",$p_enlarge='n',$raw="",$refresh='')
     {
         $p_div=strip_tags($p_div);
         $r='<div class="bxbutton">';
@@ -904,6 +904,9 @@ class HtmlInput
         }
         if ( $p_enlarge=='y') {
             $r.=Icon_Action::full_size($p_div);
+        }
+        if ( $refresh != '') {
+            $r.=Icon_Action::refresh(uniqid(), $refresh);
         }
         if ($p_mod=='close')
         {
@@ -1032,6 +1035,30 @@ class HtmlInput
      * @param string $p_col , column to search example 0,1,2
      * @param int $start_row row to always keep (header)
      * @param string $p_name name of the input field
+     * @param string $domid domid containing the second filter, it could be an HIDDEN, TEXT, SELECT field
+     * @return string HTML
+     */
+    static function filter_table_DOM($p_table_id, $p_col, $start_row, $p_name
+            ,$domid)
+    {
+        
+        $r="
+			<span>
+                        <span  class=\"icon\"  >&#xf50d;</span>
+			<input id=\"lk_".$p_table_id."\" name=\"$p_name\" autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row ,'$domid')\" type=\"text\" placeholder=\""._("Filtre rapide")."\">
+			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row,'$domid' );\" value=\"X\">
+			</span>
+			";
+        $r.=' <span class="notice" style="display:none" id="info_'.$p_table_id.'"></span>';
+        return $r;
+    }
+    
+    /**
+     * @brief  filter the rows in a table and keep the colored row in alternance
+     * @param dom_id $p_table_id table
+     * @param string $p_col , column to search example 0,1,2
+     * @param int $start_row row to always keep (header)
+     * @param string $p_name name of the input field
      * @param string $p_old_value search value sent by $_GET (or $_REQUEST)
      * @return string HTML
      */
@@ -1045,7 +1072,7 @@ class HtmlInput
 			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row );\" value=\"X\">
 			</span>
 			";
-        $r.=' <span class="notice" id="info_'.$p_table_id.'"></span>';
+        $r.=' <span class="notice" style="display:none" id="info_'.$p_table_id.'"></span>';
         return $r;
     }
     /**
@@ -1065,7 +1092,7 @@ class HtmlInput
 			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row );\" value=\"X\">
 			</span>
 			";
-        $r.=' <span class="notice" id="info_'.$p_table_id.'"></span>';
+        $r.=' <span class="notice" style="display:none" id="info_'.$p_table_id.'"></span>';
         return $r;
     }
     /**
@@ -1167,7 +1194,7 @@ class HtmlInput
      */
     static function show_receipt_document($p_jr_id, $p_name="")
     {
-        global $cn;
+        $cn=\Dossier::connect();
         $image=$p_name;
 
         // Check the jr_id has a receipt document

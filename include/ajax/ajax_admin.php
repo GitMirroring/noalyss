@@ -68,7 +68,7 @@ if ($op=='folder_add') // operation
     }
     catch (Exception $exc)
     {
-        error_log($exc->getTraceAsString());
+        record_log($exc);
         $content=_('Erreur paramètre');
         $status="NOK";
         return;
@@ -104,7 +104,7 @@ if ($op=='folder_remove') // operation
     }
     catch (Exception $exc)
     {
-        error_log($exc->getTraceAsString());
+        record_log($exc);
         $content=_('Erreur paramètre');
         $status="NOK";
     }
@@ -166,7 +166,7 @@ if ($op=='folder_display') // operation
     }
     catch (Exception $exc)
     {
-        error_log($exc->getTraceAsString());
+        record_log($exc);
         $content=_('Erreur paramètre');
         $status="NOK";
     }
@@ -200,7 +200,7 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
     }
     catch (Exception $exc)
     {
-        error_log($exc->getTraceAsString());
+        record_log($exc);
         $content=_('Erreur paramètre');
         $status="NOK";
         //----------------------------------------------------------------
@@ -391,9 +391,10 @@ if ($op=='upgradeCore')
         $progress->set_value(100);
 
         $url=sprintf('<a href="%s"> install.php</a>', NOALYSS_URL."/install.php");
-        printf(_("Afin de terminer l'installation aller sur %s , à la fin de la procédure , demandez à effacer le fichier install.php"),
+        printf(_("Afin de terminer l'installation, aller sur %s. A la fin de la procédure de mise à jour, demander à effacer le fichier install.php"),
                 $url);
     } catch (Exception $ex ) {
+        record_log($ex);
         echo '<p class="notice">';
         echo $ex->getMessage();
         echo '</p>';

@@ -25,7 +25,7 @@
 
 global $version_noalyss;
 // version 
-define('NOALYSS_VERSION', 9316 );
+define('NOALYSS_VERSION', 10000 );
 
 // Database schema version 
 define("DBVERSION", 203);
@@ -154,7 +154,6 @@ define('MAX_ACTION_SHOW', 20);
 
 if (DEBUGNOALYSS == 0) {
     // PRODUCTION : nothing is displaid , report only errors and warning
-    // Rapporte les erreurs d'exécution de script
     error_reporting(E_ERROR | E_WARNING);
     ini_set("display_errors", 0);
     ini_set("html_errors", 0);
@@ -169,6 +168,8 @@ if (DEBUGNOALYSS == 0) {
     ini_set("html_errors", 1);
     ini_set('log_errors', 1);
     ini_set('log_errors_max_len', 0);
+    ini_set('xdebug.show_exception_trace', false);
+
 } elseif (DEBUGNOALYSS == 2) {
     // like level 1 plus extra  info (filename, ...)
     error_reporting(2147483647);
@@ -177,7 +178,7 @@ if (DEBUGNOALYSS == 0) {
     ini_set("html_errors", 1);
     ini_set('log_errors', 1);
     ini_set('log_errors_max_len', 0);
-
+    ini_set('xdebug.show_exception_trace', true);
 
 }
 // Erreur
@@ -207,6 +208,7 @@ define("OPEN", 1);
 define("CLOSED", 0);
 define("NOTCENTRALIZED", 3);
 define("ALL", 4);
+define("INVOICE_STD", -2);
 
 // Pour les ShowMenuComptaLeft
 define("MENU_FACT", 1);
@@ -223,13 +225,13 @@ define("ATTR_DEF_BQ_NO", 3);
 define("ATTR_DEF_BQ_NAME", 4);
 define("ATTR_DEF_PRIX_ACHAT", 7);
 define("ATTR_DEF_PRIX_VENTE", 6);
-define("ATTR_DEF_TVA", 2);
-define("ATTR_DEF_NUMTVA", 13);
+define("ATTR_DEF_TVA", 2); // usable VAT for goods and services
+define("ATTR_DEF_NUMTVA", 13); // number of VAT 
 define("ATTR_DEF_ADRESS", 14);
-define("ATTR_DEF_CP", 15);
-define("ATTR_DEF_PAYS", 16);
+define("ATTR_DEF_POSTCODE", 15);
+define("ATTR_DEF_COUNTRY", 16);
 define("ATTR_DEF_STOCK", 19);
-define("ATTR_DEF_TEL", 17);
+define("ATTR_DEF_PHONE", 17);
 define("ATTR_DEF_EMAIL", 18);
 define("ATTR_DEF_CITY", 24);
 define("ATTR_DEF_COMPANY", 25);
@@ -247,7 +249,12 @@ define('ATTR_DEF_ACCOUNT_ND_TVA', 50);
 define('ATTR_DEF_ACCOUNT_ND_TVA_ND', 51);
 define('ATTR_DEF_ACCOUNT_ND_PERSO', 52);
 define('ATTR_DEF_ACCOUNT_ND', 53);
-define('ATTR_DEF_ACTIF', 54);
+define('ATTR_DEF_ENABLE', 54);
+define('ATTR_DEF_SIREN', 55);
+define('ATTR_DEF_SIRET', 56);
+define('ATTR_DEF_COUNTRY_CODE', 57);
+define('ATTR_DEF_PEPPOLID', 58);
+define('ATTR_DEF_QUANTITY_TYPE', 59);
 
 define("FICHE_TYPE_CLIENT", 9);
 define("FICHE_TYPE_VENTE", 1);
@@ -350,6 +357,7 @@ define('EXC_PARAM_TYPE', 1006);
 define('EXC_DUPLICATE', 1200);
 define('EXC_INVALID', 1400);
 define('EXC_FORBIDDEN', 1500);
+define('EXC_DATA_SQL', 2001);
 // exception when balance is incorrect when saving an operation
 define('EXC_BALANCE', 1501);
 define("UNPINDG", "&#xf047;");
@@ -361,6 +369,7 @@ define("ARROWUP","&#8679;");
 // Url of NOALYSS (http://...) 
 // 
 if (!defined("NOALYSS_URL")) {
+    if ( isset ( $_SERVER)) {
     $protocol = "http";
     if (isset ($_SERVER['REQUEST_SCHEME'])) {
         $protocol = $_SERVER['REQUEST_SCHEME'];
@@ -370,13 +379,19 @@ if (!defined("NOALYSS_URL")) {
         ":" . $_SERVER['SERVER_PORT'] .
         dirname($_SERVER['PHP_SELF']);
     define("NOALYSS_URL", $base);
+    }else {
+        define("NOALYSS_URL","command-line");
+    }
 }
 if (!defined("DEFAULT_SERVER_VIDEO_CONF")) {
     define("DEFAULT_SERVER_VIDEO_CONF", "https://www.free-solutions.org/");
 }
 
 define ("VATCHECK_URL","https://ec.europa.eu/taxation_customs/vies/rest-api/");
-    
+
+// define email setting name for NOALYSS
+define ("MAIL_SETTING_NOALYSS","noalyss");
+
 /**
  * @brief load automatically class
  *
@@ -393,6 +408,7 @@ function noalyss_class_autoloader($class)
     }
     
     $aClass = array(
+        "trait_card"=>"class/trait_card.php",
         "database" => "class/database.class.php",
         "acc_detail" => "class/acc_operation.class.php",
         "acc_sold" => "class/acc_operation.class.php",
@@ -415,7 +431,20 @@ function noalyss_class_autoloader($class)
         'noalyss\file_cache'=>"lib/file_cache.class.php",
         "pdfland"=>"class/pdf_land.class.php",
         "noalyss\widget\widget"=>"widget/widget.php",
-        "noalyss\otp"=>"lib/otp.class.php"
+        "noalyss\otp"=>"lib/otp.class.php",
+        'noalyss\xmldocument\xmlinvoice'=>'XMLDocument/xmlinvoice.class.php',
+        'noalyss\xmldocument\facturx'=>'XMLDocument/facturx.class.php',
+        'noalyss\xmldocument\invoiceubl21'=>'XMLDocument/invoiceubl21.class.php',
+        'noalyss\xmldocument\error_message'=>'XMLDocument/error_message.class.php',
+        "noalyss\invoice_pdf"=>"class/invoice_pdf.class.php",
+        'noalyss\xmldocument\xmlinvoice_reader'=>'XMLDocument/xmlinvoice_reader.class.php',
+        'noalyss\mail_parameter'=>'lib/mail_parameter.class.php',
+        'noalyss\smtpmail'=>'lib/smtpmail.class.php',
+        'noalyss\iban_number'=>'lib/iban_number.class.php',
+        'noalyss\xmldocument\document_reference'=>'XMLDocument/document_reference_type.class.php',
+        'noalyss\xmldocument\binary_object'=>'XMLDocument/document_reference_type.class.php',
+        'noalyss\xmldocument\xml_reader'=>'XMLDocument/xml_reader.class.php',
+        "noalyss\xmldocument\xmlcreditnote_reader"=>"XMLDocument/xmlcreditnote_reader.class.php"
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];

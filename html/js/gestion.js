@@ -338,14 +338,19 @@ function action_save_short()
          $('action_add_frm')['title_event'].parentNode.className="";
          $('action_add_frm')['type_event'].parentNode.className="";
          $('action_add_frm')['hour_event'].parentNode.className="";
+         $('action_add_frm')['date_event_action_short'].removeClassName("input-error");
+         $('action_add_frm')['title_event'].removeClassName("input-error");
+         $('action_add_frm')['hour_event'].removeClassName("input-error");
 
         if ( $('action_add_frm')['date_event_action_short'].value.trim() == '') {
             $('action_add_frm')['date_event_action_short'].parentNode.className="notice";
+            $('action_add_frm')['date_event_action_short'].addClassName("input-error");
             return false;
         }
 
         if ( $('action_add_frm')['title_event'].value.trim()=="") {
             $('action_add_frm')['title_event'].parentNode.className="notice";
+            $('action_add_frm')['title_event'].addClassName("input-error");
             return false;
         }
         var str_hour=new String($('action_add_frm')['hour_event'].value);
@@ -356,6 +361,7 @@ function action_save_short()
              str_hour.search(/^[0-9]{2}.[0-9]{2}$/) == -1)
         {
             $('action_add_frm')['hour_event'].parentNode.className="notice";
+            $('action_add_frm')['hour_event'].addClassName("input-error");
             alert_box('HH:MM  or HH.MM');
             return false;
         }
@@ -363,6 +369,7 @@ function action_save_short()
         if ( $('action_add_frm')['type_event'].options[$('action_add_frm')['type_event'].selectedIndex].value == -1 )
         {
             $('action_add_frm')['type_event'].parentNode.className="notice";
+            $('action_add_frm')['type_event'].addClassName("input-error");
             return false;
         }
         var form=$('action_add_frm').serialize();

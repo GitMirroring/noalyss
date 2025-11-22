@@ -45,11 +45,11 @@ function search_accounting(obj)
             sx=document.body.scrollTop+60;
 	}
 
-	var div_style="top:"+sx+"px";
+	var div_style="top:"+sx+"px"+';z-index:'+get_next_layer();
 	removeDiv('search_account');
 	add_div({id:'search_account',cssclass:'inner_box',html:loading(),style:div_style,drag:false});
 
-    var dossier=$('gDossier').value;
+    var dossier=id$('gDossier').value;
 
     var queryString="gDossier="+dossier;
 
@@ -61,8 +61,8 @@ function search_accounting(obj)
         {
             queryString+="&j="+obj.jrn;
         }else {
-            if ($("p_jrn")) {
-                queryString+="&j="+$("p_jrn").value;
+            if (document.getElementById("p_jrn")) {
+                queryString+="&j="+id$("p_jrn").value;
             }
         }
         if ( obj.account)
@@ -97,10 +97,10 @@ function search_accounting(obj)
             }
             else
             {
-                if ($(obj).account)
+                if (id$(obj).account)
                 {
-                    var e=$(obj).account;
-                    var str_account=$(e).value;
+                    var e=id$(obj).account;
+                    var str_account=id$(e).value;
                     queryString+="&q="+str_account;
                 }
             }
@@ -130,7 +130,7 @@ function search_accounting(obj)
  */
 function search_get_poste(obj)
 {
-    var dossier=$('gDossier').value;
+    var dossier=id$('gDossier').value;
     var queryString="gDossier="+dossier;
 
     queryString+="&op=account";
@@ -169,7 +169,7 @@ function search_get_poste(obj)
         queryString+="&bracket";
     }
 
-    $('asearch').innerHTML=loading();
+    id$('asearch').innerHTML=loading();
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
                                   method:'get',
@@ -201,7 +201,7 @@ function result_poste_search(req)
         var nodeXml=html[0];
         var code_html=getNodeText(nodeXml);
         code_html=unescape_xml(code_html);
-        $('search_account').innerHTML=code_html;
+        id$('search_account').innerHTML=code_html;
     }
     catch (e)
     {
@@ -234,7 +234,7 @@ function errorPoste()
 function display_all_card(p_dossier,p_accounting)
 {
     waiting_box();
-    var div_dest=add_div({id:'info_card_accounting',cssclass:"inner_box",style:fixed_position(100,250)+";width:auto"});
+    var div_dest=add_div({id:'info_card_accounting',cssclass:"inner_box",style:fixed_position(100,250)+";width:auto;z-index:"+get_next_layer()});
     var action=new Ajax.Request ( 'ajax_misc.php',
                                       {
                                         method:'get',

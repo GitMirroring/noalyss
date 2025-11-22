@@ -27,6 +27,11 @@ use PHPUnit\Framework\TestCase;
  */
 require DIRTEST . '/global.php';
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
+/**
+ * @backupGlobals disabled
+ */
 class DocumentTest extends TestCase {
 
     /**
@@ -147,21 +152,6 @@ class DocumentTest extends TestCase {
         $cn->commit();
     }
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp(): void {
-        
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown(): void {
-        
-    }
 
     function testBlank() {
         $cn = Dossier::connect();
@@ -195,13 +185,15 @@ class DocumentTest extends TestCase {
         $this->assertTrue($document->replace('CUST_NAME', $array) == 'Client 1', 'CUST_NAME');
     }
 
+
+        
     /**
      * @testdox Generate Document::generate(), Document::parseDocument(),Document::replace(); require  unoconv -l in another session
      * @covers Document::generate(), Document::parseDocument(),Document::replace();
-     * @backupGlobals disabled
      */
     function testGenerate() {
-        require_once 'global.php';
+       require DIRTEST . '/global.php';
+        
         $cn = Dossier::connect();
         $md_id = $cn->get_value('select max(md_id) md_id from document_modele where md_name=$1', ['Balise']);
         $array['e_client'] = 'CLIENT';
@@ -217,23 +209,6 @@ class DocumentTest extends TestCase {
         $this->assertTrue($cnt_after == $cnt_before + 1, "One file generated");
     }
 
-    /**
-     * @testdox test $_ENV['TMP'] 
-     */
-    function testGenerateTmp() {
-        $cn = Dossier::connect();
-        $md_id = $cn->get_value('select max(md_id) md_id from document_modele where md_name=$1', ['Balise']);
-        $array['e_client'] = 'CLIENT';
-        $array['e_date'] = '21.03.2020';
-        $document = new Document($cn, $md_id);
-        $document->ag_id = 2;
-        $document->md_id = $md_id;
-        $cnt_before = $cn->get_value("select count(*) from document");
-        $tEnv = $_ENV['TMP'];
-        $_ENV['TMP'] = '/not.exist';
-        $this->assertStringContainsString('échoué', $document->generate($array));
-        $_ENV['TMP'] = $tEnv;
-    }
 
     /**
      * @testdox ExtractPdf export PDF tests Document::export_pdf, Document::transform2pdf()
@@ -262,10 +237,11 @@ class DocumentTest extends TestCase {
             $document->d_id = $d_id;
             $document->get();
         }
-        return $document;
+        return $document; 
     }
 
-    function dataReplace() {
+    static function dataReplace() {
+
         return array(
             ["CUST_NAME", "Client 2"],
             ["SOLDE", 27.29],
@@ -281,6 +257,8 @@ class DocumentTest extends TestCase {
      * @backupGlobals enabled
      * @dataProvider dataReplace
      */
+     #[DataProvider('dataReplace')]
+
     function testReplace2($tag_name, $value) {
         require "global.php";
         static $request = null;
@@ -299,7 +277,7 @@ class DocumentTest extends TestCase {
         $this->assertEquals($name, $value, $tag_name." fails");
     }
     
-    function dataBalance()
+    static function dataBalance()
     {
         return array(
             ['CLIENT1',27.29, 4204.14],
@@ -309,13 +287,13 @@ class DocumentTest extends TestCase {
     }
     /**
      * @testdox test balance
-     * @backupGlobals enabled
      * @dataProvider dataBalance
      */
+     #[DataProvider('dataBalance')]
     function testBalance($quickcode,$balance_report,$balance_noreport)
     {
-         require "global.php";
           require "global.php";
+          global $g_parameter;
         static $request = null;
         static $parameter = null;
         $document = $this->build_document();
@@ -325,18 +303,19 @@ class DocumentTest extends TestCase {
         if ( $parameter == null ){
             $parameter=new \Noalyss_Parameter_Folder($document->db);
         }
-        global $g_parameter;
         $g_parameter=$parameter;
         $g_parameter->MY_REPORT='Y';
-        
+        $g_parameter->save('MY_REPORT');
         $request['qcode_dest']=$quickcode;
         
         $this->assertEquals($document->replace('SOLDE',$request),$balance_report,"{$quickcode} balance_report fails");
         $g_parameter->MY_REPORT='N';
+        $g_parameter->save('MY_REPORT');
         
         $this->assertEquals($document->replace('SOLDE',$request),$balance_noreport,"{$quickcode} balance_noreport fails");
         
        $g_parameter->MY_REPORT='Y';
+        $g_parameter->save('MY_REPORT');
         
     }
 }

@@ -56,7 +56,7 @@ try
 catch (Exception $exc)
 {
     echo $exc->getMessage();
-    error_log($exc->getTraceAsString());
+    record_log($exc);
     throw $exc;
 }
 
@@ -229,7 +229,7 @@ if ($get_option=="L" && ($jrn_type=='ODS'||$jrn_type=='FIN'||$jrn_type=='GL') )
     {
         $tiers_id=$Jrn->get_tiers_id($line['jrn_def_type'], $line['jr_id']);
         $fiche_tiers=new Fiche($cn, $tiers_id);
-        $tiers=$fiche_tiers->strAttribut(ATTR_DEF_NAME, 0)." ".$fiche_tiers->strAttribut(ATTR_DEF_FIRST_NAME,
+        $tiers=$fiche_tiers->get_attribute(ATTR_DEF_NAME, 0)." ".$fiche_tiers->get_attribute(ATTR_DEF_FIRST_NAME,
                         0);
 
         $export->add($line['num']);

@@ -39,10 +39,10 @@ if  ( isset ($_GET['fd_id']))
 {
     $fiche_def=new Fiche_Def($cn,$http->get('fd_id',"number"));
     $fiche=new Fiche($cn);
-    $e=$fiche_def->get_by_type();
+    $e=$fiche_def->get_by_type(inactive: $http->request('inactive'));
     $o=0;
     //  Heading
-    $fiche_def->GetAttribut();
+    $fiche_def->load_attribute();
     $title=array();
     foreach ($fiche_def->attribut as $attribut)
     {
@@ -56,7 +56,7 @@ if  ( isset ($_GET['fd_id']))
       {
 	$detail=new Fiche($cn,$fiche['f_id']);
 
-	$detail->getAttribut();
+	$detail->load_attribute();
 
         foreach ( $detail->attribut as $dattribut )
         {

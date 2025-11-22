@@ -23,7 +23,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @backupGlobals enabled
  * @coversDefaultClass \Acc_Payment
@@ -84,7 +84,7 @@ class Acc_TVATest extends TestCase
         }
     }
 
-    function dataCheck()  {
+    static function dataCheck()  {
          return array(
              ['abc',true]
              ,['13A',true]
@@ -100,6 +100,7 @@ class Acc_TVATest extends TestCase
      * @dataProvider dataCheck
      * @return void
      */
+     #[DataProvider('dataCheck')]
     function testCheck($tva_code,$result)
     {
         $cn=\Dossier::connect();
@@ -109,15 +110,61 @@ class Acc_TVATest extends TestCase
         $vtva_rate->tva_sale="451";
         $vtva_rate->tva_both_side="0";
         $vtva_rate->tva_rate=0.21;
-
+        $vtva_rate->tva_peppol_code='S';
         $tva_rate_mtable=new Tva_Rate_MTable($vtva_rate);
         $tva_rate_mtable->setPreviousId(0);
 
         $check = $tva_rate_mtable->check();
+        
         $this->assertTrue($result==$check," erreur pour $tva_code ");
-        $this->display_error($tva_rate_mtable);
+        if ( $result != $check)
+        {
+            print "Error for $peppopl_code\n";
+            print_r($tva_rate_mtable->aerror);
+            $this->display_error($tva_rate_mtable);
+        }
     }
-    function dataBuild()  {
+    static function dataCheckVatex()  {
+         return array(
+             ['S',true,null]
+             ,['Z',true,null]
+             ,['A',false,""]
+             ,['A',true,"XX"]
+         );
+    }
+    /**
+     * @brief VATEX Mandatory of tva_peppol_code not in S or Z
+     * @testdox VATEX Mandatory if tva_peppol_code not S or Z
+     * @param type $tva_code
+     * @param type $result
+     */
+     #[DataProvider('dataCheckVatex')]
+    function testCheckVatex($peppopl_code,$result,$vatex_code)
+    {
+        $cn=\Dossier::connect();
+        $vtva_rate=new V_Tva_rate_SQL($cn,1);
+        
+        $vtva_rate->tva_label="Test";
+        $vtva_rate->tva_sale="451";
+        $vtva_rate->tva_both_side="0";
+        $vtva_rate->tva_rate=0.21;
+        $vtva_rate->tva_peppol_code=$peppopl_code;
+        $vtva_rate->vx_code=$vatex_code;
+        $tva_rate_mtable=new Tva_Rate_MTable($vtva_rate);
+        $tva_rate_mtable->setPreviousId(1);
+
+        $check = $tva_rate_mtable->check();
+        
+        $this->assertTrue($result==$check," erreur pour $peppopl_code ");
+        if ( $result != $check)
+        {
+            print "Error for $peppopl_code\n";
+            print_r($tva_rate_mtable->aerror);
+            $this->display_error($tva_rate_mtable);
+        }
+    }
+    
+    static function dataBuild()  {
         return array(
             ['0A',4]
             ,['0B',6]
@@ -133,6 +180,7 @@ class Acc_TVATest extends TestCase
      * @dataProvider dataBuild
      * @return void
      */
+     #[DataProvider('dataBuild')]
     function testBuild($tva_code,$result)
     {
         $cn=\Dossier::connect();

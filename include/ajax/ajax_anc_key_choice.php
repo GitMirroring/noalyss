@@ -38,7 +38,7 @@ try
 }
 catch (Exception $exc)
 {
-    error_log($exc->getTraceAsString());
+    record_log($exc);
     return;
 }
 

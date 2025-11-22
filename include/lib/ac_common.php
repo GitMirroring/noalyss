@@ -36,9 +36,9 @@ function h($p_string)
 {
     return ( $p_string === null)?"":htmlspecialchars($p_string,ENT_QUOTES|ENT_HTML5,'UTF-8',true);
 }
-function p($p_string)
+function p($p_string, $p_extra='')
 {
-    return '<p>'.$p_string."</p>";
+    return '<p '.$p_extra.'>'.$p_string."</p.>";
 }
 function span($p_string, $p_extra='')
 {
@@ -170,7 +170,7 @@ function echo_error($p_log, $p_line="", $p_message="")
 {
     $msg="ERREUR :" . $p_log . " " . $p_line . " " . $p_message;
     echo $msg;
-    syslog(LOG_ERR,$msg);
+    record_log($msg);
 
 }
 
@@ -314,7 +314,7 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     
     if ($is_msie == 0 ) 
     {
-        echo '<!doctype html>';
+        echo '<!DOCTYPE html>';
         printf("\n");
  
     }
@@ -519,7 +519,57 @@ function sql_string($p_string)
     $p_string = noalyss_str_replace('\\', '\\\\', $p_string);
     return $p_string;
 }
+/**
+ * @brief Same menu for all extensions, with the right level, it calls 
+ * ShowItem with the right parameters
+ * @global $level (int) global variable of the menu level
+ * @param $p_array (array)
+ * @param $default (string) selected item
+ * @param $p_extra (string) extra code for the table tag (CSS or javascript)
+ * @see ShowItem
+ */
+function show_menu_extension($p_array,$default="",$p_extra="")
+{
+    global $level;
+    
+   
+   $level++;
+    switch ($level) {
+        case 3:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra="noprint nav nav-pills nav-level3";
+            $class_div="menu3";
+            break;
+         case 2:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra="noprint nav nav-pills nav-level2";
+            $class_div="menu2";
+            break;
+        case 1:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra='noprint nav nav-pills nav-fill flex-row ';
+            $class_div="top_menu";
+            break;
+        default:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra="noprint nav nav-level4";
+            $class_div="menu3";
+            break;
+    }
+   return "<div class=\"$class_div\">"
+           . ShowItem($p_array,$p_dir,$class,$class_ref,$default,$p_extra)
+           ."</div>";
+           
 
+}
 /**
 * \brief store the string which print
  *           the content of p_array in a table
@@ -536,6 +586,7 @@ function sql_string($p_string)
 
 function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link", $default="", $p_extra="nav nav-pills nav-fill")
 {
+      
     $ret = '';
     // for comptability with old application  mtitle for anchor is replace by nav-link
     
@@ -543,9 +594,9 @@ function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link"
     // direction Vertical
     if ($p_dir == 'V')
     { 
-        $ret .= "<ul class=\"$p_extra noprint \"  flex-row>";
+        $ret .= "<ul class=\"$p_extra  \"  flex-row>";
     } else {
-        $ret .= "<ul class=\"$p_extra noprint \" >";
+        $ret .= "<ul class=\"$p_extra \" >";
        
     }
     
@@ -565,11 +616,11 @@ function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link"
 
         if ($set==$default)
         {
-            $ret.='<li class="nav-item"><A class="'.$class_ref.' active'.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
+            $ret.='<li class="'.$class.'"><A class="'.$class_ref.' active'.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
         }
         else
         {
-            $ret.='<li class="nav-item"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
+            $ret.='<li class="'.$class.'"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
         }
         
     }
@@ -1066,15 +1117,13 @@ function find_default_module()
 
 /**
  * @brief show the module
- * @var $g_user
  * @param $module the $_REQUEST['ac'] exploded into an array
  * @param  $idx the index of the array : the AD code is splitted into an array thanks the slash
  */
 function show_menu($module)
 {
     if ($module == 0)return;
-    static $level=0;
-    global $g_user;
+    global $level, $g_user;
     $http=new HttpInput();
     $access_code=$http->request("ac");
     $cn = Dossier::connect();
@@ -1101,7 +1150,7 @@ function show_menu($module)
     if (!empty($amenu) && count($amenu) > 1)
     {
         $a_style_menu=array('topmenu','menu2','menu3');
-        if ( $level > count($a_style_menu))
+        if ( $level >= count($a_style_menu))
             $style_menu='menu3';
         else {
             $style_menu=$a_style_menu[$level];
@@ -1728,7 +1777,7 @@ function MaintenanceMode($p_file)
 }
 
 /**
- * @brief returns an double array with the error found and code , if the count is 0 then the password is very string, 5 means it is
+ * @brief returns an double array with the error found and code , if the count is 0 then the password is very strong, 5 means it is
  * empty ,4 weak, ... the array contains the errors, [msg]=>array message [code] => array of code
  * Codes are
  *        - 1 : too short
@@ -1877,4 +1926,106 @@ function guidv4($data = null) {
 
     // Output the 36 character UUID.
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+}
+/**
+ * @brief retrieve the index for the key percent, returns -1 if nothing found
+ * @param $array (array) SubTotal
+ * @param $key (string) name of the key 
+ * @param $value (string) value to look for
+ * @return int
+ */
+function find_idx($array,$key,$value) {
+    if ( count($array) == 0 ) { return -1; }
+    $nb_array=count($array);
+    for($i=0;$i <$nb_array;$i++) {
+        if ($array[$i][$key] == $value) { 
+            return $i; 
+        }
+    }
+    return -1;
+}
+
+function compute_letter_value()
+    {
+        global $aLetter,$aLetterValue;
+
+        static $make_string=null;
+        if ( $make_string == null ) {
+            for ($i=65;$i!=91;$i++) {
+                $make_string[chr($i)]=$i-55;
+            }
+            $aLetter=array_keys($make_string);
+            $aLetterValue=array_values($make_string);
+        }
+    }
+/**
+ * @brief check that an IBAN is valid
+ * @param $iban string, this parameter will change:remove of space, comma,...
+ * @return bool false the IBAN is invalid, true IBAN is VALID
+ */
+function check_iban(&$iban): bool
+{
+    global $aLetter, $aLetterValue;
+    if (trim($iban ?? "") == "")
+        return false;
+
+    //------------------------------------------------
+    // Make the letter
+    //------------------------------------------------
+    static $make_string,$aLetter, $aLetterValue=null;
+    
+    if ( $make_string == null ) 
+    {
+        for ($i=65;$i!=91;$i++) 
+        {
+            $make_string[chr($i)]=$i-55;
+        }
+        $aLetter=array_keys($make_string);
+        $aLetterValue=array_values($make_string);
+    }
+
+    $iban = strtoupper($iban);
+    $iban=str_replace([" ", ",", ".", "-"], '', $iban);
+
+    $first = substr($iban, 0, 4);
+    $chain = substr($iban, 4) . $first;
+
+    $replaced = str_replace($aLetter, $aLetterValue, $chain);
+
+    // computed by slice of 10: mod function is limited
+    $start = 0;
+    $slice = 10;
+    $result = "";
+    $length = strlen($replaced);
+    while ($start < $length)
+    {
+        $slice_string = $result . substr($replaced, $start, $slice);
+        $result = $slice_string % 97;
+        $start += $slice;
+    }
+
+    if ($result == 1)
+        return true;
+
+    return false;
+}
+
+/**
+* @brief convert a value in Mbytes, kb ... in byte 
+* @param (string) $p_value containing K , M, G
+* @return int in bytes
+*/
+function convert_ini_unit($p_value)
+{
+    if ($p_value=="") return 0;
+   $a_convert=["k"=>1024,"m"=>1024**2,"g"=>1024**3];
+
+   $p_value=trim($p_value);
+   $last=strtolower($p_value[strlen($p_value)-1]);
+   $p_value=substr($p_value,0,strlen($p_value)-1);
+   if ( isset($a_convert[$last])) {
+       $p_value=$p_value*$a_convert[$last];
+   }
+
+   return $p_value;
 }

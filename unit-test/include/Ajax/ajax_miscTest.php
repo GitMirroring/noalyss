@@ -110,9 +110,9 @@ class Ajax_MiscTest extends TestCase
         // card for Merchandise
         $fiche->set_fiche_def(1);
         Card_Property::load($fiche);
-        $fiche->setAttribut(1, "Inserted by PHPUNIT-" . __CLASS__ . ":" . __FUNCTION__);
-        $fiche->setAttribut(ATTR_DEF_TVA, '210A');
-        $fiche->setAttribut(ATTR_DEF_QUICKCODE, 'MA1');
+        $fiche->set_attribute(1, "Inserted by PHPUNIT-" . __CLASS__ . ":" . __FUNCTION__);
+        $fiche->set_attribute(ATTR_DEF_TVA, '210A');
+        $fiche->set_attribute(ATTR_DEF_QUICKCODE, 'MA1');
         $fiche->insert(1, $fiche->to_array());
         return $fiche;
     }

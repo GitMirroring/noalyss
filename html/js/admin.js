@@ -33,8 +33,8 @@ function folder_display(p_user)
      * 
      */
     var p_filter = "";
-    if ($('database_filter_input')) {
-        p_filter = $('database_filter_input').value;
+    if (document.getElementById('database_filter_input')) {
+        p_filter = id$('database_filter_input').value;
     }
     /*
      * Ajax request to display the folder
@@ -46,11 +46,11 @@ function folder_display(p_user)
             // table id = database_list
             var folder = {};
             var create = false;
-            if (!$('folder_list_div')) {
+            if (!document.getElementById('folder_list_div')) {
                 folder = create_div({'id': 'folder_list_div', 'cssclass': "inner_box", 'style': 'width:90%,right:5%;top:100px'});
                 create = true;
             }
-            folder = $('folder_list_div');
+            folder = id$('folder_list_div');
             // Analyze XML answer 
             var answer = p_xml.responseXML;
             var a = answer.getElementsByTagName('status');
@@ -66,7 +66,7 @@ function folder_display(p_user)
             folder.innerHTML.evalScripts();
             // show it
             folder.show();
-            $('database_filter_input').focus();
+            id$('database_filter_input').focus();
         }
     });
 }
@@ -123,7 +123,7 @@ function folder_add(p_user, p_dossier)
             }
 
             var content = getNodeText(html[0]);
-            var nb = $('database_list').rows.length + 1;
+            var nb = id$('database_list').rows.length + 1;
             var row = new Element('tr', {'id': 'row' + p_dossier});
             if (nb % 2 == 0) {
                 row.addClassName('even');
@@ -131,8 +131,8 @@ function folder_add(p_user, p_dossier)
                 row.addClassName('odd');
             }
             row.innerHTML = unescape_xml(content);
-            $('database_list').appendChild(row);
-            $('row_db_'+p_dossier).hide();
+            id$('database_list').appendChild(row);
+            id$('row_db_'+p_dossier).hide();
             remove_waiting_box();
         }
     });
@@ -157,16 +157,16 @@ function display_admin_answer(p_dossier,p_action)
             
             var folder;
             var create = false;
-            if (!$(div_display)) {
+            if (!document.getElementById(div_display)) {
                 folder = create_div({'id': div_display, 'cssclass': "inner_box", style: 'width:90%;right:5%;top:100px'});
                 create = true;
             }
-            folder=$(div_display);
+            folder=id$(div_display);
 
             var content = getNodeText(html[0]);
             folder.innerHTML=unescape_xml(content);
             var pos=calcy(250);
-            $(div_display).setStyle({top:pos+'px'});
+            id$(div_display).setStyle({top:pos+'px'});
             
             folder.show();
             remove_waiting_box();

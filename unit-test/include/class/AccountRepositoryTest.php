@@ -137,10 +137,12 @@ class AccountRepositoryTest extends TestCase {
 
     /**
      * @testdox create a repository
+     * @backupGlobals disabled
      */
     function testCreate() {
         try {
             $repo = new \Database(0);
+            $repo->exec_sql("drop database if exists phpunit_account_repository  ");
             $repo->exec_sql("create database phpunit_account_repository encoding='utf8'");
 
             $db = $this->make_conx();
@@ -160,7 +162,6 @@ class AccountRepositoryTest extends TestCase {
             $db->start();
             $nb_table = $db->get_value("select count(*) from information_schema.tables where table_schema='public'");
             $db->commit();
-            $db->close();
             $this->assertEquals(11, $nb_table, " number of table incorrect $nb_table");
         } catch (\Exception $ex) {
             echo $ex->getMessage();

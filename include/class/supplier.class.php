@@ -26,7 +26,7 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
  * \brief  class  Supplier are a specific kind of card
  */
 
-// Use the view vw_supplier
+///@brief Use the view vw_supplier and the trait Trait_Card
 //
 class Supplier extends Fiche
 {
@@ -38,6 +38,9 @@ class Supplier extends Fiche
     var $cp;          /*!< $cp Zip code */
     var $vat_number;  /*!< $vat_number vat number */
 
+    use Trait_Card; 
+
+    
     /*! \brief Constructor
     * only a db connection is needed */
     function __construct($p_cn,$p_id=0)

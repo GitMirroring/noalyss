@@ -59,16 +59,18 @@ $js="onclick='UpgradeCore()'";
 
 echo HtmlInput::button("upgrade",_("Mise à jour de votre système"),$js);
 ?>
-<div id="info_admin">
-    
-</div>
+<div style="display:none" id="info_admin"></div>
 <script>
     function UpgradeCore()
     {
         progress_bar_start('upgradeCore');
-        new Ajax.Updater("info_admin","ajax_misc.php",{
+        new Ajax.Request("ajax_misc.php",{
                 method:'POST',
                 parameters:{op:"upgradeCore",gDossier:0,task_id:'upgradeCore'
+                },
+                onSuccess:function (req) {
+                    $('info_admin').update(req.responseText);
+                    new Effect.Appear('info_admin',{duration:1})
                 }
             }
             );

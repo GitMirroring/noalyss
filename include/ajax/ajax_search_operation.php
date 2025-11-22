@@ -18,8 +18,23 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-/*! \file
+/*!
+ * \file
  * \brief Search module
+ * \see javascript search_reconcile
+
+\param   dossier_id int  in $_GET  dossier id needed to connect to the right folder
+\param   ctlc in $_GET string of DOM ID that receives the result when operation is selected
+\param   tiers in $_GET
+\param   amount_id float in $_GET amount to search
+\param   target in $_GET element to update
+\param   hide_operation in $_GET
+\param   single_operation in $_GET
+ */
+
+/**
+ * @var $op comes from $_GET['op'] , that is the parameter from ajax to select the action (route) to perform.
+ * @var $g_user type of Noalyss_User , connected user
  */
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
@@ -35,6 +50,7 @@ $cn=Dossier::connect();
 
 
 $base=basename($_SERVER['PHP_SELF']);
+
 $inside=false;
 $tiers=$http->get("tiers", "string", "");
 // With the amount id, we find the amount in a html elt
@@ -83,7 +99,8 @@ if (isset($_GET['amount_min'])&&isset($_GET['amount_max'])&&($_GET['amount_max']
     );
 }
 //-----------------------------------------------------
-// Display search result
+// Display search result, value from the search FORM
+//
 //-----------------------------------------------------
 if (isset($_GET['viewsearch']))
 {

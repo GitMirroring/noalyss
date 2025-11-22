@@ -45,6 +45,7 @@ $http=new HttpInput();
 try {
     $op= $http->request("op");
     if ($op =='check_vatnumber') session_write_close();
+    if ($op =='search_peppol') session_write_close();
 
 } catch (\Exception $e) {
     exit();
@@ -372,6 +373,14 @@ $path = array(
     ,'activate_plugin'=>'ajax_activate_plugin'
     // set the operation paid or unpaid
     , 'payment_status'=>'ajax_payment_status'
+    // email setting
+    , 'email_setting'=>'ajax_email_setting'
+    // check iban  number
+    , 'check_ibannumber'=>'ajax_check_ibannumber'
+    // related to peppol : search 
+    ,'search_peppol'=>'ajax_search_peppol'
+    // find and select a VATEX code : VAT Exemption code mandatory for PEPPOL
+    ,'search_vatex'=>'ajax_search_vatex'
 ) ;
 
 if (array_key_exists($op, $path)) {
@@ -589,7 +598,7 @@ EOF;
                     
                     $Res = $cn->exec_sql("select * from v_tva_rate 
                                 where
-                        tva_purchase <> '#' and tva_sale <> '#'
+                        tva_purchase <> '#' or tva_sale <> '#'
                             order by tva_id asc");
                 }
 		$Max = Database::num_row($Res);

@@ -33,9 +33,9 @@ class Noalyss_Appearance
 {
     static private $aCSSColor = ['H2' => '#9fbcd6',
         'MENU1' => '#000074',
-        'BODY' => '#ffffff',
+        'BODY' => '#fafafa',
         'MENU2' => '#3d3d87',
-        'MENU1-SELECTED' => '#7191ea',
+        'MENU1-SELECTED' => '#506cb8',
         'TR-ODD'=>'#DCE7F5',
         'TR-EVEN'=>'#ffffff',
         'INNER-BOX'=>'#DCE1EF',
@@ -44,7 +44,7 @@ class Noalyss_Appearance
         'FONT-MENU2' => '#ffffff',
         'FONT-TABLE' => '#222bd0',
         'FONT-DEFAULT' => '#000074',
-        'FOLDER' => '#ffffff',
+        'FOLDER' => '#fafafa',
         'FONT-TABLE-HEADER' =>'#0C106D',
         'FONT-FOLDER' => '#000074'];
     static private $aCSSColorName = array();
@@ -170,9 +170,7 @@ class Noalyss_Appearance
      .nav-pills .nav-link {
       color: {$menu1_font}  !important;  
     }
-    .nav-link:hover {
-        background-color:{$menu1_selected};
-    }
+    
     table.sortable, table.table_large, table.result  ,table.resultfooter {
         color:{$font_table} !important;
     }

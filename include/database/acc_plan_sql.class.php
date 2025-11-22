@@ -33,6 +33,7 @@ class Acc_Plan_SQL extends Data_SQL
 {   
 
         private $limit_fiche_qcode;
+        var $sql;
     function __construct($p_cn, $p_id=-1)
     {
         $this->table = "accounting_card";

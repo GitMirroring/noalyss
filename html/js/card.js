@@ -24,7 +24,6 @@
  * javascript for searching a card
  */
 
-var card_layer=1;
 /**
  * search a card an display the result into a inner box
  */
@@ -34,7 +33,7 @@ function boxsearch_card(p_dossier)
 	{
 	waiting_box();
 	removeDiv('boxsearch_card_div');
-	var queryString="gDossier="+p_dossier+"&op=cardsearch"+"&card="+encodeURI($("card_search").value);
+	var queryString="gDossier="+p_dossier+"&op=cardsearch"+"&card="+encodeURI(id$("card_search").value);
 	var action = new Ajax.Request(
 				  "ajax_misc.php" ,
 				  {
@@ -49,8 +48,8 @@ function boxsearch_card(p_dossier)
 						var y=calcy(15);
 						var div_style="position:absolute;"+";top:"+y+"px";
 						add_div({id:'boxsearch_card_div',cssclass:'inner_box',html:loading(),style:div_style,drag:true});
-						$('boxsearch_card_div').innerHTML=req.responseText;
-						sorttable.makeSortable($('tb_fiche'));
+						id$('boxsearch_card_div').innerHTML=req.responseText;
+						sorttable.makeSortable(id$('tb_fiche'));
 				      }
 				  }
 				  );
@@ -76,9 +75,9 @@ function search_card(obj)
 {
     try
     {
-        var gDossier=$('gDossier').value;
+        var gDossier=id$('gDossier').value;
         var inp=obj.inp;
-        var string_to_search=$(inp).value;
+        var string_to_search=id$(inp).value;
         var label=obj.label;
         var typecard=obj.typecard;
         var price=obj.price;
@@ -93,8 +92,8 @@ function search_card(obj)
         }
         if ( jrn==undefined)
         {
-            if ( g('p_jrn'))   {
-		jrn=$('p_jrn').value;
+            if ( document.getElementById('p_jrn'))   {
+		jrn=id$('p_jrn').value;
 	    }
             else 	    {
 		jrn=-1;
@@ -114,10 +113,10 @@ function search_card(obj)
                       'amount_from_type':amount_from_type,
                       'inactive_card':inactive_card
                              });
-	if (  $('search_card') ) {
+	if (  document.getElementById('search_card') ) {
 	    removeDiv('search_card');
 	}
-
+        
 
         waiting_box();
 
@@ -164,7 +163,7 @@ function action_concerned_save_card(obj)
                 var nodeXml = html[0];
                 var code_html = getNodeText(nodeXml);
                 code_html = unescape_xml(code_html);
-                $(namectl).update(code_html);
+                id$(namectl).update(code_html);
                 removeDiv('search_card');
                 /* if dialog box exist with list other card, then refresh it */
                 if ( document.getElementById("action_concerned_list_dv") ) {
@@ -222,7 +221,7 @@ function action_concerned_list(p_obj) {
                             code_html = unescape_xml(code_html);
 
 
-                            $('action_concerned_list_dv').innerHTML = code_html;
+                            id$('action_concerned_list_dv').innerHTML = code_html;
                         } catch (e) {
                             alert_box(e.message);
                         }
@@ -336,9 +335,9 @@ function action_concerned_search_card(obj)
                             sx = document.body.scrollTop + 60;
                         }
                         var div_style = "top:" + sx + "px;height:52rem";
-                        if ( ! $('search_card')) { add_div({id: 'search_card', cssclass: 'inner_box', html: "", style: div_style, drag: true}); }
-                        $('search_card').innerHTML = code_html;
-                        $('query').focus();
+                        if ( ! document.getElementById('search_card')) { add_div({id: 'search_card', cssclass: 'inner_box', html: "", style: div_style, drag: true}); }
+                        id$('search_card').innerHTML = code_html;
+                        id$('query').focus();
                         activate_checkbox_range('select_card_ck');
                         }catch (e) {
                             alert_box(e.message);
@@ -360,10 +359,11 @@ function action_concerned_search_card(obj)
  *@param obj form
  *@note the same as search_card, except it answer to a FORM and not
  * to a click event
+ * @see ajax_card.php
  */
 function search_get_card(obj)
 {
-    var dossier=$('gDossier').value;
+    var dossier=id$('gDossier').value;
 
     var queryString="gDossier="+dossier;
     queryString+="&op2=fs&op=card";
@@ -417,7 +417,7 @@ function search_get_card(obj)
     }
 
     queryString=encodeURI(queryString);
-    $('asearch').innerHTML=loading();
+    id$('asearch').innerHTML=loading();
 
     var action=new Ajax.Request ( 'ajax_misc.php',
                                   {
@@ -430,6 +430,7 @@ function search_get_card(obj)
 }
 /**
  * show the answer of ajax request
+ * @see search_get_card
  *@param  answer in XML
  */
 function result_card_search(req)
@@ -463,12 +464,12 @@ function result_card_search(req)
             sx=document.body.scrollTop+60;
 	}
 
-        var div_style="top:"+sx+"px;min-height:80%;height:auto";
+        var div_style="top:"+sx+"px;min-height:80%;height:auto;z-index:"+get_next_layer();;
         add_div({id:'search_card',cssclass:'inner_box',html:"",style:div_style,drag:false,effect:'blinddown'});
 
-        $('search_card').innerHTML=code_html;
+        id$('search_card').innerHTML=code_html;
 
-        if ($('query')) { $('query').focus();}
+        if (document.getElementById('query')) { id$('query').focus();}
     }
     catch (e)
     {
@@ -500,12 +501,12 @@ function result_card_search(req)
 */
 function setCtrl(p_ctrl,p_quickcode,p_ctrlname,p_label)
 {
-    var ctrl=g(p_ctrl);
+    var ctrl=id$(p_ctrl);
     if ( ctrl )
     {
         ctrl.value=p_quickcode;
     }
-    var ctrl_name=g(p_ctrlname);
+    var ctrl_name=id$(p_ctrlname);
     if ( ctrl_name )
     {
         ctrl_name.value=p_label;
@@ -514,29 +515,7 @@ function setCtrl(p_ctrl,p_quickcode,p_ctrlname,p_label)
 
 
 
-/**
- * clean the row (the label, price and vat)
- * @param p_ctl the calling ctrl
- */
-function clean_Fid(p_ctl)
-{
-    nSell=p_ctl+"_price";
-    nBuy=p_ctl+"_price";
-    nTva_id=p_ctl+"_tva_id";
-    if ( $(nSell) )
-    {
-        $(nSell).value="";
-    }
-    if ( $(nBuy) )
-    {
-        $(nBuy).value="";
-    }
-    if ( $(nTva_id) )
-    {
-        $(nTva_id).value="-1";
-    }
 
-}
 function errorFid(request,json)
 {
     alert_box(content[53]);
@@ -583,7 +562,7 @@ function fill_fin_data_onchange(ctl)
 function fill_fin_data(text,li)
 {
     ajaxFid(text);
-    ajax_saldo($(text.id));
+    ajax_saldo(id$(text.id));
 }
 /**
  * show the ipopup window and display the details of a card,
@@ -597,7 +576,7 @@ function fill_fin_data(text,li)
 function fill_ipopcard(obj)
 {
 
-    card_layer++;
+    var card_layer=get_next_layer();
 
     var content='card_'+card_layer;
     var nTop=170+card_layer;
@@ -606,22 +585,22 @@ function fill_ipopcard(obj)
     }
     var str_top="top:"+calcy(nTop)+"px";
 
-    var str_style=str_top+";height:auto;position:absolute";
+    var str_style=str_top+";height:auto;position:absolute;z-index:"+get_next_layer();
     waiting_box();
     var popup={'id':  content,'cssclass':'inner_box2','style':str_style,'html':"",'drag':false};
 
     add_div(popup);
-    var dossier=$('gDossier').value;
+    var dossier=id$('gDossier').value;
     var qcode='';
-    if ( $(obj).qcode != undefined )
+    if ( obj.qcode != undefined )
     {
         qcode=obj.qcode;
     }
     else
     {
-        qcode=$(obj).value;
+        qcode=id$(obj).value;
     }
-    //    ctl=$(obj).id;
+    //    ctl=id$(obj).id;
 
     var queryString='gDossier='+dossier;
     queryString+='&qcode='+qcode;
@@ -671,7 +650,7 @@ function  successFill_ipopcard(req,json)
         var code_html=getNodeText(html[0]);
         code_html=unescape_xml(code_html);
 
-        $(name_ctl).innerHTML=code_html;
+        id$(name_ctl).innerHTML=code_html;
     }
     catch (e)
     {
@@ -698,20 +677,20 @@ function  successFill_ipopcard(req,json)
  */
 function select_card_type(obj)
 {
-    var dossier=$('gDossier').value;
+    var dossier=id$('gDossier').value;
     var elementId="";
     // give a filter, -1 if not
-    var filter=$(obj).filter;
+    var filter=id$(obj).filter;
     if ( filter==undefined)
     {
         filter=-1;
     }
     var content="select_card_div";
-    if ( $(content)){removeDiv(content);}
+    if ( document.getElementById(content)){removeDiv(content);}
     var sx=0;
     sx=calcy(160);
 
-    var str_style="top:"+sx+"px;height:auto";
+    var str_style="top:"+sx+"px;height:auto;z-index:"+get_next_layer();
     waiting_box();
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
 
@@ -721,25 +700,25 @@ function select_card_type(obj)
     queryString+='&ctl='+content;
     queryString+='&op2=st'; 	// st for selecting type
     queryString+='&op=card'; 	// st for selecting type
-    if ( $(obj).win_refresh!=undefined)
+    if ( id$(obj).win_refresh!=undefined)
     {
         queryString+='&ref';
     }
     /* if an element id must be updated after creating a new card */
-    if ( $(obj).elementId) {
-        var elementId=$(obj).elementId;
+    if (  id$(obj).elementId) {
+        var elementId=id$(obj).elementId;
         queryString+="&eltid="+elementId;
     }
     queryString+='&fil='+filter;
     // filter on the ledger, -1 if not
-    var oledger=$(obj).jrn;
+    var oledger=id$(obj).jrn;
     if (oledger==undefined)
     {
         ledger=-1;
     }
     else
     {
-        ledger=$(obj).jrn;
+        ledger=id$(obj).jrn;
     }
 
     queryString+='&ledger='+ledger;
@@ -773,7 +752,7 @@ function select_card_type(obj)
                                           return;
                                       }
                                       fill_box(req);
-                                       $('lk_cat_card_table').focus();
+                                       id$('lk_cat_card_table').focus();
                                     }
                                   }
                                 );
@@ -803,14 +782,14 @@ function dis_blank_card(obj)
     var content='div_new_card';
     var nTop=calcy(150);
     var nLeft=posX;
-    var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto;width:45rem;";
+    var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto;width:45rem;z-index:"+get_next_layer();
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
 
     add_div(popup);
 
     if ( obj.gDossier.value != undefined ) {
-        var dossier=$('gDossier').value;
+        var dossier=id$('gDossier').value;
     } else {
 	var dossier=obj.gDossier;
     }
@@ -845,14 +824,14 @@ function form_blank_card(obj)
     var content='div_new_card';
     var nTop=posY-40;
     var nLeft=posX-20;
-    var str_style="top:"+nTop+"px;left:"+nLeft+"px;width:60em;height:auto";
+    var str_style="top:"+nTop+"px;left:"+nLeft+"px;width:60em;height:auto;z-index:"+get_next_layer();
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
-    if ( $(content)) {removeDiv(content);}
+    if ( document.getElementById(content)) {removeDiv(content);}
     add_div(popup);
 
 
-    var dossier=$('gDossier').value;
+    var dossier=id$('gDossier').value;
 
     var queryString='gDossier='+dossier;
     queryString+='&ctl='+content;
@@ -878,8 +857,8 @@ function form_blank_card(obj)
  */
 function save_card(obj)
 {
-    var content=$(obj).ipopup;
-    var accounting= $(obj)['av_text5'];
+    var content=id$(obj).ipopup;
+    var accounting= id$(obj)['av_text5'];
     if ( accounting && accounting.value.length > 40 ) {
       smoke.alert('Poste comptable trop grand');
       return false;
@@ -887,9 +866,9 @@ function save_card(obj)
 
     // Data must be taken here
 
-    var    data=$('save_card').serialize(false);
+    var    data=id$('save_card').serialize(false);
     waiting_box();
-    var dossier=$('gDossier').value;
+    var dossier=id$('gDossier').value;
     var queryString='gDossier='+dossier;
     queryString+='&ctl='+content;
     queryString+=data;
@@ -922,7 +901,7 @@ function save_card(obj)
                                       // if status == OK and after_save == 1
                                       // then add a row to the table
                                       if ( status_value == 'OK' && after_save == 1) {
-                                            var table_card=$('fiche_tb_id');
+                                            var table_card=id$('fiche_tb_id');
                                             f_id=getNodeText(req.responseXML.getElementsByTagName("f_id")[0]);
                                              var row=new Element('tr');
                                              row.id="row_card"+f_id;
@@ -943,9 +922,9 @@ function save_card(obj)
                                          var eltid=getNodeText(elt[0]);
                                          if ( eltid !="") {
                                             var eltvalue=req.responseXML.getElementsByTagName("elt_value");
-                                            $(eltid).value=getNodeText(eltvalue[0]);
+                                            id$(eltid).value=getNodeText(eltvalue[0]);
                                             fill_data_onchange(eltid);
-                                            $(eltid).focus();
+                                            id$(eltid).focus();
                                         }
                                       }
                                       if (status_value == "OK") {
@@ -984,12 +963,12 @@ function add_category(obj)
     // show ipopup
 	var div={id:obj.ipopup,
 			cssclass:"inner_box",drag:1,style:div_style};
-	if ( $(div) ) {
+	if ( document.getElementById(div) ) {
 		removeDiv(div);
 	}
 	add_div(div);
 	waiting_box();
-    var dossier=$('gDossier').value;
+    var dossier=id$('gDossier').value;
     var queryString='gDossier='+dossier;
     queryString+='&op2=ac';
     queryString+='&op=card';
@@ -1021,23 +1000,37 @@ function save_card_category(obj)
     };
 try {
 		// Data must be taken here
-    data=$('newcat').serialize(false);
-    var dossier=$('gDossier').value;
+    data=id$('newcat').serialize(false);
+    var dossier=id$('gDossier').value;
     var queryString='ctl='+obj.ipopup+'&';
     queryString+=data;
     queryString+='&op2=scc'; 	// sc for save card
     queryString+='&op=card'; 	// sc for save card
 
     var action=new Ajax.Request ( 'ajax_misc.php',
-                                  {
-                                  method:'get',
-                                  parameters:queryString,
-                                  onFailure:errorFid,
-                                  onSuccess:fill_box
-                                  }
+                            {
+                                method:'POST',
+                                parameters:queryString,
+                                onFailure:errorFid,
+                                onSuccess:function (req) 
+                                { 
+                                    fill_box(req);
+                                    // populate
+                                     var answer = req.responseXML;
+                                     var a = answer.getElementsByTagName('id');
+                                     var b = answer.getElementsByTagName('name');
+                                     if ( a.length == 1 && b.length == 1) {
+                                         let option=new Element('option');
+                                         option.value=getNodeText(a[0]);
+                                         option.text=getNodeText(b[0]);
+                                         id$('cat').add(option);
+                                     }
+                                }
+                              }
                                 );
 	} catch(e)
 	{
+            
 		alert_box(e.message);
 		return false;
 	}
@@ -1124,7 +1117,7 @@ function action_save_concerned(p_form_id) {
                         var code_html = getNodeText(nodeXml);
                         code_html = unescape_xml(code_html);
                         removeDiv('search_card');
-                        $('concerned_card_td').innerHTML = code_html;
+                        id$('concerned_card_td').innerHTML = code_html;
                     } catch (e) {
 
                     }
@@ -1156,10 +1149,10 @@ function action_remove_concerned(p_dossier,p_fiche_id,p_action_id)
                         var nodeXml=html[0];
                         var code_html = getNodeText(nodeXml);
                         code_html = unescape_xml(code_html);
-                        $('concerned_card_td').innerHTML = code_html;
+                        id$('concerned_card_td').innerHTML = code_html;
                         removeDiv('search_card');
 
-                        $(namectl).remove();
+                        id$(namectl).remove();
 
                     } catch (e) {
                         if ( console) { console.log('Erreur ') + e.message;}
@@ -1214,7 +1207,7 @@ function delete_card(obj) {
 function modify_card(p_fiche_id)
 {
     /* window with result */
-    card_layer++;
+     var card_layer=get_next_layer();
 
     var content = 'card_' + card_layer;
     var nTop = 170 + card_layer;
@@ -1234,7 +1227,7 @@ function modify_card(p_fiche_id)
         console.error("card_gdossier error");
         throw ("card_gdossier not set");
     }
-    var dossier = $('card_gdossier').value;
+    var dossier = id$('card_gdossier').value;
 
 
     var action = new Ajax.Request('ajax_misc.php',
@@ -1262,8 +1255,8 @@ function delete_card_id(p_fiche_id)
         console.error("card_gdossier error");
         throw ("card_gdossier not set");
     }
-    $(row).addClassName("background-selected");
-    var dossier = $('card_gdossier').value;
+    id$(row).addClassName("background-selected");
+    var dossier = id$('card_gdossier').value;
     smoke.confirm(content[47], function (e) {
         if (e) {
             waiting_box();
@@ -1272,7 +1265,7 @@ function delete_card_id(p_fiche_id)
                 parameters: {'gDossier':dossier,"op":'card',"op2":"rm_card","f_id":p_fiche_id,'ctl':row} ,
                 onSuccess: function (req) {
                     remove_waiting_box();
-                    var table_card=$('fiche_tb_id');
+                    var table_card=id$('fiche_tb_id');
                     var answer = req.responseXML;
                     var a = answer.getElementsByTagName('ctl');
                     if (a.length == 0)
@@ -1288,7 +1281,7 @@ function delete_card_id(p_fiche_id)
 
                     if ((code_html) == "OK") {
                         Effect.Fade(row, {duration: 0.1});
-                        table_card.tBodies[0].removeChild($(row));
+                        table_card.tBodies[0].removeChild(id$(row));
                         alternate_row_color("fiche_tb_id");
                     } else {
                         smoke.alert(code_html);
@@ -1298,7 +1291,7 @@ function delete_card_id(p_fiche_id)
 
             });
         } else{
-                   $(row).removeClassName("background-selected");
+                   id$(row).removeClassName("background-selected");
 
         }
     });
@@ -1338,11 +1331,11 @@ function card_update_row(obj)
 
                             if ( document.getElementById(name_ctl)) {
                                 // update the row
-                                $(name_ctl).innerHTML = code_html;
+                                id$(name_ctl).innerHTML = code_html;
                                 new Effect.Highlight(name_ctl ,{startcolor: '#FAD4D4',endcolor: '#F78082' });
 
                             }
-                            $(a[0].firstChild.nodeValue).remove();
+                            id$(a[0].firstChild.nodeValue).remove();
 
 
                         } catch (e) {
@@ -1391,7 +1384,7 @@ function linked_card_option(p_action_person_id,p_dossier) {
             onSuccess:function(req) {
                 remove_waiting_box();
                 add_div({ "id":"d_linked_card_option",cssclass:"inner_box",style:"position:fixed;top:30%;min-width:20rem;width:auto;",drag:0});
-                $("d_linked_card_option").update(req.responseText);
+                id$("d_linked_card_option").update(req.responseText);
 
             }
         });
@@ -1414,7 +1407,7 @@ function save_linked_card_option(obj)
         onSuccess:function(req) {
             remove_waiting_box();
             removeDiv("d_linked_card_option");
-            $("other_"+obj.action_person_id.value).update(req.responseText);
+            id$("other_"+obj.action_person_id.value).update(req.responseText);
               new Effect.Highlight("other_"+obj.action_person_id.value,{startcolor: '#FAD4D4',endcolor: '#F78082' });
         }
     });
@@ -1503,10 +1496,10 @@ CategoryCardDefinition.prototype.add_attribut = function (attribut_id) {
                     // if successfull add id on existing_list and remove from available_list
 
                     // remove from available_list
-                    $('avail_attr_' + attribut_id).remove();
+                    id$('avail_attr_' + attribut_id).remove();
                     var parser = new DOMParser();
                     var element = parser.parseFromString(req.responseText, 'text/html');
-                     $(here.existing_list).appendChild(element.body.firstChild);
+                     id$(here.existing_list).appendChild(element.body.firstChild);
                     new Effect.Highlight('existing_attr_' + attribut_id, {
                         startcolor: '#FAD4D4',
                         endcolor: '#F78082'
@@ -1551,10 +1544,10 @@ CategoryCardDefinition.prototype.remove_attribut = function (attribut_id) {
                     // if successfull add id on existing_list and remove from available_list
 
                     // remove from available_list
-                    $('existing_attr_' + attribut_id).remove();
+                    id$('existing_attr_' + attribut_id).remove();
                     var parser = new DOMParser();
                     var element = parser.parseFromString(req.responseText, 'text/html');
-                    $(here.available_list).appendChild(element.body.firstChild);
+                    id$(here.available_list).appendChild(element.body.firstChild);
 
                     alternate_row_color_list(here.available_list);
                     Sortable.create('attribut_card', {tag: 'li', hoverclass: inner_box});

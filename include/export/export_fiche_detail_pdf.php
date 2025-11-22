@@ -59,7 +59,7 @@ if ( count($array) == 0 )
 $size=array(13,25,20,60,12,20,20,20);
 $align=array('L','C','C','L','R','R','R','R');
 
-$Libelle=sprintf("(%s) %s %s [ %s ]",$Fiche->id,$Fiche->getName(),$Fiche->strAttribut(ATTR_DEF_FIRST_NAME,0),$Fiche->get_quick_code());
+$Libelle=sprintf("(%s) %s %s [ %s ]",$Fiche->id,$Fiche->getName(),$Fiche->get_attribute(ATTR_DEF_FIRST_NAME,0),$Fiche->get_quick_code());
 $pdf->SetFont('DejaVu','',10);
 $pdf->write_cell(0,8,$Libelle,1,0,'C');
 $pdf->line_new();
@@ -113,9 +113,9 @@ for ($e=0;$e<count($array);$e++)
             $str_diff_solde=sprintf("%12.2f ",$diff_solde);
 
             $pdf->SetFont('DejaVu','B',8);
-            $pdf->LongLine(15,6,_('totaux'),0,'L');
+            $pdf->write_multi(15,6,_('totaux'),0,'L');
             $pdf->write_cell(15,6,$current_exercice,0,0,'L');
-            $pdf->LongLine(40,6,$solde,0,'L');
+            $pdf->write_multi(40,6,$solde,0,'L');
             $pdf->write_cell(40,6,$str_debit,0,0,'R');
             $pdf->write_cell(40,6,$str_credit,0,0,'R');
             $pdf->write_cell(40,6,$str_diff_solde,0,0,'R');
@@ -146,17 +146,17 @@ for ($e=0;$e<count($array);$e++)
     $tiers=$operation->find_tiers($row['jr_id'], $row['j_id'], $row['j_qcode']);
     $description=($tiers=="")?$row["description"]:"[".$tiers."]".$row['description'];
 
-    $pdf->LongLine($size[$l],6,($description.'('.$row['jr_internal'].")"),0,$align[$l]);
+    $pdf->write_multi($size[$l],6,($description.'('.$row['jr_internal'].")"),0,$align[$l]);
 
     $l++;
 
-    $pdf->LongLine($size[$l],6,((!empty($row['letter']) && $row['letter']!=-1)?strtoupper(base_convert($row['letter'],10,36)):''),0,$align[$l]);
+    $pdf->write_multi($size[$l],6,((!empty($row['letter']) && $row['letter']!=-1)?strtoupper(base_convert($row['letter'],10,36)):''),0,$align[$l]);
     $l++;
-    $pdf->LongLine($size[$l],6,(sprintf('% 12.2f',$row['deb_montant'])),0,$align[$l]);
+    $pdf->write_multi($size[$l],6,(sprintf('% 12.2f',$row['deb_montant'])),0,$align[$l]);
     $l++;
-    $pdf->LongLine($size[$l],6,(sprintf('% 12.2f',$row['cred_montant'])),0,$align[$l]);
+    $pdf->write_multi($size[$l],6,(sprintf('% 12.2f',$row['cred_montant'])),0,$align[$l]);
     $l++;
-    $pdf->LongLine($size[$l],6,(sprintf('% 12.2f',abs($progress))),0,$align[$l]);
+    $pdf->write_multi($size[$l],6,(sprintf('% 12.2f',abs($progress))),0,$align[$l]);
     $l++;
     $pdf->line_new();
     $tot_deb=bcadd($tot_deb,$row['deb_montant']);

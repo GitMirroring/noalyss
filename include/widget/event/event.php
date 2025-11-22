@@ -40,6 +40,7 @@ class Event extends Widget
         $sql="select ag_ref
         ,ag_hour
         ,coalesce(vw_name,'Interne') as vw_name
+        ,coalesce(quick_code,'interne') as quick_code
         ,ag_id
         ,ag_title
         ,ag_ref

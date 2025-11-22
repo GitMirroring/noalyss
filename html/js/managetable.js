@@ -381,10 +381,11 @@ var ManageTable = function (p_table_name)
                     var pos = calcy(50);
       
                     here.mt_style["top"]=pos+"px";
+                    here.mt_style["z-index"]=get_next_layer();
                     $(obj.id).setStyle(here.mt_style);
                     remove_waiting_box();
                     $(obj.id).update(x['html']);
-                    Effect.SlideDown(obj.id,{duration:0.1,scaleX:false,scaleY:true,scaleContent:false});
+                    $(obj.id).show();
                 } catch (e) {
                     smoke.alert(content[48] + e.message);
                 }

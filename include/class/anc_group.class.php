@@ -30,10 +30,11 @@ require_once  NOALYSS_INCLUDE.'/constant.php';
  */
 class Anc_Group extends Anc_Print
 {
-    var $db;
-    var $ga_id;
-    var $ga_description;
-    var $pa_id;
+    var $db; /*!< $db (Database) Database connexion */
+    var $ga_id; /*!< $ga_id (int) PK GROUPE_ANALYTIQUE.GA_ID */
+    var $ga_description; /*!< $ga_description (string) name of the group */
+    var $pa_id; /*!< $pa_id (int) id PLAN_ANALYTIC.PA_ID */
+    var $pa_name; /*!< $pa_name (string) name of the Analytic Axis */
 
     function __construct ( $p_cn )
     {

@@ -311,7 +311,7 @@ case 'st':
         $r.=_("Choisissez la catégorie de fiche à laquelle vous aimeriez ajouter une fiche").'</p>';
         if ( ! isset($eltid)) $eltid="";
         $msg=_('Choisissez une catégorie svp');
-        $r.='<span id="error_cat" class="notice"></span>';
+        $r.='<span id="error_cat" style="display:none" class="notice"></span>';
         $r.=dossier::hidden();
         $r.=(isset($ref))?HtmlInput::hidden('ref',1):'';
         $r.=_('Cherche').' '.HtmlInput::filter_table("cat_card_table", '0,1', 0);
@@ -326,7 +326,8 @@ case 'st':
             $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_label']).'</a>';
             $r.='</td>';
             $r.='<td>';
-            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h($array[$i]['fd_description'])."($nb_count)".'</a>';
+            $r.='<a href="javascript:void(0)" onclick="select_cat(\''.$array[$i]['fd_id'].'\','.$gDossier.',\''.$eltid.'\')">'.h
+                ($array[$i]['fd_description'])."($nb_count)".'</a>';
             $r.='</td>';
            
              $r.="</tr>";
@@ -342,7 +343,7 @@ case 'st':
         
     }
     $xml=escape_xml($html);
-    header('Content-type: text/xml; charset=UTF-8');
+if (!defined("TEST_UNIT"))    header('Content-type: text/xml; charset=UTF-8');
 echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
@@ -633,9 +634,9 @@ case 'scc':
     {
         
         $html="";
-        $nom_mod=$http->get("nom_mod");
-        $class_base=$http->get("class_base");
-        $fd_description=$http->get("nom_mod");
+        $nom_mod=$http->post("nom_mod");
+        $class_base=$http->post("class_base");
+        $fd_description=$http->post("fd_description","string","");
         if ( noalyss_strlentrim($nom_mod) != 0 )
         {
             $array=array("FICHE_REF"=>$cat,
@@ -643,7 +644,7 @@ case 'scc':
                          "class_base"=>$class_base,
                           "fd_description"=>$fd_description);
             
-            if ( isset ($_POST['create'])) $array['create']=1;
+            if ( isset ($_POST['create'])) $array['create']="on";
             
             $catcard=new Fiche_Def($cn);
             
@@ -660,7 +661,15 @@ case 'scc':
             }
             else{
                 $script="alert_box('"._('Catégorie sauvée')."');removeDiv('$ctl')";
-            }
+                // add code to update the SELECT in include/template/category_of_card.php
+                $catcard->get();
+               
+                $extra = '<code2>'.
+                        '<id>'.$catcard->id.'</id>'.
+                        '<name>'. escape_xml($catcard->label).'</name>'.
+                        '</code2>';
+                
+            }   
                 
             $html.=create_script($script);
         }

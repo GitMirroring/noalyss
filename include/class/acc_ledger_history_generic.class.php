@@ -33,7 +33,6 @@
 class Acc_Ledger_History_Generic extends Acc_Ledger_History
 {
 
-
     /**
      * Constructor
      * @param Database $cn
@@ -428,6 +427,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
              jrn.jr_def_id as jr_def_id,
              jrn.jr_montant as montant,
              substr(jrn.jr_comment,1,35) as comment,
+             jrn.jr_comment str_comment,
              to_char(jrn.jr_date,'DD-MM-YYYY') as date,
              to_char(jrn.jr_date_paid,'DD-MM-YYYY') as date_paid,
              jr_pj_number,
@@ -561,7 +561,7 @@ class Acc_Ledger_History_Generic extends Acc_Ledger_History
                 $fiche=new Fiche($this->db);
                 if ($fiche->get_by_qcode($line['j_qcode'], false)==0)
                 {
-                    $line['description']=$fiche->strAttribut(ATTR_DEF_NAME);
+                    $line['description']=$fiche->get_attribute(ATTR_DEF_NAME);
                 }
             }
             if ($case!=$line['grp'])

@@ -35,7 +35,7 @@ class Acc_Operation_Note
     private $id;
     private $operation_id; //!< jrn.jr_id
     private $jrn_note_sql;
-
+    
     function __construct(Jrn_Note_SQL $p_Jrn_Note_SQL)
     {
         $this->jrn_note_sql = $p_Jrn_Note_SQL;
@@ -79,12 +79,18 @@ class Acc_Operation_Note
     {
         $cn=Dossier::connect();
         $this->jrn_note_sql->setp("jr_id",$this->operation_id);
-        $this->jrn_note_sql->setp("n_text",$this->note);
+        $this->jrn_note_sql->setp("n_text", strip_tags($this->note));
 
         if ( empty($this->jrn_note_sql->n_text) && $this->id > -1 ) {
             $this->jrn_note_sql->delete();
             return $this;
         }
+        // forbid the tag script, iframe and A
+        $n=str_ireplace('<script','<.script',$this->note);
+        $n=str_ireplace('<iframe','<.iframe',$n);
+        $n=str_ireplace('<a ','<.a',$n);
+        
+        $this->jrn_note_sql->setp("n_html", $n);
         $this->jrn_note_sql->save();
         $this->id=$this->jrn_note_sql->n_id;
         return $this;
@@ -121,6 +127,19 @@ class Acc_Operation_Note
     }
     function print()
     {
-        echo '<pre id="print_note">'.h($this->note).'</pre>';
+        echo '<div id="print_note">'.h($this->note).'</div>';
+    }
+    /**
+     * @brief create a TEXTAREA to show HTML Note
+     * @param type $div_id
+     * @returns ITextarea
+     */
+    static function build_textarea($div_id)
+    {
+        $inote = new ITextarea('jrn_note');
+        $inote->id="{$div_id}_jrn_note";
+        $inote->set_enrichText("no-toolbar");
+        $inote->heigh=500;
+        return $inote;
     }
 }

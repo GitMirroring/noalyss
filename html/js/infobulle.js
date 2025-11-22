@@ -81,9 +81,9 @@ function displaySelectBox(p_name) {
             newDiv.id="select_box_content"+p_name;
             document.body.appendChild(newDiv);
             newDiv.addClassName("select_box");
-            $("select_box_content"+p_name).onmouseleave=function() {
+            id$("select_box_content"+p_name).onmouseleave=function() {
                 try {
-                    var newDiv=$("select_box_content"+p_name);
+                    var newDiv=id$("select_box_content"+p_name);
                     newDiv.setStyle({display:"none"});
                 } catch(e) {
                     alert(e.message);
@@ -92,26 +92,31 @@ function displaySelectBox(p_name) {
         } else {
             newDiv=document.getElementById("select_box_content"+p_name);
         }
-        newDiv.innerHTML=$("select_box"+p_name).innerHTML;
+        newDiv.innerHTML=id$("select_box"+p_name).innerHTML;
         var viewport = document.viewport.getDimensions();
+        let div_height=newDiv.getHeight();
+        if ( div_height > window.innerHeight) {
+            div_height =  window.innerHeight / 2;
+        }
         var locPosY=posY;
-        if ( posY+offsetY+ newDiv.getHeight() > window.innerHeight -3) {
-        locPosY-=newDiv.getHeight()+20
+        if ( posY+offsetY+ div_height > window.innerHeight -3) {
+            locPosY-=div_height+20
         }
         newDiv.style.top=locPosY+"px";
 
         newDiv.style.left=document.getElementById(p_name+"_bt").offsetLeft+"px";
-        newDiv.setStyle({display:"block",position:"absolute","z-index":999});
+        var card_layer=get_next_layer();
+        newDiv.setStyle({display:"block",position:"absolute","z-index":card_layer});
 
-        if ( $("search_"+p_name+"_list") ) {
+        if ( id$("search_"+p_name+"_list") ) {
             var sTmp = newDiv.innerHTML;
             var regex=new RegExp(p_name+"_list","g");
             sTmp = sTmp.replace(regex,p_name+"_t_list");
             newDiv.innerHTML=sTmp;
-            $("search_"+p_name+"_t_list").focus();
+            id$("search_"+p_name+"_t_list").focus();
         }
     } catch(e) {
-        alert(e.message);
+        console.error(e.message);
     }
 
 }

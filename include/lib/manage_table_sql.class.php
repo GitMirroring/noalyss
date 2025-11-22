@@ -218,7 +218,7 @@ class Manage_Table_SQL
      */
     function send_header()
     {
-        header('Content-type:text/xml;charset="UTF-8"');
+        @header('Content-type:text/xml;charset="UTF-8"');
     }
 
     /**
@@ -1384,6 +1384,7 @@ function check()
             ob_start();
 
             echo HtmlInput::title_box($this->getTitle(), $this->dialog_box,"close","","y","y");
+            print '<div class="content">';
             printf('<form id="frm%s_%s"  method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
                     $this->object_name, $this->table->get_pk_value(),
                     $this->object_name, $this->object_name,
@@ -1409,7 +1410,7 @@ function check()
             '</li>',
             '</ul>';
             echo "</form>";
-            
+            print "</div>";
 
             $html=ob_get_contents();
             ob_end_clean();

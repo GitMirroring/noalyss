@@ -46,7 +46,7 @@ try {
     $gDossier = dossier::id();
 
 } catch (Exception $exc) {
-    error_log($exc->getTraceAsString());
+    record_log($exc);
     return;
 }
 
@@ -94,8 +94,6 @@ if ($ledger == "") {
     $html = escape_xml($html);
     if (!headers_sent()) {
         header('Content-type: text/xml; charset=UTF-8');
-    } else {
-        echo "HTML" . unescape_xml($html);
     }
     echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -218,7 +216,7 @@ switch ($action) {
                 echo HtmlInput::hidden('div', $div);
                 echo '<INPUT TYPE="FILE" id="receipt_id" name="pj" onchange="' . $check_receipt . '">';
 
-                echo '<p id="receipt_info_id" class="error"></p>';
+                echo '<p id="receipt_info_id" style="display:inline"></p>';
 
                 echo '</FORM>';
             } else {
@@ -258,8 +256,13 @@ switch ($action) {
                 $filename = mb_substr($obj->det->jr_pj_name, 0, 60);
             }
             echo HtmlInput::show_receipt_document($jr_id, h($filename));
+            // if using the XML Belgian format, add a tab for showing it
+            $acc_document=new Acc_Document($cn,$jr_id);
+            echo '<span style="margin-left:5rem">'.
+                 $acc_document->link_download_xml()
+                .'</span>';
             echo $x;
-            echo '<p id="receipt_info_id" class="error"></p>';
+            echo '<p id="receipt_info_id" style="display:inline" ></p>';
             echo '</div>';
             echo '</body></html>';
             exit();
@@ -270,9 +273,8 @@ switch ($action) {
     case 'loadfile':
         if ($access == 'W' && isset ($_FILES)) {
             $cn->start();
-            // remove the file
-            $grpt = $cn->get_value('select jr_grpt_id from jrn where jr_id=$1', array($jr_id));
-            $cn->save_receipt($grpt);
+            $acc_document=new \Acc_Document($cn,$jr_id);
+            $acc_document->save_receipt();
             $cn->commit();
             // Show a link to the new file
             $op->get();
@@ -292,7 +294,13 @@ switch ($action) {
             $filename = $obj->det->jr_pj_name;
             echo HtmlInput::show_receipt_document($jr_id, h($filename));
             echo $x;
-
+            // if using the XML Belgian format, add a tab for showing it
+            $acc_document=new Acc_Document($cn,$jr_id);
+            echo '<span style="margin-left:5rem">'.
+                 $acc_document->link_download_xml()
+                .'</span>';
+            echo '<p id="receipt_info_id" style="display:inline" ></p>';
+            echo '</div>';
             echo '</div>';
             echo '</body></html>';
         }
@@ -319,7 +327,7 @@ switch ($action) {
             echo HtmlInput::hidden('div', $div);
 
             echo '<INPUT TYPE="FILE" id="receipt_id" name="pj" onchange="' . $check_receipt . '">';
-            echo '<p id="receipt_info_id" class="error"></p>';
+            echo '<p id="receipt_info_id" style="display:inline"></p>';
             echo '</FORM>';
             $ret = $cn->exec_sql("select jr_pj from jrn where jr_id=$1", array($jr_id));
             if (Database::num_row($ret) != 0) {
@@ -327,12 +335,21 @@ switch ($action) {
                 $old_oid = $r['jr_pj'];
                 if (strlen($old_oid) != 0) {
                     // check if this pj is used somewhere else
-                    $c = $cn->count_sql("select * from jrn where jr_pj=" . $old_oid);
+                    $c = $cn->get_value("select count(*) from jrn where jr_pj=$1",
+                            [$old_oid]);
+                    
                     if ($c == 1)
                         $cn->lo_unlink($old_oid);
                 }
+                
                 $cn->exec_sql("update jrn set jr_pj=null, jr_pj_name=null, " .
                     "jr_pj_type=null  where jr_id=$1", array($jr_id));
+                
+                if ( ($oid_xml = $cn->get_value("select jr_document_xml from jrn where jr_id = $1",[$jr_id])) != "") 
+                {
+                    $cn->exec_sql("update jrn set jr_document_xml=null   where jr_id=$1", array($jr_id));
+                    $cn->lo_unlink($oid_xml);
+                }
             }
         }
         echo '</div>';
@@ -395,9 +412,15 @@ switch ($action) {
 						from jrnx join jrn on (j_grpt=jr_grpt_id)
 						where jr_id=$1)
 						', array($jr_id));
-                $cn->exec_sql("select comptaproc.jrn_add_note($1,$2)",
-                    array($jr_id, $http->post('jrn_note')));
-                $rapt = $_POST['rapt'];
+                //------------------------------------------------
+                // Save note
+                //------------------------------------------------
+                $acc_operation_note= Acc_Operation_Note::build_jrn_id($jr_id);
+                $acc_operation_note->setOperation_id($jr_id);
+                $acc_operation_note->setNote(decodeURI($http->post("jr_note",'raw')??""));
+                $acc_operation_note->save();
+                $rapt = $http->post('rapt');
+                
 
                 if ($g_parameter->MY_UPDLAB == 'Y' && isset ($_POST['j_id'])) {
                     $a_rowid = $http->post("j_id");
@@ -486,7 +509,7 @@ switch ($action) {
     case 'ask_extdate':
         $date = new IDate('p_date');
         $html .= "<form id=\"form_" . $div . "\" onsubmit=\"return reverseOperation(this);\">";
-        $html .= HtmlInput::hidden('jr_id', $_REQUEST['jr_id']) .
+        $html .= HtmlInput::hidden('jr_id', $http->request('jr_id','number')) .
             HtmlInput::hidden('div', $div) .
             dossier::hidden() .
             HtmlInput::hidden('act', 'reverseop');
@@ -539,13 +562,111 @@ switch ($action) {
 
 
         break;
+    case 'note_refresh':
+        $acc_operation_note= Acc_Operation_Note::build_jrn_id($jr_id);
+        echo substr($acc_operation_note->getNote()??"",0,120);
+        
+        return;
+    case "rmsup":
+    //------------------------------------------------
+    // Remove a document from JRN_SUP_DOCUMENT
+    //------------------------------------------------
+        $js_id=$http->post("js_id","number");
+        $jrn_sup= new Jrn_Sup_Document_SQL($cn,$js_id);
+        $jrn_sup->delete();
+        // no answer, we stop here
+        return;
+    case 'input_file':
+    //------------------------------------------------
+    // Display form for adding file , directly HTML
+    // 
+    //------------------------------------------------
+        require_once NOALYSS_TEMPLATE."/ajax_ledger+input_file.php";
+        return;
+    case 'save_file':
+    //------------------------------------------------
+    // Add a document to the operation
+    //------------------------------------------------
+        if (sizeof($_FILES)==0) {
+            return;
+        }
+        $nb=count($_FILES['document_supplemental']["name"]);
+        $cn->start();
+        for ($i=0;$i<$nb;$i++)
+        {
+            $file= tempnam($_ENV["TMP"], "sup_file");
+            if ( move_uploaded_file($_FILES['document_supplemental']['tmp_name'][$i],$file))
+            {
+                if ( ($oid=$cn->lo_import($file)) != false )
+                {
+                    $jrn_sup=new Jrn_Sup_Document_SQL($cn);
+                    $jrn_sup->jr_id=$jr_id;
+                    $jrn_sup->js_lob=$oid;
+                    $jrn_sup->js_mimetype=$_FILES['document_supplemental']['type'][$i];
+                    $jrn_sup->js_filename=$_FILES['document_supplemental']['name'][$i];
+                    $jrn_sup->insert();
+                    $rowid=sprintf("row_js_%s_%s",$div,$jrn_sup->js_id);
+                    // @var $download (url) to send file
+                    $download="export.php?". http_build_query(
+                            [
+                                "act"=>"RAW:suppl-document"
+                                ,"js_id"=>$jrn_sup->js_id
+                                ,"gDossier"=>$gDossier
+                            ]);
+                    
+                    
+                    $script_remove="Supplement_Document.delete_document('$gDossier','$div','{$jrn_sup->js_id}','$jr_id')";
+                    $icon_remove=\Icon_Action::trash(uniqid("sdd"),$script_remove);
+                    echo <<<EOF
+<div class="row" id="{$rowid}">
+    <div class="col">
+        <a href="{$download}" download>   
+        {$jrn_sup->js_filename}
+        </a>
+    </div>
+    <div class="col">
+        {$jrn_sup->js_description}
+    </div>
+    <div class="col">
+        {$icon_remove}
+    </div>
+</div>
+EOF;
+                }
+                else 
+                {
+                    // failed
+                    print '<div class="row">';
+                    echo_warning(_("1 Echec ").$_FILES["name"]);
+                    print '</div>';
+                }
+
+            }
+            else
+            {
+                //failed
+                // failed
+                print '<div class="row">';
+                echo_warning(_("2 Echec ").$_FILES["name"]);
+                print '</div>';
+            }
+        }
+        
+        $cn->commit();
+        return;
+        case 'refresh_file':
+        //------------------------------------------------
+        // refresh list of suppemental files
+        //------------------------------------------------
+        Acc_Document::display_supplementary_doc($cn, $http->get("div"), $http->get("jr_id"));
+          
+        return;
 }
 $html = escape_xml($html);
 if (!headers_sent()) {
     header('Content-type: text/xml; charset=UTF-8');
-} else {
-    echo "HTML" . unescape_xml($html);
 }
+
 
 echo <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
