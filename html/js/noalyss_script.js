@@ -609,14 +609,19 @@ function popup_select_tva(obj, p_function_callback) {
         if (document.getElementById('tva_select')) {
             removeDiv('tva_select');
         }
-
-        var queryString = "gDossier=" + obj.gDossier + "&op=dsp_tva" + "&ctl=" + obj.ctl + '&popup=' + 'tva_select';
-        if (obj.jcode)
-            queryString += '&code=' + obj.jcode;
-        if (obj.compute)
-            queryString += '&compute=' + obj.compute;
-        if (obj.filter)
-            queryString += '&filter=' + obj.filter;
+        var gDossier=(obj.gDossier)?obj.gDossier:obj.getAttribute("gdossier");
+        var ctl=(obj.ctl)?obj.ctl:obj.getAttribute("ctl");
+     
+        var queryString = "gDossier=" + gDossier + "&op=dsp_tva" + "&ctl=" + ctl + '&popup=' + 'tva_select';
+        
+        var jcode=(obj.jcode)?obj.jcode:obj.getAttribute("jcode");
+        if (jcode)
+            queryString += '&code=' + jcode;
+        var compute=(obj.compute)?obj.compute:obj.getAttribute("compute");
+        if (compute)             queryString += '&compute=' + compute;
+        var filter=(obj.filter)?obj.filter:obj.getAttribute("filter");
+        
+        if (filter)            queryString += '&filter=' + filter;
 
         var action = new Ajax.Request(
             "ajax_misc.php",
@@ -641,7 +646,7 @@ function popup_select_tva(obj, p_function_callback) {
 
                         var nTop = posY - 200;
                         var nLeft = "15%";
-                        var str_style = "top:" + nTop + "px;left:" + nLeft + ";right:" + nLeft + ";width:55em;height:auto";
+                        var str_style = "top:" + nTop + "px;left:" + nLeft + ";right:" + nLeft + ";width:55em;height:auto;z-index:"+get_next_layer()+';';
 
                         var popup = {
                             'id': 'tva_select',
@@ -1135,6 +1140,8 @@ function show_calc() {
     if (document.getElementById('calc1')) {
         this.document.getElementById('inp').value = "";
         this.document.getElementById('inp').focus();
+        document.getElementById("calc1").setStyle({ 'z-index':get_next_layer()});
+    
         return;
     }
     var sid = 'calc1';
@@ -1147,8 +1154,10 @@ function show_calc() {
     shtml += '</form><span class="highligth" style="display:block" id="sub_total">  ' + content[67] + '  </span><span style="display:block"  id="listing"> </span>';
 
     var obj = {
-        id: sid, html: shtml,
-        drag: false, style: 'z-index:'+get_next_layer()
+        id: sid,
+        html: shtml,
+        drag: false, 
+        style: 'z-index:'+get_next_layer()
     };
     add_div(obj);
     this.document.getElementById('inp').focus();
@@ -2202,10 +2211,11 @@ function view_action(ag_id, dossier, modify) {
  * @param  _id : id of the table
  * @param  colnr : string containing the column number where you're searching separated by a comma
  * @param start_row : first row (1 if you have table header)
+ * @param class 2nd filter on the CSS CLASS of the row (TR), domid of the TAG containing the classname (TagName: SELECT, HIDDEN, TEXT )
  * @returns nothing
  * @see HtmlInput::filter_table
  */
-function filter_table(phrase, _id, colnr, start_row) {
+function filter_table(phrase, _id, colnr, start_row,classname) {
     id$('info_div').innerHTML = content[65];
     id$('info_div').style.display = "block";
     var words = id$(phrase).value.toLowerCase();
@@ -2220,8 +2230,17 @@ function filter_table(phrase, _id, colnr, start_row) {
     }
     var ele;
     var tot_found = 0;
-
-    for (var r = start_row; r < table.rows.length; r++) {
+    console.debug(`filter is ${classname}`)
+    var row_class="";
+    if ( classname )     row_class=id$(classname).value;
+    
+    for (var r = start_row; r < table.rows.length; r++) 
+    {
+        if ( row_class != "" && ! table.rows[r].hasClassName(row_class)) {
+            console.debug(`no check ${r} ${classname}`)
+            continue;
+        }
+        console.debug(`checked ${r} ${classname}`)
         var found = 0;
         for (var col = 0; col < aCol.length; col++) {
             var idx = aCol[col];
@@ -4992,4 +5011,114 @@ Noalyss.prototype.parameter_test_smtp = function ()
 
 }
 
+VAT_Code = function (dossier_id) {
+    this.dossier_id=dossier_id;
+}
+
+VAT_Code.prototype.list_vatex=function () 
+{
+    try
+    {
+        var here=this;
+        var dgbox = "search_vatex_div";
+        waiting_box();
+        removeDiv(dgbox);
+        var queryString = {
+            op:'search_vatex',
+            gDossier:this.dossier_id,
+            dgbox:dgbox
+        }
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                           var y = calcy(15);
+                        var div_style = "position:absolute;" + ";top:" + y + "px"+";z-index:"+get_next_layer();
+                        add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: false});
+                        $(dgbox).update(req.responseText);
+                        here.filter_country();
+                     
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
+
+}
+
+VAT_Code.prototype.select_value=function(vx_code)
+{
+    try
+    {
+        var dgbox = "search_vatex_div";
+        waiting_box();
+        var queryString = {
+            op:'search_vatex',
+            gDossier:this.dossier_id,
+            select_code:vx_code,
+            dgbox:dgbox
+
+        }
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        removeDiv(dgbox);
+                        var answer=req.responseJSON
+                        $("vx_code").value=answer.vx_code;
+                        $("vx_value").update(answer.vx_value);
+                        $('vx_code_description').update(answer.vx_description)
+                     
+                        
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
+
+}
+VAT_Code.prototype.filter_country=function()
+{
+    try {
+        var to_show=id$("filter_country").value;
+           console.debug(`show ${to_show}`)
+        let a_row=id$("code_vatex_tb").rows;
+        // show all rows, then hide
+       for (let i=1;i< a_row.length;i++) {
+           
+           if (id$("filter_country").value == 0 || a_row[i].hasClassName(to_show)){
+            a_row[i].show()
+           console.debug(`show row ${i}`)
+               
+           }else {
+            a_row[i].hide()
+           console.debug(`hide row ${i}`)
+            }
+       }
+       $('lk_code_vatex_tb').value="";
+    }catch (e)
+    {
+        console.error(e.message);
+        return false;
+    }
+}
 noalyss=new Noalyss();
+

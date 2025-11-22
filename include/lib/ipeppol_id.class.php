@@ -76,11 +76,4 @@ class IPEPPOL_ID extends HtmlInput
         return $this->itext->display();
 
     }
-
-    static function testme()
-    {
-        $ivatnumber=new IPEPPOL_ID("av_text13");
-
-        echo $ivatnumber->input();
-    }
 }

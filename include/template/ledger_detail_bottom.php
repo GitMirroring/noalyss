@@ -45,6 +45,7 @@ $a_tab['linked_operation_div']=array('id'=>'linked_operation_div'.$div,'label'=>
 $a_tab['document_operation_div']=array('id'=>'document_operation_div'.$div,'label'=>_('Document').'('.$nb_document.')','display'=>'block');
 $a_tab['linked_action_div']=array('id'=>'linked_action_div'.$div,'label'=>_('Actions Gestion').'('.count($a_followup).')','display'=>'none');
 $a_tab['analytic_div']=array('id'=>'analytic_div'.$div,'label'=>_('Comptabilité Analytique'),'display'=>'none');
+$a_tab['supplemental_doc_div']=array('id'=>'supplemental_doc_div'.$div,'label'=>_('Documents supplémentaires'),'display'=>'none');
 //var $g_parameter \Noalyss_Parameter_Folder
 global $g_parameter;
 
@@ -64,7 +65,11 @@ if ( $div != "popup") :
     ?>
     <li class="<?php echo $class?>">
         <?php $div_tab_id=$a_value['id'];?>
-        <a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected' ;show_tabs($F('<?=$div?>tab').split(','),'<?php echo $div_tab_id; ?>');"><?php echo _($a_value['label'])?></a>
+        <?php if ( $div_tab_id == "supplemental_doc_div".$div):?>
+            <a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected' ;Supplement_Document.refresh_list('<?=\Dossier::id()?>','<?=$div?>','<?=$obj->jr_id?>');show_tabs($F('<?=$div?>tab').split(','),'<?php echo $div_tab_id; ?>');"><?php echo _($a_value['label'])?></a>
+        <?php else: ?>
+            <a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected' ;show_tabs($F('<?=$div?>tab').split(','),'<?php echo $div_tab_id; ?>');"><?php echo _($a_value['label'])?></a>
+        <?php endif; ?>
     </li>
     <?php    endforeach; ?>
 </ul>
@@ -294,8 +299,16 @@ echo '</div>';
 ?>
 
 <?php 
-
+//------------------------------------------------
+// Receipt
+//------------------------------------------------
 require_once NOALYSS_TEMPLATE.'/ledger_detail_file.php';
+?>
+<?php
+//------------------------------------------------
+// Receipt supplemental_doc_div
+//------------------------------------------------
+require_once NOALYSS_TEMPLATE."/ledger_detail_sup_files.php";
 ?>
 
 

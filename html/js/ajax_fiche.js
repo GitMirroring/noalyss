@@ -428,9 +428,14 @@ category_card.display_search_peppol = function (p_domid)
     {
         var dgbox = "peppol_id_search_div";
         waiting_box();
+        let peppol_id=id$(p_domid).value;
         var queryString = {
                 op:'search_peppol'
                 ,ctl:p_domid
+                ,query:peppol_id
+        }
+        if ( peppol_id != "") {
+            queryString['filter']='peppolid';
         }
         if (id$("peppol_id_search_div_frm")) {
             queryString['query']=$F("query");

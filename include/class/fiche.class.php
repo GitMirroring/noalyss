@@ -524,6 +524,16 @@ class Fiche
             {
                 $p_array["av_text".ATTR_DEF_QUICKCODE]="";
             }
+            // by default the quick_code is the base account of the class + first letters of the name
+            if ( $p_array["av_text".ATTR_DEF_QUICKCODE] =="")
+            {
+                $base_acc=$this->cn->get_value("select fd_class_base from fiche_def where fd_id = $1",
+                        [$p_fiche_def]);
+                $p_array["av_text".ATTR_DEF_QUICKCODE]=sprintf("%s%s"
+                            , substr($base_acc,0, 3)
+                            , substr($p_array["av_text".ATTR_DEF_NAME], 0, 4)
+                        );
+            }
             $sql=sprintf("select insert_quick_code(%d,'%s')", $fiche_id,
                     sql_string($p_array['av_text'.ATTR_DEF_QUICKCODE]));
             $this->cn->exec_sql($sql);
@@ -553,9 +563,9 @@ class Fiche
         }
         catch (Exception $e)
         {
-            record_log("FIC603".$e->getMessage()." ".$e->getTraceAsString());
+            record_log($e);
             $this->cn->rollback();
-            throw ($e);
+            throw (new \Exception ("F561 ". __CLASS__.".".__FUNCTION__,561,$e));
             return;
         }
         return;

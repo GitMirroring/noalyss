@@ -184,9 +184,6 @@ if ( isset($_POST['record']) )
                         ,h($file));
                 $acc_document=new Acc_Document($cn,$Ledger->jr_id);
 
-                /**
-                 * @todo si Client non belge ou pas de n° de tva alors pas de e-facture 
-                 */
                 if ($g_parameter->MY_INVOICE_FORMAT != 'BASIC' && ! empty($acc_document->d_filename ))
                 {
                     $flag_invoice=2;

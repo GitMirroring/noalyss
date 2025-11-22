@@ -379,6 +379,8 @@ $path = array(
     , 'check_ibannumber'=>'ajax_check_ibannumber'
     // related to peppol : search 
     ,'search_peppol'=>'ajax_search_peppol'
+    // find and select a VATEX code : VAT Exemption code mandatory for PEPPOL
+    ,'search_vatex'=>'ajax_search_vatex'
 ) ;
 
 if (array_key_exists($op, $path)) {
@@ -596,7 +598,7 @@ EOF;
                     
                     $Res = $cn->exec_sql("select * from v_tva_rate 
                                 where
-                        tva_purchase <> '#' and tva_sale <> '#'
+                        tva_purchase <> '#' or tva_sale <> '#'
                             order by tva_id asc");
                 }
 		$Max = Database::num_row($Res);

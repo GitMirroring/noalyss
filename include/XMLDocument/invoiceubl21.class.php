@@ -83,6 +83,17 @@ class InvoiceUBL21 extends XMLInvoice {
                 $a_error[]=$item;
             }
         }
+        /**
+         * check that PEPPOL ID is valid
+         */
+        if ( isset($company['COMPANY_UBL_ID'])) 
+        {
+            if ( strpos($company['COMPANY_UBL_ID'],':') == 0 )
+            {
+                $a_error[]="COMPANY_UBL_ID";
+            }
+            
+        }
         return $a_error;
     }
      /**
@@ -100,11 +111,23 @@ class InvoiceUBL21 extends XMLInvoice {
             ];
         
         foreach ($a_needed as $item=>$value) {
-             if ( $this->data['customer'][$value]=="") {
+             if ( trim($this->data['customer'][$value])=="") {
                  $a_error[]=$value;
              }
         }
-      
+        if ( $this->data['customer']["endpoint_id"] != "")
+        {
+            // check if peppol id has the form 9999:9999...
+            list($scheme_id,$peppol)=explode(":", $this->data['customer'][$value]);
+            if (preg_replace('/[0-9]/', '', $scheme_id) != "") 
+            {
+                $a_error[]=ATTR_DEF_PEPPOLID;
+            }elseif(\noalyss_trim($peppol) =="") 
+            {
+                $a_error[]=ATTR_DEF_PEPPOLID;
+                
+            }
+        }
         return $a_error;
     }
 
@@ -130,9 +153,10 @@ class InvoiceUBL21 extends XMLInvoice {
         
         $customer=$this->createElement('cac:AccountingCustomerParty');
         $customer_party=$customer->appendChild($this->createElement('cac:Party'));
-        ///@todo EndPointID doit être dans les paramètres (voir upgrade.sql)
-        $customer_party->appendChild($this->createElement('cbc:EndpointID',$this->data['customer']['endpoint_id']))
-                ->setAttribute('schemeID', 9925);
+        list($scheme_id,$peppol)=explode( ":",$this->data['customer']['endpoint_id']);
+        $customer_party->appendChild($this->createElement('cbc:EndpointID',$peppol))
+                ->setAttribute('schemeID', $scheme_id);
+        
         $party_name=$this->createElement('cac:PartyName');
         $party_name->appendChild($this->createElement("cbc:Name", $this->data['customer']['name']));
         $customer_party->appendChild($party_name);
@@ -210,7 +234,11 @@ class InvoiceUBL21 extends XMLInvoice {
         
         $supplier=$this->createElement('cac:AccountingSupplierParty');
         $supplier_party=$supplier->appendChild($this->createElement('cac:Party'));
-        $supplier_party->appendChild($this->createElement('cbc:EndpointID',$this->data["supplier"]['supplier_vat_id']))->setAttribute('schemeID', 9925);
+        list($scheme_id,$peppol)=explode( ":",$company['COMPANY_UBL_ID']);
+        $supplier_party->appendChild($this->createElement('cbc:EndpointID',$peppol))
+                ->setAttribute('schemeID', $scheme_id);
+        
+        //$supplier_party->appendChild($this->createElement('cbc:EndpointID',$this->data["supplier"]['supplier_vat_id']))->setAttribute('schemeID', 9925);
         $party_name=$this->createElement('cac:PartyName');
         $party_name->appendChild($this->createElement('cbc:Name', $this->data['supplier']['name']));
         $supplier_party->appendChild($party_name);
@@ -269,6 +297,7 @@ class InvoiceUBL21 extends XMLInvoice {
 			<cac:TaxCategory>
 				<cbc:ID>S</cbc:ID>
 				<cbc:Percent>6</cbc:Percent>
+                               if ID !=Z and ID != S  <cbc:TaxExemptionReasonCode
 				<cac:TaxScheme>
 					<cbc:ID>VAT</cbc:ID>
 				</cac:TaxScheme>
@@ -292,12 +321,14 @@ class InvoiceUBL21 extends XMLInvoice {
             $subTotalXML->appendChild($this->createElement('cbc:TaxAmount',sprintf("%.2f",$subTotal[$i]['vat'])))
                     ->setAttribute("currencyID",$this->data['currency']);
             $taxCategory=$this->createElement("cac:TaxCategory");
-            /**
-             * @TODO DNY
-             * Pas toujours S !?
-             */
             $taxCategory->appendChild($this->createElement("cbc:ID",$subTotal[$i]['vat_code']));
             $taxCategory->appendChild($this->createElement("cbc:Percent",sprintf("%.2f",$subTotal[$i]['percent'])));
+            if ($subTotal[$i]['vat_code'] != "S"
+                    && $subTotal[$i]['vat_code'] != "Z")
+            {
+                // if cbc:ID not S and not Z then exemption VAT code is needed
+                 $taxCategory->appendChild($this->createElement("cbc:TaxExemptionReasonCode",$subTotal[$i]['vatex']));
+            }
             $taxScheme=$this->createElement("cac:TaxScheme");
             $taxScheme->appendChild($this->createElement("cbc:ID", "VAT"));
             $taxCategory->appendChild($taxScheme);

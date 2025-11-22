@@ -278,7 +278,9 @@ abstract class XMLInvoice extends \DOMDocument
                 $VAT_SubTotal[$idx_subtotal]['idx']=$idx;
                 $VAT_SubTotal[$idx_subtotal]['vat_code']=$result['operation'][$i]['vat_code'] ;
                 $VAT_SubTotal[$idx_subtotal]['percent']=$percent;
+                $VAT_SubTotal[$idx_subtotal]['vatex']=$acc_tva->vx_code;
                 $VAT_SubTotal[$idx_subtotal]['amount']=$VAT_SubTotal[$idx_subtotal]['vat']=0;
+                
                 $idx_subtotal++;
             }
             /**
@@ -371,6 +373,23 @@ abstract class XMLInvoice extends \DOMDocument
                         ,$tva->tva_code 
                         );
             }
+            elseif (! in_array($this->data['operation'][$i]['vat_code'],array("S","Z")))
+            {
+                $card=new \Fiche(
+                        $this->cn
+                        ,$this->data['operation'][$i]['card_id']
+                        );
+                $tva= \Acc_Tva::build($this->cn, $this->data['operation'][$i]['vat_id']);
+                if ( $tva->vx_code == "") 
+                {
+                      $a_error[]=sprintf(_("%s : %s code Exemption pour PEPPOL non configuré code TVA [ %s %s ]")
+                        ,   $i
+                        , $card->get_quick_code()
+                        ,$tva->tva_id
+                        ,$tva->tva_code 
+                        );
+                }
+            }
         }
         return $a_error;
     }
@@ -452,8 +471,9 @@ abstract class XMLInvoice extends \DOMDocument
         {
            $result['country']=substr($result['customer_vat_id'],0,2);
         }
-        // $result['endpoint_id']=$customer->get_attribute(ATTR_DEF_PEPPOLID,0);
-        $result['endpoint_id']= $result['customer_vat_id'];
+        $result['endpoint_id']=$customer->get_attribute(ATTR_DEF_PEPPOLID,0);
+        
+        
         return $result;
     }
     /**

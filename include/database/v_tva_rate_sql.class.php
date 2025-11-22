@@ -53,6 +53,7 @@ class V_Tva_Rate_SQL extends Table_Data_SQL
             ,'tva_payment_purchase'=>'tva_payment_purchase'
             ,'tva_payment_sale'=>'tva_payment_sale'
             ,'tva_peppol_code'=>'tva_peppol_code'
+            , 'vx_code'=>'vx_code'
 
         );
         /*
@@ -71,6 +72,7 @@ class V_Tva_Rate_SQL extends Table_Data_SQL
             , 'tva_payment_purchase'=>'text'
             , 'tva_payment_sale'=>'text'
             ,'tva_peppol_code'=>'text'
+            , 'vx_code'=>'text'
         );
 
 

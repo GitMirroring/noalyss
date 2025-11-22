@@ -196,7 +196,7 @@ class Acc_Ledger_Search
         $f_qcode->javascript=sprintf(' onchange="fill_data_onchange(%s);" ',
                 $f_qcode->name);
         $f_qcode->value=$http->request($this->div.'qcode',"string","");
-
+        $f_qcode->setAfter_clean("");
         /*        $f_txt_qcode=new IText('qcode');
           $f_txt_qcode->value=(isset($_REQUEST['qcode']))?$_REQUEST['qcode']:'';
          */
