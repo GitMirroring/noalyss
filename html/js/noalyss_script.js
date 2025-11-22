@@ -609,14 +609,19 @@ function popup_select_tva(obj, p_function_callback) {
         if (document.getElementById('tva_select')) {
             removeDiv('tva_select');
         }
+        var gDossier=(obj.gDossier)?obj.gDossier:obj.getAttribute("gdossier");
+        var ctl=(obj.ctl)?obj.ctl:obj.getAttribute("ctl");
+     
+        var queryString = "gDossier=" + gDossier + "&op=dsp_tva" + "&ctl=" + ctl + '&popup=' + 'tva_select';
         
-        var queryString = "gDossier=" + obj.getAttribute("gdossier") + "&op=dsp_tva" + "&ctl=" + obj.getAttribute("ctl") + '&popup=' + 'tva_select';
-        if (obj.jcode)
-            queryString += '&code=' + obj.jcode;
-        if (obj.compute)
-            queryString += '&compute=' + obj.compute;
-        if (obj.filter)
-            queryString += '&filter=' + obj.filter;
+        var jcode=(obj.jcode)?obj.jcode:obj.getAttribute("jcode");
+        if (jcode)
+            queryString += '&code=' + jcode;
+        var compute=(obj.compute)?obj.compute:obj.getAttribute("compute");
+        if (compute)             queryString += '&compute=' + compute;
+        var filter=(obj.filter)?obj.filter:obj.getAttribute("filter");
+        
+        if (filter)            queryString += '&filter=' + filter;
 
         var action = new Ajax.Request(
             "ajax_misc.php",

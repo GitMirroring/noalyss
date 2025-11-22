@@ -598,7 +598,7 @@ EOF;
                     
                     $Res = $cn->exec_sql("select * from v_tva_rate 
                                 where
-                        tva_purchase <> '#' and tva_sale <> '#'
+                        tva_purchase <> '#' or tva_sale <> '#'
                             order by tva_id asc");
                 }
 		$Max = Database::num_row($Res);
