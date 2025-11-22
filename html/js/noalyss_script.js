@@ -1140,6 +1140,8 @@ function show_calc() {
     if (document.getElementById('calc1')) {
         this.document.getElementById('inp').value = "";
         this.document.getElementById('inp').focus();
+        document.getElementById("calc1").setStyle({ 'z-index':get_next_layer()});
+    
         return;
     }
     var sid = 'calc1';
@@ -1152,8 +1154,10 @@ function show_calc() {
     shtml += '</form><span class="highligth" style="display:block" id="sub_total">  ' + content[67] + '  </span><span style="display:block"  id="listing"> </span>';
 
     var obj = {
-        id: sid, html: shtml,
-        drag: false, style: 'z-index:'+get_next_layer()
+        id: sid,
+        html: shtml,
+        drag: false, 
+        style: 'z-index:'+get_next_layer()
     };
     add_div(obj);
     this.document.getElementById('inp').focus();

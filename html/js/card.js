@@ -116,7 +116,7 @@ function search_card(obj)
 	if (  document.getElementById('search_card') ) {
 	    removeDiv('search_card');
 	}
-
+        
 
         waiting_box();
 
@@ -464,7 +464,7 @@ function result_card_search(req)
             sx=document.body.scrollTop+60;
 	}
 
-        var div_style="top:"+sx+"px;min-height:80%;height:auto";
+        var div_style="top:"+sx+"px;min-height:80%;height:auto;z-index:"+get_next_layer();;
         add_div({id:'search_card',cssclass:'inner_box',html:"",style:div_style,drag:false,effect:'blinddown'});
 
         id$('search_card').innerHTML=code_html;
@@ -690,7 +690,7 @@ function select_card_type(obj)
     var sx=0;
     sx=calcy(160);
 
-    var str_style="top:"+sx+"px;height:auto";
+    var str_style="top:"+sx+"px;height:auto;z-index:"+get_next_layer();
     waiting_box();
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
 
@@ -782,7 +782,7 @@ function dis_blank_card(obj)
     var content='div_new_card';
     var nTop=calcy(150);
     var nLeft=posX;
-    var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto;width:45rem;";
+    var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto;width:45rem;z-index:"+get_next_layer();
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
 
@@ -824,7 +824,7 @@ function form_blank_card(obj)
     var content='div_new_card';
     var nTop=posY-40;
     var nLeft=posX-20;
-    var str_style="top:"+nTop+"px;left:"+nLeft+"px;width:60em;height:auto";
+    var str_style="top:"+nTop+"px;left:"+nLeft+"px;width:60em;height:auto;z-index:"+get_next_layer();
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
     if ( document.getElementById(content)) {removeDiv(content);}
