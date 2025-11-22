@@ -65,7 +65,7 @@
   $W1->set_attribute('typecard','deb');
 
   $W1->extra='deb';
-
+O
   // Add the callback function to filter the card on the jrn
   $W1->set_callback('filter_card');
 

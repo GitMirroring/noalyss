@@ -230,6 +230,19 @@ class Card_Property
             $result['label']=$this->ad_text;
             return $result;
         } 
+         // Warning length quickcode
+        if ($this->ad_id == ATTR_DEF_QUICKCODE) {
+            $result['input'] = new IText();
+            $result['input']->css_size = "100%";
+            $result['input']->label = $this->ad_text;
+            $result['input']->name = "av_text" . $this->ad_id;
+            $result['input']->value = $this->av_text;
+            $result['input']->placeholder= "999NOM";
+            $result['bulle'] = Icon_Action::warnbulle(76);
+            $result['label']=$this->ad_text;
+            return $result;
+        }       
+        
         switch ($this->ad_type) {
             case 'text':
                 $result['input'] = new IText();
@@ -303,10 +316,7 @@ class Card_Property
             $result['bulle'] = Icon_Action::infobulle(21);
         }
 
-        // Warning length quickcode
-        if ($this->ad_id == ATTR_DEF_QUICKCODE) {
-            $result['bulle'] = Icon_Action::warnbulle(76);
-        }
+      
 
         return $result;
     }
