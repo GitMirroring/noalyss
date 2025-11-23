@@ -806,7 +806,7 @@ function view_history_account(p_value, dossier, p_exercice) {
                 add_div(popup);
                 success_box(req, xml);
                 id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
-                $id$(idbox).setStyle({top:calcy(140 + (layer * 3)) + "px"
+                id$(idbox).setStyle({top:calcy(140 + (layer * 3)) + "px"
                 ,"z-index":layer})
             }
         }
@@ -850,7 +850,7 @@ function view_history_anc_account(p_value, dossier, p_exercice) {
                   id$(idbox).setStyle(
                             {
                                 top:calcy(140 + (layer * 3)) + "px"
-                                ,"z-index":get_next_layer()
+                                ,"z-index":layer
                             }
                     )
             }

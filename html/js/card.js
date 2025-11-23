@@ -46,7 +46,7 @@ function boxsearch_card(p_dossier)
                                                     return;
                                                 }
 						var y=calcy(15);
-						var div_style="position:absolute;"+";top:"+y+"px";
+						var div_style="position:absolute;"+";top:"+y+"px;z-index:"+get_next_layer();
 						add_div({id:'boxsearch_card_div',cssclass:'inner_box',html:loading(),style:div_style,drag:true});
 						id$('boxsearch_card_div').innerHTML=req.responseText;
 						sorttable.makeSortable(id$('tb_fiche'));
