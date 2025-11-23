@@ -91,7 +91,6 @@ class FacturX extends XMLInvoice
                 ,ATTR_DEF_CITY=>'city'
                 ,ATTR_DEF_COUNTRY_CODE=>'country'
                 ,ATTR_DEF_NUMTVA=>'customer_vat_id'
-                ,ATTR_DEF_PEPPOLID=>'endpoint_id'
             ];
         
         foreach ($a_needed as $item=>$value) {
@@ -244,6 +243,25 @@ class FacturX extends XMLInvoice
         return $invoice->downloadString();
     }
 
-
+    /**
+     * @brief check that all the data are correct
+     * @returns empty arry : no errors,  array with error code
+     * @see get_message_error
+     */
+    public function verify()
+    {
+                // verify all VAT
+        ///@var $a_error : array of error_code see check_company_error
+        $a_error = array();
+        $a_error['general'] =  [];
+        $a_error['operation']=[];
+       
+        // verify that all needed data in PARAMETER are valid
+        $a_error['company'] = $this->check_company_data();
+        $a_error['customer'] = $this->check_customer_data();
+        
+        return $a_error;
+    } 
+     
 
 }

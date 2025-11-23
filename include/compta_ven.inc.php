@@ -50,8 +50,9 @@ if ( isset($_REQUEST['p_jrn']) &&
     NoAccess();
     exit -1;
 }
-
+//------------------------------------------------
 /* if a new invoice is encoded, we display a form for confirmation */
+//------------------------------------------------
 if ( isset ($_POST['view_invoice'] ) )
 {
     $p_jrn=$http->post("p_jrn","number");
@@ -115,10 +116,10 @@ if ( isset ($_POST['view_invoice'] ) )
         return;
     }
 }
+
 //------------------------------
 /* Record the invoice */
 //------------------------------
-
 if ( isset($_POST['record']) )
 {
 // Check privilege
