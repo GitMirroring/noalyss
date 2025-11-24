@@ -361,12 +361,12 @@ class PDF_Operation extends PDF {
         $nb=count($pa_plan);
         $this->pdf->SetFont('DejaVu', 'B', 8);
         $width=25;
-        $this->pdf->SetFillColor(220,221,255);
+        $this->pdf->fill_row(0);
         for ($i = 0; $i<$nb; $i++) {
              $this->pdf->write_cell($width,8,$pa_plan[$i]['pa_name']);
         }
         $this->pdf->write_cell($width,8,_('Montant'),0,0,'R');
-        $this->pdf->SetFillColor(0,0,0);
+        $this->pdf->fill_row(1);
         $this->pdf->line_new(8);
     }
     private function print_anc_detail($p_j_id, $pa_plan) {

@@ -112,7 +112,7 @@ class Print_Ledger_Detail_Item extends Print_Ledger
         $nb=Database::num_row($ret_detail);
         $this->SetFont('DejaVu', '', 6);
         $internal="";
-        $this->SetFillColor(220,221,255);
+        $this->fill_row(0);
         $high=8;
         $high_lg=8;
         for ( $i=0;$i< $nb ;$i++)

@@ -266,7 +266,7 @@ else
 					$pdf->write_cell($tab[6], 4, "", 0, 0, 'R', $fill);
 				$pdf->line_new();
 			}
-			$pdf->SetFillColor(0, 0, 0);
+			$pdf->fill_row(1);
 			$pdf->SetFont('DejaVuCond', 'B', 8);
 			$debit = sprintf('Debit  : %s', nbm($amount_deb));
 			$credit = sprintf('Credit : %s', nbm($amount_cred));

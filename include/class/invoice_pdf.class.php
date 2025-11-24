@@ -255,7 +255,12 @@ class Invoice_PDF extends \PDF
             $item->get_by_qcode(trim($this->data['e_march' . $i]));
             $fill  = $this->is_fill($line);
             $this->write_multi($col['quick_code'], 4, $item->get_attribute(ATTR_DEF_QUICKCODE),'','',$fill);
-            $this->write_multi($col['label'], 4, $this->data['e_march' . $i . '_label'],fill:$fill);
+            if ( isset ($this->data['e_march' . $i . '_label']))
+            {
+                $this->write_multi($col['label'], 4, $this->data['e_march' . $i . '_label'],fill:$fill);
+            }else {
+                $this->write_multi($col['label'], 4,$item->get_attribute(ATTR_DEF_NAME),fill:$fill);
+            }
             $this->write_multi($col['quantity'], 4, nbm($this->data['e_quant' . $i]), '', 'R',fill:$fill);
             $this->write_multi($col['price'], 4, nbm($this->data['e_march' . $i . '_price']), '', 'R',fill:$fill);
             $this->write_multi($col['vat_code'], 4, $this->data['e_march' . $i . '_tva_id'], '', 'C',fill:$fill);

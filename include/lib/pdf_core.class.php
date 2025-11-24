@@ -350,7 +350,15 @@ class PDF_Core extends TFPDF
         }
         return $fill;
     }
-
+    /**
+     * @brief set color for row , 
+     * @param $enable (int)set color 0 or disable 1
+     * @return 0 or 1 
+     */
+    function fill_row($enable)
+    {
+        return $this->is_fill($enable);
+    }
 
 
 }
