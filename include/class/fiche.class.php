@@ -482,7 +482,7 @@ class Fiche
      * \brief  insert a new record thanks an array , either as parameter or $_POST
      *
      * \param $p_fiche_def fiche_def.fd_id
-     * \param $p_array is the array containing the data key = av_textX where X is AD_ID
+     * \param $p_array (double array) array containing arrays of key  (av_textX where X is AD_ID ), value of the property
      *\param $transation DEPRECATED : if we are in a transaction, we don't commit here , else if not, the
      * then a transaction is started and committed 
      * 
@@ -527,10 +527,14 @@ class Fiche
             // by default the quick_code is the base account of the class + first letters of the name
             if ( $p_array["av_text".ATTR_DEF_QUICKCODE] =="")
             {
-                $base_acc=$this->cn->get_value("select fd_class_base from fiche_def where fd_id = $1",
+                if ( ! empty( $p_array['av_text'. ATTR_DEF_ACCOUNT])) {
+                    $base_acc=substr($p_array['av_text'. ATTR_DEF_ACCOUNT]??"",0, 3);
+                }else {
+                    $base_acc=$this->cn->get_value("select substr(fd_class_base,1,2) from fiche_def where fd_id = $1",
                         [$p_fiche_def]);
+                }
                 $p_array["av_text".ATTR_DEF_QUICKCODE]=sprintf("%s%s"
-                            , substr($base_acc,0, 3)
+                            , $base_acc
                             , substr($p_array["av_text".ATTR_DEF_NAME], 0, 4)
                         );
             }
