@@ -47,8 +47,8 @@ $max=($preference['PAGESIZE'] > -1 && count($array)> $preference['PAGESIZE'])? $
 <h2 class="notice"><?php printf (_("Résultat limité à %d dans vos préférences, %d fiches trouvées"), $preference['PAGESIZE'],count($array))?> </h2>
 
 <?php endif?>
+<div class="content">
 <?php echo _('Cherche')?> <?php echo Icon_Action::infobulle(26);echo HtmlInput::filter_table("tb_fiche", "0,1,2,3,4,5", 1); ?>
-<div style="padding:2px">
 <table id="tb_fiche" class="sorttable" style="width:100%">
 	<tr>
 		<th>

@@ -115,9 +115,11 @@ if ( isset($_GET['f_id']))
 	echo '<p style="text-align:center;">'.$detail_card.'</p>';
  
 	if (   $result ==-1){
+            print '<div class="content">';
 	  echo h2(_("Aucune opération pour l'exercice courant"),'class="error"');
           echo HtmlInput::button_close($div);
           } else {
+            print '<div class="content">';
             echo $fiche->filter_history("tb".$div);
             echo $old;
             echo $table;
@@ -127,6 +129,7 @@ if ( isset($_GET['f_id']))
           }
 
 	echo $old;
+          print "</div>";
 
         $html=ob_get_contents();
         ob_end_clean();

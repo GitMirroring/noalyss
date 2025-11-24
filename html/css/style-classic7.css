@@ -70,6 +70,8 @@ BODY {
     --font-super:'roboto regular';
     --font-title:'Montserrat Regular';
     --bg-inner-box:#DCE1EF;
+    --underline-menu:#d7e8ee;
+    --bg-slide:#c5d5e8;
 }
 input{
     font-family: 'OpenSansRegular';
@@ -341,15 +343,17 @@ td.tool a.mtitle:hover {
      bottom:0;
      right:0;
      position:absolute;
-     background-color:#5d90cd;
+     background-color:var(--bg-slide);
      z-index:-1;
      transform:scaleX(0);
      transition:transform 300ms ease-in-out;
      mix-blend-mode: darken;
+     border:1px solid navy;
  }
  #module  .nav-item-module.nav-item-slide:hover::before,
  #module  .nav-item-module.nav-item-slide:focus::before {
      transform:scaleX(1);
+     border:1px navy solid;
  }
  #module .nav-item-slide {
      z-index:0;
@@ -1767,8 +1771,6 @@ div.menu2 table {
     /*! border-spacing:1px; */
 }
 div.menu3 {
-	font-size:80%;
-	font-size:0.80rem;
     
 }
 #go_submit_id {
@@ -3994,15 +3996,15 @@ h2.h-section {
     right:0;
     position:absolute;
     height:var(--border-size);
-    background-color:lightblue;
-    transform:scaleX(0);
+    background-color:var(--underline-menu);
+    transform:scaleX(0) scaleY(0);
     transition:transform 300ms ease-in-out;
 }
 
 .nav-item.nav-item-underline:hover::before,
 .nav-item.nav-item-underline:focus::before
 {
-    transform:scaleX(1);
+    transform:scaleX(1) scaleY(1.2);
 }
 
  .nav-item.li-active.nav-item-underline::before {
