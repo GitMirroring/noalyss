@@ -1750,6 +1750,7 @@ class Document
                                              join document_type dt  on (ag_type=dt.dt_id) 
                             where ag_id=$1", array($p_array["ag_id"]));
                 }  elseif (isset($p_array['gen_doc'])) {
+                    if ( $p_array['gen_doc'] == -2) return _("Facture standard");
                     $ret = $this->db->get_value("
                                         select md_name from public.document_modele where md_id=$1",
                         [$p_array['gen_doc']]);
