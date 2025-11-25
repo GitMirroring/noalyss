@@ -56,6 +56,23 @@ if ( count($array) == 0 )
 {
     exit;
 }
+
+$acc_account_ledger=new Acc_Account_Ledger($cn,$Fiche->get_attribute(ATTR_DEF_ACCOUNT));
+$type=$acc_account_ledger->get_type();
+// label  warning if the saldo is incorrect
+$label="";
+if (in_array($type,array('CHA','ACT','PASINV','PROINV')) && $tot_deb<$tot_cred)
+{
+
+    $label=_("Solde créditeur au lieu de débiteur").mb_chr(9888);
+}
+if (in_array($type,array('PRO','PAS','ACTINV','CHAINV')) && $tot_deb>$tot_cred)
+{
+
+    $label=_("Solde débiteur au lieu de créditeur").mb_chr(9888);
+}
+
+
 $size=array(13,25,20,60,12,20,20,20);
 $align=array('L','C','C','L','R','R','R','R');
 
@@ -63,8 +80,14 @@ $Libelle=sprintf("(%s) %s %s [ %s ]",$Fiche->id,$Fiche->getName(),$Fiche->get_at
 $pdf->SetFont('DejaVu','',10);
 $pdf->write_cell(0,8,$Libelle,1,0,'C');
 $pdf->line_new();
-
-
+if ( $label !="" ) 
+{
+    // warning about side
+    $pdf->SetTextColor(255,39,24);
+    $pdf->write_cell(0,8,$label,1,0,'C',fill: false);
+    $pdf->line_new();
+}
+$pdf->SetTextColor(0);
 $pdf->SetFont('DejaVuCond','',8);
 $l=0;
 $pdf->write_cell($size[$l],6,'Date',0,0,'L');

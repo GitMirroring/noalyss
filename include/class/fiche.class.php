@@ -860,7 +860,7 @@ class Fiche
                                    join jrn on (jr_grpt_id=j_grpt)
                                    join tmp_pcmn on (j_poste=pcm_val)
 				   join parm_periode on (p_id=jr_tech_per) 
-                                  where j_qcode=$1 and 
+                                  where f_id=$1 and 
                                   ( to_date($2,'DD.MM.YYYY') <= j_date and 
                                     to_date($3,'DD.MM.YYYY') >= j_date ) 
                                   and $filter_sql  $sql_let ) as m",array($this->id,$p_from,$p_to));
@@ -1020,7 +1020,23 @@ class Fiche
 
         if ( count($this->row ) == 0 )
             return -1;
+        
+        $acc_account_ledger=new Acc_Account_Ledger($this->cn,$this->get_attribute(ATTR_DEF_ACCOUNT));
+        $type=$acc_account_ledger->get_type();
+        // label  warning if the saldo is incorrect
+        $label="";
+        if (in_array($type,array('CHA','ACT','PASINV','PROINV')) && $tot_deb<$tot_cred)
+        {
 
+            $label.=_("Solde créditeur au lieu de débiteur").'<span class="icon">&#xe80e;</span>';
+        }
+        if (in_array($type,array('PRO','PAS','ACTINV','CHAINV')) && $tot_deb>$tot_cred)
+        {
+
+            $label.=_("Solde débiteur au lieu de créditeur")." ".'<span class="icon">&#xe80e;</span>';
+        }
+        if ( $label !="" ) 
+                echo '<span class="notice" >'.$label.'</span>';
         $rep="";
 	if ( $from_div==1)
 	  {

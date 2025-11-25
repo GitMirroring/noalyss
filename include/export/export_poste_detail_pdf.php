@@ -82,6 +82,27 @@ foreach ($a_poste as $poste)
     $pdf->write_cell(0,8,$Libelle,1,0,'C');
     $pdf->line_new();
 
+    $type=$Poste->get_type();
+    // label  warning if the saldo is incorrect
+    $label="";
+    if (in_array($type,array('CHA','ACT','PASINV','PROINV')) && $tot_deb<$tot_cred)
+    {
+
+        $label=_("Solde créditeur au lieu de débiteur").mb_chr(9888);
+    }
+    if (in_array($type,array('PRO','PAS','ACTINV','CHAINV')) && $tot_deb>$tot_cred)
+    {
+
+        $label=_("Solde débiteur au lieu de créditeur").mb_chr(9888);
+    }
+    if ( $label !="" ) 
+    {
+        // warning about side
+        $pdf->SetTextColor(255,39,24);
+        $pdf->write_cell(0,8,$label,1,0,'C',fill:false);
+        $pdf->line_new();
+    }
+    $pdf->SetTextColor(0);
     $pdf->SetFont('DejaVuCond','',8);
     $l=0;
     $pdf->write_cell($size[$l],8,_('Date'),0,0,'L');
