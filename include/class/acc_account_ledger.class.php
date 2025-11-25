@@ -472,7 +472,8 @@ class Acc_Account_Ledger
 
             $label.=_("Solde débiteur au lieu de créditeur")." ".'<span class="icon">&#xe80e;</span>';
         }
-        echo '<span class="notice">'.$label.'</span>';
+        if ( $label !="" ) 
+                echo '<span class="notice" >'.$label.'</span>';
         
         if ( $from_div == 1)
 			echo "<TABLE id=\"tbpopup\" class=\"resultfooter\" style=\"border-collapse:separate;margin:1%;width:98%;\">";
