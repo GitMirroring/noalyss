@@ -27,7 +27,7 @@ $dossier_id=Dossier::id();
 <tr>
 <?php
 $date=new IDate('p_date');
-if (  $g_parameter->MY_STRICT=='Y' && $g_user->check_action(UPDDATE)==0) {
+if (  $g_parameter->MY_STRICT=='Y' || $g_user->check_action(UPDDATE)==0) {
     $date->setReadOnly(true);
 }
 $date->value=format_date($obj->det->jr_date);
