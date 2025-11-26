@@ -234,7 +234,7 @@ insert into parameter_extra(pe_code,pe_label) values ('COMPANY_LEGAL_REGISTRATIO
 insert into parameter_extra(pe_code,pe_label) values ('COMPANY_LEGAL_ENTITY','Forme légal de la société (SRL,ASBL,AISBL,...') on conflict do nothing;
 insert into parameter_extra(pe_code,pe_label) values ('COMPANY_BANK_IBAN','Compte en banque (IBAN)') on conflict do nothing;
 insert into parameter_extra(pe_code,pe_label) values ('COMPANY_BANK_BIC','BIC Bank Identification Code') on conflict do nothing;
-insert into parameter_extra(pe_code,pe_label) values ('COMPANY_UBL_ID','Identifiant PEPPOL') on conflict do nothing;
+insert into parameter_extra(pe_code,pe_label) values ('COMPANY_PEPPOL_ID','Identifiant PEPPOL') on conflict do nothing;
 insert into parameter_extra(pe_code,pe_label) values ('SIREN','n° SIREN') on conflict do nothing;
 insert into parameter_extra(pe_code,pe_label) values ('SIRET','n° SIRET') on conflict do nothing;
 

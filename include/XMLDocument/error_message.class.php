@@ -50,7 +50,7 @@ namespace Noalyss\XMLDocument;
         - 'COMPANY_LEGAL_REGISTRATION' full name
         - 'COMPANY_BANK_IBAN' IBAN bank account
         - 'COMPANY_BANK_BIC'  BIC bank account
-        - 'COMPANY_UBL_ID'    PEPPOL id ==> normalement c'est BE0999999999
+        - 'COMPANY_PEPPOL_ID'    PEPPOL id ==> normalement c'est BE0999999999
         - 'MY_COUNTRY_CODE'   country code (normally BE)
         - 'MY_NAME'           short company name
         - 'MY_STREET'         address
@@ -80,7 +80,7 @@ class Error_Message
             , 'COMPANY_LEGAL_REGISTRATION' => _("Nom complet de la société")
             , 'COMPANY_BANK_IBAN' => _("Compte en banque (IBAN) de la société")
             , 'COMPANY_BANK_BIC' => _("Code BIC de compte en banque")
-            , 'COMPANY_UBL_ID' => _("Identifiant PEPPOL")
+            , 'COMPANY_PEPPOL_ID' => _("Identifiant PEPPOL")
             , 'MY_COUNTRY_CODE' => _('Code Pays')
             , 'MY_NAME' => _("Nom de la société")
             , 'MY_STREET' => _("Adresse de la société")

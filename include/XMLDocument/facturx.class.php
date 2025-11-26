@@ -48,7 +48,7 @@ class FacturX extends XMLInvoice
         , 'COMPANY_LEGAL_REGISTRATION'
         , 'COMPANY_BANK_IBAN'
         , 'COMPANY_BANK_BIC'
-        , 'COMPANY_UBL_ID'
+        , 'COMPANY_PEPPOL_ID'
         , 'COUNTRY_CODE'
         , 'MY_NAME'
         , 'MY_STREET'

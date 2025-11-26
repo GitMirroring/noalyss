@@ -86,11 +86,11 @@ class InvoiceUBL21 extends XMLInvoice {
         /**
          * check that PEPPOL ID is valid
          */
-        if ( isset($company['COMPANY_UBL_ID'])) 
+        if ( isset($company['COMPANY_PEPPOL_ID'])) 
         {
-            if ( strpos($company['COMPANY_UBL_ID'],':') == 0 )
+            if ( strpos($company['COMPANY_PEPPOL_ID'],':') == 0 )
             {
-                $a_error[]="COMPANY_UBL_ID";
+                $a_error[]="COMPANY_PEPPOL_ID";
             }
             
         }
@@ -234,7 +234,7 @@ class InvoiceUBL21 extends XMLInvoice {
         
         $supplier=$this->createElement('cac:AccountingSupplierParty');
         $supplier_party=$supplier->appendChild($this->createElement('cac:Party'));
-        list($scheme_id,$peppol)=explode( ":",$company['COMPANY_UBL_ID']);
+        list($scheme_id,$peppol)=explode( ":",$company['COMPANY_PEPPOL_ID']);
         $supplier_party->appendChild($this->createElement('cbc:EndpointID',$peppol))
                 ->setAttribute('schemeID', $scheme_id);
         
