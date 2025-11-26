@@ -638,6 +638,9 @@ td.selectedcell{
        min-width: 0px;
     }
 }
+div.menu2 {
+    margin-top:2px;
+}
 .menu2 td.mtitle ,.menu2 td.selectedcell{
     /*! border-radius: 0px; */
     border-radius: 4px;
@@ -3617,7 +3620,7 @@ margin:1px;
      width: 1.5rem;
      height: 1.5rem;
      display: inline-block;
-     animation: turn-color 6s linear 0s infinite forwards;
+     animation: turn-color 6s linear 0s infinite;
      position: relative;
      left: 0px;
      top: 10px;
@@ -3627,15 +3630,15 @@ margin:1px;
  }
  .loading_msg:nth-child(2) {
     background:blue;
-     animation: turn-color2 6s linear 0s infinite forwards;
+     animation: turn-color2 6s linear 0s infinite ;
  }
  .loading_msg:nth-child(3) {
      background:red;
-     animation: turn-color3 6s linear 0s infinite forwards;
+     animation: turn-color3 6s linear 0s infinite ;
  }
  .loading_msg:nth-child(4) {
      background:navy;
-     animation: turn-color2 6s linear 0s infinite forwards;
+     animation: turn-color2 6s linear 0s infinite ;
  }
 
  @keyframes turn-color{
@@ -3943,10 +3946,9 @@ h2.h-section {
      content:'';
     left:0;
     bottom:0;
-    right:0;
-    position:absolute;
+    right:0;3    position:absolute;
     height:var(--border-size);
-    background-color:lightblue;
+    background-color:red;
     transform:scaleX(0);
     transition:transform 150ms ease-in-out;
 }
@@ -3959,7 +3961,8 @@ h2.h-section {
 
  .nav-item.li-active.nav-item-underline::before {
     transform: scale(1);
-     background-color: #d03100;
+    background-color: #d03100;
+    background-image: linear-gradient(to bottom,darkred,red);
  }
 
  /**
@@ -3973,11 +3976,14 @@ h2.h-section {
      left: 0;
      right: 0;
      background-color:darkorange;
+     background-color:orange;
      height: var(--border-size);
+     background-image: linear-gradient(to bottom,orangered,orange);
  }
 
  .nav-level3 .nav-link.active::after {
      background-color:yellow;
+     background-image: linear-gradient(to bottom,yellow,white);
  }
 /***
  * Animate menu
@@ -3996,7 +4002,7 @@ h2.h-section {
     right:0;
     position:absolute;
     height:var(--border-size);
-    background-color:var(--underline-menu);
+    /*background-color:var(--underline-menu);*/
     transform:scaleX(0) scaleY(0);
     transition:transform 300ms ease-in-out;
 }
@@ -4004,7 +4010,7 @@ h2.h-section {
 .nav-item.nav-item-underline:hover::before,
 .nav-item.nav-item-underline:focus::before
 {
-    transform:scaleX(1) scaleY(1.2);
+    transform:scaleX(1) scaleY(1);
 }
 
  .nav-item.li-active.nav-item-underline::before {
@@ -4131,3 +4137,50 @@ h2.h-section {
     gap: 5rem;
     display:flex;flex-direction: row;
 }
+
+
+/**
+ *
+ */
+.menu2 .nav-item.nav-item-underline:hover::before,.menu2 .nav-item.nav-item-underline:focus::before {
+  transform: scaleX(1) scaleY(1);
+   background-image: linear-gradient(to right,orangered,orange);
+}
+.menu2 .nav-item.nav-item-underline::before {
+     content:'';
+    left:0;
+    bottom:0;
+    right:0;
+    position:absolute;
+    height:var(--border-size);
+     background-image: linear-gradient(to bottom,orangered,orange);
+    transform:scaleX(0) scaleY(0);
+    transition:transform 300ms ease-in-out;
+}
+.topmenu .nav-item.nav-item-underline:hover::before,.topmenu .nav-item.nav-item-underline:focus::before {
+  transform: scaleX(1) scaleY(1);
+   background-image: linear-gradient(to right,darkred,red);
+}
+
+
+.menu3  .nav-item.nav-item-underline:hover::before,.menu3  .nav-item.nav-item-underline:focus::before {
+  transform: scaleX(1) scaleY(1);
+ background-image: linear-gradient(to right,yellow,white);
+}
+
+.topmenu .nav-item.nav-item-underline:hover::before,.topmenu .nav-item.nav-item-underline:focus::before {
+  transform: scaleX(1) scaleY(1);
+   background-image: linear-gradient(to right,darkred,red);
+}
+
+/*.topmenu .nav-item.nav-item-underline::before {
+     content:'';
+    left:0;
+    bottom:0;
+    right:0;
+    position:absolute;
+    height:var(--border-size);
+     background-image: linear-gradient(to bottom,darkred,red);
+    transform:scaleX(0) scaleY(0);
+    transition:transform 300ms ease-in-out;
+}*/
