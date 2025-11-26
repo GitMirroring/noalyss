@@ -28,7 +28,7 @@ global $version_noalyss;
 define('NOALYSS_VERSION', 10000 );
 
 // Database schema version 
-define("DBVERSION", 203);
+define("DBVERSION", 205);
 
 // version for MONO_DATABASE
 define("MONO_DATABASE", 25);
