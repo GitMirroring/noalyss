@@ -347,6 +347,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
      */
     function check()
     {
+        global $g_parameter;
         $cn=Dossier::connect();
         if ( $this->previous_id === null ) {
             throw new \Exception ("TVA184: no previous TVA id");
@@ -452,17 +453,19 @@ class Tva_Rate_MTable extends Manage_Table_SQL
         }
         
         // if vatex is set then code invoice must be different from S and Z
-        if ( trim($this->table->vx_code??"") != "" && in_array($this->table->tva_peppol_code,['S','Z'] ))
+        if ( $g_parameter->MY_INVOICE_FORMAT != 'BASIC'  && trim($this->table->vx_code??"") != "" && in_array($this->table->tva_peppol_code,['S','Z'] ))
         {
             $this->set_error("vx_code",_("Le code d'exemption TVA ne peut être utilisé avec ce  code Facture électronique UBL "));
         }
         // if vatex is set then code invoice must be different from S and Z
-        if ( trim($this->table->vx_code??"") != "" && $this->table->tva_peppol_code=="")
+        if ( $g_parameter->MY_INVOICE_FORMAT != 'BASIC'  && trim($this->table->vx_code??"") != "" && $this->table->tva_peppol_code=="")
         {
             $this->set_error("vx_code",_("Le code d'exemption TVA n' pas de sens sans code Facture électronique"));
         }
         // if tva_peppol_code is not S or Z then a VATEX code must be supplied
-        if ( ! in_array($this->table->tva_peppol_code??"",["Z","S"]) && trim($this->table->vx_code??"" ) =="")
+        if ( $g_parameter->MY_INVOICE_FORMAT != 'BASIC' 
+                && ! in_array($this->table->tva_peppol_code??"",["Z","S"]) 
+                && trim($this->table->vx_code??"" ) =="")
         {
             $this->set_error("vx_code",_("Un code d'exemption de TVA doit être fourni, voyez le manuel"));
             
