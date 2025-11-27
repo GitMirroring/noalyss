@@ -530,8 +530,11 @@ class InvoiceUBL21 extends XMLInvoice {
         $root->appendChild($this->build_supplier());
         // add the customer
         $root->appendChild($this->build_customer());
-        // add the payment 
-        $root->appendChild($this->build_paymentInfo());
+        
+        // add the payment  if there is a bank account
+        if ( $company['COMPANY_BANK_IBAN'] != "")
+            $root->appendChild($this->build_paymentInfo());
+        
         // Add cac:TaxTotal
         $root->appendChild($this->build_taxTotal());
         
