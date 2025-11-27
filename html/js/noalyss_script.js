@@ -168,7 +168,6 @@ function g(ID) {
     return id$(ID);
 }
 function get_next_layer(){
-    console.debug(`layer is ${global_layer}`);
     return global_layer++;
 }
 /**
@@ -2230,17 +2229,14 @@ function filter_table(phrase, _id, colnr, start_row,classname) {
     }
     var ele;
     var tot_found = 0;
-    console.debug(`filter is ${classname}`)
     var row_class="";
     if ( classname )     row_class=id$(classname).value;
     
     for (var r = start_row; r < table.rows.length; r++) 
     {
         if ( row_class != "" && ! table.rows[r].hasClassName(row_class)) {
-            console.debug(`no check ${r} ${classname}`)
             continue;
         }
-        console.debug(`checked ${r} ${classname}`)
         var found = 0;
         for (var col = 0; col < aCol.length; col++) {
             var idx = aCol[col];
@@ -4821,7 +4817,6 @@ Noalyss.prototype.activate_tinymce=function (domid,mode,p_height) {
       
     }else if ( mode == 'no-toolbar'  )
         {
-            console.debug(`no toolbar ${domid} height ${p_height}`)
         tinymce.init({
           selector: 'textarea#'+domid,
           height: p_height,
@@ -4935,7 +4930,6 @@ Noalyss.prototype.save_config_smtp = function ()
     {
         waiting_box();
         var queryString = $("form_config_smtp").serialize(true);
-        console.debug(queryString)
         queryString['op'] = "email_setting";
         queryString['op2'] = "save_config_smtp";
         var action = new Ajax.Request(
@@ -5099,18 +5093,15 @@ VAT_Code.prototype.filter_country=function()
 {
     try {
         var to_show=id$("filter_country").value;
-           console.debug(`show ${to_show}`)
         let a_row=id$("code_vatex_tb").rows;
         // show all rows, then hide
        for (let i=1;i< a_row.length;i++) {
            
            if (id$("filter_country").value == 0 || a_row[i].hasClassName(to_show)){
             a_row[i].show()
-           console.debug(`show row ${i}`)
                
            }else {
             a_row[i].hide()
-           console.debug(`hide row ${i}`)
             }
        }
        $('lk_code_vatex_tb').value="";
@@ -5122,3 +5113,4 @@ VAT_Code.prototype.filter_country=function()
 }
 noalyss=new Noalyss();
 
+bookmark=new Bookmark();

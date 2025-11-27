@@ -78,14 +78,10 @@ Operation_Payment.prototype.checkbox_set_range = function (event, elt)
 
 Operation_Payment.prototype.check_item = function (dom_elt,flag_waiting_box)
 {
-    console.debug(`element = ${dom_elt.name}`);
-    console.debug(`dossier ${this.dossier_id} ac ${this.ac}`)
     try
     {
         if ( ! flag_waiting_box ) waiting_box();
         var queryString = {op:'payment_status',operation_id:dom_elt.name,gDossier:this.dossier_id,ac:this.ac,state:dom_elt.checked};
-        console.debug (`queryString : `)
-        console.debug (queryString)
         
         var action = new Ajax.Request(
                 "ajax_misc.php",
