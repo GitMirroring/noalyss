@@ -553,7 +553,7 @@ function show_menu_extension($p_array,$default="",$p_extra="")
             $p_dir='H';
             $class="nav-item nav-item-underline";
             $class_ref="nav-link";
-            $p_extra='noprint nav nav-pills nav-fill flex-row ';
+            $p_extra='noprint nav nav-pills nav-fill  ';
             $class_div="top_menu";
             break;
         default:
@@ -594,7 +594,7 @@ function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link"
     // direction Vertical
     if ($p_dir == 'V')
     { 
-        $ret .= "<ul class=\"$p_extra  \"  flex-row>";
+        $ret .= "<ul class=\"$p_extra  \"  style=\"display:flex;flex-direction:column\">";
     } else {
         $ret .= "<ul class=\"$p_extra \" >";
        
@@ -616,7 +616,7 @@ function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link"
 
         if ($set==$default)
         {
-            $ret.='<li class="'.$class.'"><A class="'.$class_ref.' active'.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
+            $ret.='<li class="'.$class.' li-active "><A class="'.$class_ref.'  active'.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
         }
         else
         {

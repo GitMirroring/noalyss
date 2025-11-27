@@ -3970,6 +3970,7 @@ h2.h-section {
     transform: scale(1);
     background-color: #d03100;
     background-image: linear-gradient(to right,#cc0000 0%,red 20%) ;
+    background-image: linear-gradient(to right,darkred 0%,red 10%,red 90%,darkred);
  }
 
  /**
@@ -3985,7 +3986,7 @@ h2.h-section {
      background-color:darkorange;
      background-color:orange;
      height: var(--border-size);
-     background-image: linear-gradient(to right,orangered 0%,orange 30%);
+     background-image: linear-gradient(to right,orangered 0%,orange 10%,orange 90%,orangered 100%);
  }
 
  .nav-level3 .nav-link.active::after {
