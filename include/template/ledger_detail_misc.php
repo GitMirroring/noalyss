@@ -19,7 +19,7 @@ $dossier_id=Dossier::id();
 ?>
 <?php 
 ?>
-<div class="content" style="padding:0">
+<div class="content">
 
     <?php if ( $access=='W') : ?>
 <form class="print" onsubmit="return op_save(this);">

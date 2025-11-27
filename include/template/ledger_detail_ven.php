@@ -20,7 +20,7 @@ $tab_receipt = $div . "receipt";
 $tab_document = $div . "document";
 $str_anc = "";
 ?>
-<div class="content" style="padding:0px;">
+<div class="content">
     <?php
     $owner = new Noalyss_Parameter_Folder($cn);
     ?>

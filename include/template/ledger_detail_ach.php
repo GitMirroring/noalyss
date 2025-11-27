@@ -17,7 +17,7 @@ $dossier_id=Dossier::id();
 //@var $obj (Acc_Operation) current operation detail 
 
 ?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
-<div class="content" style="padding:0;">
+<div class="content">
     <?php
     $owner = new Noalyss_Parameter_Folder($cn);
     ?>

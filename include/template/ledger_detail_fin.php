@@ -11,7 +11,7 @@ $dossier_id=Dossier::id();
 
 //* @var $div (string) current DIV ID 
 ?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
-<div class="content" style="padding:0;">
+<div class="content" >
 <?php
    $cn=Dossier::connect();
   $owner=new Noalyss_Parameter_Folder($cn);

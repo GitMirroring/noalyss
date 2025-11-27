@@ -1304,6 +1304,9 @@ div.inner_box  {
       left:0px !important ;
         border-radius: 0px;
     }
+    div.inner_box div.content,div.inner_box2 div.content {
+    padding:2px;
+}
 }
 /* MD */
 @media (min-width: 768px) {
@@ -1329,6 +1332,9 @@ div.inner_box  {
         left:5% ;
         border-radius: 7px;
     }
+    div.inner_box div.content,div.inner_box2 div.content {
+    padding:5px;
+    }
 }
 /* XL */
 @media (min-width: 1200px) {
@@ -1346,11 +1352,12 @@ div.inner_box  {
         padding-bottom: 10px;
         border-radius: 7px;
     }
+    div.inner_box div.content {
+    padding:10px;
+}
 }
 
-div.inner_box div.content,div.inner_box2 div.content {
-    padding:5px;
-}
+
 /***********************************************************************************/
 div.op_detail_title {
     background-color:#888;
@@ -3962,7 +3969,7 @@ h2.h-section {
  .nav-item.li-active.nav-item-underline::before {
     transform: scale(1);
     background-color: #d03100;
-    background-image: linear-gradient(to right,darkred,red);
+    background-image: linear-gradient(to right,#cc0000 0%,red 20%) ;
  }
 
  /**
@@ -3978,7 +3985,7 @@ h2.h-section {
      background-color:darkorange;
      background-color:orange;
      height: var(--border-size);
-     background-image: linear-gradient(to bottom,orangered,orange);
+     background-image: linear-gradient(to right,orangered 0%,orange 30%);
  }
 
  .nav-level3 .nav-link.active::after {
@@ -4153,7 +4160,7 @@ h2.h-section {
     right:0;
     position:absolute;
     height:var(--border-size);
-     background-image: linear-gradient(to bottom,orangered,orange);
+     background-image: linear-gradient(to right,orangered 0%,orange 30%);
     transform:scaleX(0) scaleY(0);
     transition:transform 300ms ease-in-out;
 }
@@ -4170,7 +4177,7 @@ h2.h-section {
 
 .topmenu .nav-item.nav-item-underline:hover::before,.topmenu .nav-item.nav-item-underline:focus::before {
   transform: scaleX(1) scaleY(1);
-   background-image: linear-gradient(to right,darkred,red);
+   background-image: linear-gradient(to right,darkred 0%,red 30%);
 }
 
 /*.topmenu .nav-item.nav-item-underline::before {
