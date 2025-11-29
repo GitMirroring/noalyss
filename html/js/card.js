@@ -203,7 +203,7 @@ function action_concerned_list(p_obj) {
                             {
                                 sx = document.body.scrollTop + 60;
                             }
-                            var div_style = "top:" + sx + "px;";
+                            var div_style = "top:" + sx + "px;z-index:"+get_next_layer();
                             add_div({id: 'action_concerned_list_dv', cssclass: 'inner_box', html: "",
                                 style: div_style, drag: true});
                             remove_waiting_box();
@@ -334,7 +334,7 @@ function action_concerned_search_card(obj)
                         {
                             sx = document.body.scrollTop + 60;
                         }
-                        var div_style = "top:" + sx + "px;height:52rem";
+                        var div_style = "top:" + sx + "px;height:52rem;z-index:"+get_next_layer();
                         if ( ! document.getElementById('search_card')) { add_div({id: 'search_card', cssclass: 'inner_box', html: "", style: div_style, drag: true}); }
                         id$('search_card').innerHTML = code_html;
                         id$('query').focus();
@@ -959,7 +959,7 @@ function add_category(obj)
             sx=document.body.scrollTop+120;
 	}
 
-	var div_style="top:"+sx+"px;width:60%;height:80%";
+	var div_style="top:"+sx+"px;width:60%;height:80%;z-index:"+get_next_layer();
     // show ipopup
 	var div={id:obj.ipopup,
 			cssclass:"inner_box",drag:1,style:div_style};
