@@ -35,6 +35,7 @@ namespace Noalyss\XMLDocument;
  * Exception code : 
  *    - 55 : XML Invalid
  *    - 62 : filename don't exist
+ *    - 140: not a credit note
  * Namespace standard (from XSD)
  * 
  * Array
@@ -135,6 +136,10 @@ class XMLCreditNote_Reader extends XML_Reader
     {
         $result = [];
         $node = $this->get_node("//cac:CreditNoteLine");
+        if ($node == null )
+        {
+            throw new \Exception ("XC140 invalide document",140);
+        }
         for ($e = 0; $e < $node->length; $e++)
         {
             $row = [];

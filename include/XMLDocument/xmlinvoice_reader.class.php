@@ -34,6 +34,7 @@ namespace Noalyss\XMLDocument;
  * Exception code : 
  *    - 55 : XML Invalid
  *    - 62 : filename don't exist
+ *    - 143 : not an invoice
  * Namespace standard (from XSD)
  * 
  * Array
@@ -100,6 +101,12 @@ class XMLInvoice_Reader extends XML_Reader
     {
         $result = [];
         $node = $this->get_node("//cac:InvoiceLine");
+        
+        // read Invoice
+        if ( $node == null )
+        {
+            throw new \Exception ("XR143 unknow document",143);
+        }
         for ($e = 0; $e < $node->length; $e++)
         {
             $row = [];
@@ -113,8 +120,8 @@ class XMLInvoice_Reader extends XML_Reader
             $row ['tva_percent'] = $this->get_node_value("//cac:InvoiceLine/cac:Item/cac:ClassifiedTaxCategory/cbc:Percent", $e);
 
             $result[] = $row;
+            return $result;
         }
-        return $result;
     }
     /**
      * @brief return the code of the document
