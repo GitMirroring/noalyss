@@ -27,7 +27,7 @@ if (!defined('ALLOWED'))
  */
 \Noalyss\Dbg::echo_file(__FILE__);
 ?>
-<img src="<?=NOALYSS_URL?>/image/logo9000.png" width="100%" style="position:absolute;top:0px;left:0px;z-index:-1;opacity: 11%">
+<img src="<?=NOALYSS_URL?>/image/logo10000.png" width="100%" style="position:absolute;top:0px;left:0px;z-index:-1;opacity: 11%">
 <div id="mobile_module"  >
 <h1>NOALYSS</h1>
     <ul class="nav nav-pills nav-fill  flex-column  " >

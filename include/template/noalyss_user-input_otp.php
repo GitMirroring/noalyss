@@ -128,7 +128,7 @@ form {
     margin-left:15%;
 }
 </style>
-   <img id="logo_id" src="image/logo9000.png" >
+   <img id="logo_id" src="image/logo10000.png" >
 <div class="content">
     <h1>Double authentification</h1>
     <p>
