@@ -111,8 +111,15 @@ if (isset($_POST["FMOD_NAME"]))
 		for ($i = 0; $i < $nb_lob; $i++)
 			$cn_mod->lo_unlink($a_lob[$i]['jr_pj']);
 	}
+	$Res = $cn_mod->exec_sql("truncate table tool_uos");
+	$Res = $cn_mod->exec_sql("truncate table user_filter");
+	$Res = $cn_mod->exec_sql("truncate table user_widget");
 	$Res = $cn_mod->exec_sql("truncate table centralized");
+	$Res = $cn_mod->exec_sql("truncate table stock_change cascade");
+	$Res = $cn_mod->exec_sql("truncate table parm_periode cascade");
+	$Res = $cn_mod->exec_sql("truncate table operation_exercice cascade");
 	$Res = $cn_mod->exec_sql("truncate table jrn cascade");
+	$Res = $cn_mod->exec_sql("truncate table forecast cascade");
 	$Res = $cn_mod->exec_sql("delete from del_jrn");
 	$Res = $cn_mod->exec_sql("delete from del_jrnx");
 	$Res = $cn_mod->exec_sql("truncate table  jrnx cascade ");
@@ -136,7 +143,12 @@ if (isset($_POST["FMOD_NAME"]))
 			' select p_id,jrn_def_id,\'OP\' ' .
 			' from ' .
 			' parm_periode cross join jrn_def');
+        // clean parameter 
+        $Res= $cn_mod->exec_sql('update "parameter" set pr_value=null');
+        $Res= $cn_mod->exec_sql('update "parameter_extra" set pe_value=null');
 
+        // clean forecast
+        // 
 	// Reset Sequence
 	$a_seq = array('s_jrn', 's_jrn_op', 's_centralized', 's_stock_goods', 's_internal');
 	foreach ($a_seq as $seq)
@@ -171,11 +183,13 @@ if (isset($_POST["FMOD_NAME"]))
 	if (isset($_POST['DOC']))
 	{
 		$Res = $cn_mod->exec_sql("delete from action_gestion_related");
+		$Res = $cn_mod->exec_sql("delete from action_gestion_filter");
 		$Res = $cn_mod->exec_sql("delete from action_gestion_comment");
 		$Res = $cn_mod->exec_sql("delete from action_gestion_related");
 		$Res = $cn_mod->exec_sql("delete from action_person");
 		$Res = $cn_mod->exec_sql("delete from action_gestion");
 		$Res = $cn_mod->exec_sql("delete from tags");
+		$Res = $cn_mod->exec_sql("delete from tag_group");
 		$Res = $cn_mod->exec_sql("delete from action_tags");
 		$Res = $cn_mod->exec_sql("delete from document");
 
@@ -210,6 +224,7 @@ if (isset($_POST["FMOD_NAME"]))
 		$Res = $cn_mod->exec_sql("delete from document");
 		$Res = $cn_mod->exec_sql("delete from document_modele");
 		$Res = $cn_mod->exec_sql("delete from op_predef");
+		$Res = $cn_mod->exec_sql("delete from op_predef_detail");
 
 
 	}
@@ -217,6 +232,7 @@ if (isset($_POST["FMOD_NAME"]))
 	{
 		$Res = $cn_mod->exec_sql('delete from poste_analytique');
 		$Res = $cn_mod->exec_sql('delete from plan_analytique');
+		$Res = $cn_mod->exec_sql('truncate key_distribution cascade');
 	}
         if ( isset ($_POST['PLUGIN'])) {
             $a_schema=$cn_mod->get_array("
@@ -230,6 +246,9 @@ if (isset($_POST["FMOD_NAME"]))
             {
                 $cn_mod->exec_sql(" drop schema ".$a_schema[$i]['nspname']." cascade");
             }
+            $Res = $cn_mod->exec_sql("delete from profile_mobile where me_code not in ('AGENDA','LOGOUT')");
+            $Res = $cn_mod->exec_sql("delete from menu_ref where me_type='PL'");
+            $Res = $cn_mod->exec_sql("delete from extension ");
         }
         // Clean orphan log
         $cn_mod->clean_orphan_lob();

@@ -32,13 +32,6 @@
  *
  * Data member
  * - $cn database connection
- * - $variable :
- *    -  id (extension.ex_id)
- *    -  name (extension.ex_name)
- *    - plugin_code (extension.ex_code)
- *    - desc (extension.ex_desc)
- *    - enable (extension.ex_enable)
- *    - filepath (extension.ex_file)
  */
 require_once NOALYSS_INCLUDE.'/database/menu_ref_sql.class.php';
 require_once NOALYSS_INCLUDE.'/database/profile_sql.class.php';
