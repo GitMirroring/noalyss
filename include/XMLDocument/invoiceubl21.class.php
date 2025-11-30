@@ -501,6 +501,9 @@ class InvoiceUBL21 extends XMLInvoice {
 
         $this->data = $this->build_data($jr_id);
         
+        // var $company (array) all the parameters of the company
+        $company = $this->load_noalyss_parameter();
+        
         // HEADER
         $root=$this->createElementNS('urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',"Invoice",);
         $root->setAttributeNS('http://www.w3.org/2000/xmlns/',"xmlns:cac", "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2");
