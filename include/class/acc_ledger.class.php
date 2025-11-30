@@ -2930,7 +2930,10 @@ class Acc_Ledger  extends jrn_def_sql
     {
         $r='';
         $r.='<div id="payment"> ';
-        $r.='<h2 class="h-section"> '._('Paiement').' </h2>';
+        $r.='<h2 class="h-section"> '._('opération de paiement').' </h2>';
+        $r.='<p class="text-muted">';
+        $r.=_("Opération de paiement crée en plus de cette opération, ne concerne pas la facturation électronique");
+        $r.='</p>';
         $mp=new Acc_Payment($this->db);
         $mp->set_parameter('ledger_source', $this->id);
         $r.=$mp->select($p_selected,$p_amount,$p_date,$p_comm);
