@@ -146,6 +146,7 @@ if (isset($_POST["FMOD_NAME"]))
         // clean parameter 
         $Res= $cn_mod->exec_sql('update "parameter" set pr_value=null');
         $Res= $cn_mod->exec_sql('update "parameter_extra" set pe_value=null');
+        $Res= $cn_mod->exec_sql('update parm_mail_server set pe_value=null');
 
         // clean forecast
         // 

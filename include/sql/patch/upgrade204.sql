@@ -300,7 +300,6 @@ DROP FUNCTION comptaproc.jrn_add_note(int8, text);
 
 CREATE OR REPLACE FUNCTION comptaproc.jrn_add_note(p_jrid bigint, p_note text,p_note_html text)
  RETURNS void
- LANGUAGE plpgsql
 AS $function$
 declare
 	tmp bigint;
@@ -324,7 +323,7 @@ begin
 	return;
 end;
 $function$
-;
+ LANGUAGE plpgsql;
 
 CREATE TABLE public.parm_mail_server (
 	pe_id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL, -- pk

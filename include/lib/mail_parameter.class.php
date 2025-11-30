@@ -239,7 +239,7 @@ class Mail_Parameter
     {
         $mail_parameter=new Mail_Parameter($cnx,MAIL_SETTING_NOALYSS);
         if ( $mail_parameter->smtp_type=="sendmail") {
-            return new Sendmail($mail_parameter->smtp_replyto,$mail_parameter->smtp_replyto);
+            return new \Sendmail($mail_parameter->smtp_replyto,$mail_parameter->smtp_replyto);
         } elseif ($mail_parameter->smtp_type=="smtp") {
             $phpmail= new SMTPMail($mail_parameter);
             return $phpmail;
