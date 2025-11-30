@@ -334,6 +334,7 @@ class Pre_operation
         if ( $this->p_jrn=='') $value=array();
 
         $r="";
+        $r.='<div style="padding:5px">';
         if (count($value)==0) {
             $r.=_("Vous n'avez encore sauvé aucun modèle");
             return $r;
@@ -350,6 +351,7 @@ class Pre_operation
             $r.='</tr>';
         }
         $r.='</table>';
+        $r.='</div>';
         return $r;
     }
     public function   get_operation()
