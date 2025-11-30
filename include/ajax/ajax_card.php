@@ -516,6 +516,9 @@ case 'fs':
                                          $inp,$array[$i]['quick_code']);
         $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
                        $label,j(noalyss_strip_tags($aFound[$i]['vw_name'])));
+        
+         // var $rownb (int) number of the row
+        $rownb=preg_replace('/[^0-9]/','',$label);
 
 
         /* if it is a ledger of sales we use vw_buy
@@ -536,7 +539,7 @@ case 'fs':
          $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
              $tvaid,$tva_code);
          $array[$i]['javascript'].="removeDiv('search_card');";
-
+         $array[$i]['javascript'].=(empty($tva_code))?"":"compute_ledger($rownb);";
     }//foreach
 
     ob_start();
