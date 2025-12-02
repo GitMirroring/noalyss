@@ -2490,7 +2490,7 @@ var Bookmark = function() {
                 onFailure: ajax_misc_failure,
                 onSuccess: function (req) {
                     remove_waiting_box();
-                    add_div({id: 'bookmark_div', cssclass: 'inner_box', drag: 1});
+                    add_div({id: 'bookmark_div', cssclass: 'inner_box',style: 'z-index:'+get_next_layer(), drag: 1});
                     id$('bookmark_div').innerHTML = req.responseText;
                     try {
                         req.responseText.evalScripts();
