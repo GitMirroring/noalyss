@@ -2029,3 +2029,20 @@ function convert_ini_unit($p_value)
 
    return $p_value;
 }
+/**
+ * @brief convert an array KEY=>VALUE into a double array useable by \ISelect
+ * @param $array (array) array key=>value
+ * @return double array array (array('value'=>'KEY','label'=>VALUE),...))
+ * @see ISelect
+ */
+function convert_array_select($array)
+{
+    if (count($array) == 0 ) return null;
+    $a_ret=array();$i=0;
+    foreach ($array as $key=>$value) {
+        $a_ret[$i]['value']=$key;
+        $a_ret[$i]['label']=$value;
+        $i++;
+    }
+    return $a_ret;
+}
