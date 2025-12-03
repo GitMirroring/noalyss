@@ -95,7 +95,6 @@ class XMLInvoice_Reader extends XML_Reader
     }
     /**
      * @brief retrieve InvoiceLines
-     * @TODO XMLInvoice_Reader->get_invoiceLine             * Implémenter les allowances
      */
     function get_invoiceLine(): array
     {
@@ -110,7 +109,6 @@ class XMLInvoice_Reader extends XML_Reader
         for ($e = 0; $e < $node->length; $e++)
         {
             $row = [];
-            $xml = simplexml_import_dom($node->item($e));
             $row ['quantity'] = $this->get_node_value("//cbc:InvoicedQuantity", $e);
             $row ['amount'] = $this->get_node_value("//cbc:LineExtensionAmount", $e);
             $row ['description'] = $this->get_node_value("//cac:Item/cbc:Description", $e);
@@ -173,10 +171,7 @@ class XMLInvoice_Reader extends XML_Reader
             }else {
                 $row ['name'] ="";
             }
-            /**
-             * @TODODNY
-             * Implémenter les allowances
-             */
+           
             $result[] = $row;
         }
         return $result;

@@ -352,6 +352,22 @@ abstract class XML_Reader
     function get_allowance(): array
     {
         $result = [];
+        $node=$this->get_node("//cac:AllowanceCharge");
+        if ( $node == null )
+        {
+            return $result;
+        }
+        for ($e = 0; $e  < $node->length;$e++)
+        {
+            $row=[];
+            $row['ChargeIndicator'] = $this->get_node_value('//cac:AllowanceCharge/cbc:ChargeIndicator',$e);
+            $row['AllowanceChargeReasonCode'] = $this->get_node_value('//cac:AllowanceCharge/cbc:AllowanceChargeReasonCode',$e);
+            $row['AllowanceChargeReason'] = $this->get_node_value('//cac:AllowanceCharge/cbc:AllowanceChargeReason',$e);
+            $row['amount'] = $this->get_node_value('//cac:AllowanceCharge/cbc:Amount',$e);
+            $row['tva_id'] = $this->get_node_value('//cac:AllowanceCharge/cac:TaxCategory/cbc:ID',$e);
+            $row['tva_percent'] = $this->get_node_value('//cac:AllowanceCharge/cac:TaxCategory/cbc:Percent',$e);
+            $result[]=$row;
+        }
         return $result;
     }
     /**
@@ -467,7 +483,7 @@ abstract class XML_Reader
             $pdf->write_cell(25, 4, $result[$i]['tva_percent'], align: 'R');
             $pdf->write_cell(5, 4, $result[$i]['tva_id']);
             $pdf->write_cell(25, 4, $result[$i]['quantity'], align: 'R');
-            $pdf->write_cell(25, 4, $result[$i]['amount'], align: 'R');
+            $pdf->write_cell(25, 4, nbm($result[$i]['amount']), align: 'R');
             $pdf->line_new();
         }
         $pdf->line_new(10);
@@ -479,25 +495,56 @@ abstract class XML_Reader
         $result = $this->get_amount_summary();
 //        @TODO DNY : Qu'est-ce que LineExtension Amount ??
         $pdf->write_cell(50, 4, _("Base taxe"));
-        $pdf->write_cell(50, 4, $result['LineExtensionAmount']);
+        $pdf->write_cell(50, 4, nbm($result['LineExtensionAmount']),align:'R');
         $pdf->line_new();
         $pdf->write_cell(50, 4, _("Total Hors Taxe"));
-        $pdf->write_cell(50, 4, $result['TaxExclusiveAmount']);
+        $pdf->write_cell(50, 4, nbm($result['TaxExclusiveAmount']),align:'R');
         $pdf->line_new();
         $pdf->write_cell(50, 4, _("Total avec Taxe"));
-        $pdf->write_cell(50, 4, $result['TaxInclusiveAmount']);
+        $pdf->write_cell(50, 4, nbm($result['TaxInclusiveAmount']),align:'R');
         $pdf->line_new();
         $pdf->write_cell(50, 4, _("Total à payer"));
-        $pdf->write_cell(50, 4, $result['PayableAmount']);
+        $pdf->write_cell(50, 4, nbm($result['PayableAmount']),align:'R');
         $pdf->line_new();
         $pdf->write_cell(50, 4, _("Total réduction"));
-        $pdf->write_cell(50, 4, $result['AllowanceTotalAmount']);
+        $pdf->write_cell(50, 4, nbm($result['AllowanceTotalAmount']),align:'R');
         $pdf->line_new();
         $pdf->write_cell(50, 4, _("Total charge"));
-        $pdf->write_cell(50, 4, $result['ChargeTotalAmount']);
-        $pdf->line_new();
-
+        $pdf->write_cell(50, 4, nbm($result['ChargeTotalAmount']),align:'R');
         $pdf->line_new(10);
+        $result=$this->get_allowance();
+        $nb_inline = count($result);
+        if ( !empty ($result ))
+        {
+            $pdf->setFont("DejaVu", "B", 12);
+            $pdf->write_cell(60, 4, _("Charge et déduction"));
+            $pdf->line_new(10);
+            $pdf->setFont("DejaVu", "", 7);
+            $pdf->write_cell(20, 4, _("code"), align: 'L', border: '1');
+            $pdf->write_cell(20, 4, _("Type"), border: '1');
+            $pdf->write_cell(55, 4, _("Raison"), align: 'L', border: '1');
+            $pdf->write_cell(30, 4, _("Montant"), align: 'R', border: '1');
+            $pdf->write_cell(30, 4, _("TVA"), align: 'L', border: '1');
+             $pdf->line_new();
+            for ($i = 0; $i < $nb_inline; $i++)
+            {
+                $pdf->write_cell(20, 4, $result[$i]['AllowanceChargeReasonCode'], align: 'L');
+                if ( $result[$i]['ChargeIndicator'] == 'false')
+                {
+                    $pdf->write_cell(20, 4, _("Déduction"), align: 'L');
+
+                }else{
+                    $pdf->write_cell(20, 4, _("Charge suppl."), align: 'L');
+
+                }   
+                $pdf->write_cell(55, 4, $result[$i]['AllowanceChargeReason'], align: 'L');
+                $pdf->write_cell(30, 4,nbm( $result[$i]['amount']), align: 'R');
+                $pdf->write_cell(5, 4, $result[$i]['tva_id']);
+                $pdf->write_cell(25, 4, $result[$i]['tva_percent'], align: 'R');
+
+                $pdf->line_new();
+            }
+        }
         $pdf->setFont("DejaVu", "B", 12);
         $pdf->write_cell(60, 4, _("TVA"));
         $pdf->line_new(10);
@@ -513,12 +560,14 @@ abstract class XML_Reader
         {
             $pdf->write_cell(25, 4, $result[$i]['tax_percent'], align: 'R');
             $pdf->write_cell(5, 4, $result[$i]['tax_id']);
-            $pdf->write_cell(50, 4, $result[$i]['taxable_amount'], align: 'R');
-            $pdf->write_cell(50, 4, $result[$i]['tax'], align: 'R');
+            $pdf->write_cell(50, 4, nbm($result[$i]['taxable_amount']), align: 'R');
+            $pdf->write_cell(50, 4, nbm($result[$i]['tax']), align: 'R');
 
             $pdf->line_new();
         }
         $pdf->line_new(10);
+      
+        
         $pdf->setFont("DejaVu", "B", 12);
         $pdf->write_cell(60, 4, _("Paiement"));
         $pdf->line_new(10);
