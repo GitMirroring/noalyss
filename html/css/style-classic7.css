@@ -4192,3 +4192,39 @@ h2.h-section {
     transform:scaleX(0) scaleY(0);
     transition:transform 300ms ease-in-out;
 }*/
+/**
+ * Widget Status_Operation_Event
+ */
+#so_event_main_id {
+    display:flex;
+    
+    flex-direction: column;
+}
+#so_event_main_id h2 ,#so_event_main_id h3{
+    text-align: center;
+    font-size:130%;
+    grid-column: 1 / span 2;
+}
+.sect1  {
+    display:grid;
+      }
+
+.sect1_today {
+    grid-column:1;
+    grid-row:2;
+    text-align: center;
+}
+.sect1_late {
+    grid-column: 2;
+    grid-row:2;
+    text-align: center;        
+}
+
+#so_event_main_id .notice {
+    width: auto;
+    margin-left: 0;
+}
+
+.sect1 .highlight {
+    background:wheat
+}
