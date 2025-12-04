@@ -62,6 +62,7 @@ class Currency_MTable extends Manage_Table_SQL
         $this->a_order=array("cr_code_iso", "currency_id", "currency_history_id", "cr_name", "ch_value", "str_from");
         $this->set_icon_mod("first");
         $this->set_sort_column("cr_code_iso");
+        $this->setCssClass("inner_box2");
     }
 
     /**

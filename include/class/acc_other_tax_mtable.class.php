@@ -43,6 +43,7 @@ class Acc_Other_Tax_MTable extends Manage_Table_SQL
         $object->set_col_type("ac_accounting","custom");
         $object->set_col_type("ajrn_def_id","custom");
         $object->set_property_visible("ajrn_def_id",false);
+        $object->setCssClass("inner_box2");
         return $object;
     }
     function input_custom($p_key,$p_value) {

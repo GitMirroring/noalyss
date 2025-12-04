@@ -30,7 +30,7 @@ global $g_user;
 // security
 if ( $g_user->check_module("C0CARD") == 0 ) {
     
-    record_log(new \Exception("C0CARD1: not authorized"));
+    record_log(new \Exception("C0CARD: not authorized"));
     return;
 }
 
