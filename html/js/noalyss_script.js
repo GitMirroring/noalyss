@@ -2409,7 +2409,7 @@ function ask_navigator(p_dossier) {
                 onFailure: ajax_misc_failure,
                 onSuccess: function (req) {
                     remove_waiting_box();
-                    add_div({id: 'navi_div', style: 'top:2em;', cssclass: 'inner_box'});
+                    add_div({id: 'navi_div', style: 'top:2em;z-index:'+get_next_layer(), cssclass: 'inner_box'});
                     id$('navi_div').innerHTML = req.responseText;
                     try {
                         req.responseText.evalScripts();
@@ -2447,7 +2447,7 @@ function set_preference(p_dossier) {
                         reconnect();
                         return;
                     }
-                    add_div({id: 'preference_div', drag: 1});
+                    add_div({id: 'preference_div', style: 'z-index:'+get_next_layer(), drag: 1});
                     id$('preference_div').innerHTML = req.responseText;
                     try {
                         req.responseText.evalScripts();
