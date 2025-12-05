@@ -23,12 +23,12 @@ namespace Noalyss;
 
 
 /**
- * @file
+ * @file invoice_pdf.class.php
  * @brief create a standard invoice
  */
 
 /**
- * @class Invoice PDF 
+ * @class Invoice_PDF 
  * @brief create a standard invoice
  */
 class Invoice_PDF extends \PDF
