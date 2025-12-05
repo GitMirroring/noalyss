@@ -111,7 +111,7 @@ class FacturX extends XMLInvoice
         $this->data = $this->build_data($jr_id);
         $company = $this->load_noalyss_parameter();
       //  var_dump($this->data);
-        $documentBuilder = ZugferdDocumentBuilder::createNew(ZugferdProfiles::PROFILE_XRECHNUNG_2_3);
+        $documentBuilder = ZugferdDocumentBuilder::createNew(ZugferdProfiles::PROFILE_EN16931);
         $documentBuilder->setDocumentInformation(
                 $this->data['id']
                 ,"380"
@@ -260,6 +260,9 @@ class FacturX extends XMLInvoice
         
         return $a_error;
     } 
-     
+    function check_VAT()
+    {
+        return array();
+    }
 
 }

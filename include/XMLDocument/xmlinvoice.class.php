@@ -350,49 +350,10 @@ abstract class XMLInvoice extends \DOMDocument
         include NOALYSS_TEMPLATE."/xmlinvoice-display_error.php";
         
     }
-    
     /**
      * @brief check that the VAT is using a PEPPOL Code
      */
-    function check_VAT()
-    {
-        $a_error=array();
-        $nb_operation=count($this->data['operation']);
-        for ($i=0;$i <$nb_operation;$i++) 
-        {
-            if ( $this->data['operation'][$i]['vat_code'] == "" ) {
-                $card=new \Fiche(
-                        $this->cn
-                        ,$this->data['operation'][$i]['card_id']
-                        );
-                $tva= \Acc_Tva::build($this->cn, $this->data['operation'][$i]['vat_id']);
-                $a_error[]=sprintf(_("%s : %s code TVA pour PEPPOL non configuré code TVA [ %s %s ]")
-                        ,   $i
-                        , $card->get_quick_code()
-                        ,$tva->tva_id
-                        ,$tva->tva_code 
-                        );
-            }
-            elseif (! in_array($this->data['operation'][$i]['vat_code'],array("S","Z")))
-            {
-                $card=new \Fiche(
-                        $this->cn
-                        ,$this->data['operation'][$i]['card_id']
-                        );
-                $tva= \Acc_Tva::build($this->cn, $this->data['operation'][$i]['vat_id']);
-                if ( $tva->vx_code == "") 
-                {
-                      $a_error[]=sprintf(_("%s : %s code Exemption pour PEPPOL non configuré code TVA [ %s %s ]")
-                        ,   $i
-                        , $card->get_quick_code()
-                        ,$tva->tva_id
-                        ,$tva->tva_code 
-                        );
-                }
-            }
-        }
-        return $a_error;
-    }
+    abstract function check_VAT();
 
     /**
      * @brief thanks MY_INVOICE_FORMAT , create the corresponding object  
