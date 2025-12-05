@@ -404,10 +404,10 @@ abstract class XML_Reader
      * @param \Database $cn
      * @returns \PDF
      */
-    public function to_pdf(): \PDF_Core
+    public function to_pdf(): PDF
     {
         //$pdf = new PDF($cn);
-        $pdf = new \PDF_Core;
+        $pdf = new PDF();
         $result = $this->get_info();
 
     //    $pdf->setDossierInfo(_(" id ") . " " . $result['id']);

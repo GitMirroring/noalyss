@@ -19,7 +19,7 @@
 
 // Copyright Author Dany De Bontridder danydb@noalyss.eu
 
-/*!\file
+/*!\file pdf.class.php
  * \brief API for creating PDF, unicode, based on tfpdf
  *@see TFPDF
  */

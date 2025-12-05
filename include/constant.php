@@ -444,7 +444,8 @@ function noalyss_class_autoloader($class)
         'noalyss\xmldocument\document_reference'=>'XMLDocument/document_reference_type.class.php',
         'noalyss\xmldocument\binary_object'=>'XMLDocument/document_reference_type.class.php',
         'noalyss\xmldocument\xml_reader'=>'XMLDocument/xml_reader.class.php',
-        "noalyss\xmldocument\xmlcreditnote_reader"=>"XMLDocument/xmlcreditnote_reader.class.php"
+        "noalyss\xmldocument\xmlcreditnote_reader"=>"XMLDocument/xmlcreditnote_reader.class.php",
+        "noalyss\xmldocument\pdf"=>"XMLDocument/pdf.class.php"
     );
     if (isset ($aClass[$class])) {
         require_once NOALYSS_INCLUDE . "/" . $aClass[$class];
