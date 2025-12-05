@@ -37,6 +37,7 @@ class Coming_Event extends  Widget
     {
         global $cn;
         $this->open_div();
+         $this->title(_("Résumé"));
         \Status_Operation_Event::main_display($cn);
         $this->close_div();
     }

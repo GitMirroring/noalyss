@@ -48,8 +48,7 @@ $nb_supplier_late=count($supplier_late);
 $nb_customer_now=count($customer_now);
 $nb_customer_late=count($customer_late);
 
-?>
-  <?php echo HtmlInput::title_box(_("Résumé"),"situation_div",'none','','n','','',$refresh)?>
+?>  
 <div id="content">
     <div id="so_event_main_id">
         <div class="sect1">
@@ -155,9 +154,3 @@ $nb_customer_late=count($customer_late);
     
     
 </div>
-<ul class="aligned-block">
-	<li>
-		<?=\HtmlInput::button_action(_("Rafraîchir"),sprintf("event_display_main('%s')",Dossier::id()),uniqid(),"smallbutton")?>
-	</li>
-
-</ul>
