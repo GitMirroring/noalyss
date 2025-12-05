@@ -511,8 +511,7 @@ abstract class XMLInvoice extends \DOMDocument
         $result['COMPANY_LEGAL_ENTITY']=$a_parameter['COMPANY_LEGAL_ENTITY']??"";
         $result['INVOICE_CONTACT_NAME']=$a_parameter['INVOICE_CONTACT_NAME']??"";
         $result['INVOICE_EMAIL_COMPANY']=$a_parameter['INVOICE_EMAIL_COMPANY']??"";
-        //$result['COMPANY_PEPPOL_ID']=$a_parameter['COMPANY_PEPPOL_ID']??"";
-        $result['COMPANY_PEPPOL_ID']="9925:".$result['supplier_vat_id'];
+        $result['COMPANY_PEPPOL_ID']=$a_parameter['COMPANY_PEPPOL_ID']??"";
         return $result;
     }
     /**
