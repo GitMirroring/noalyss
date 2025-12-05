@@ -322,7 +322,7 @@ class Acc_Document extends Document {
            {
                 
                 // create a PDF with standard information
-                $pdf=$xmlreader->to_pdf($this->db);
+                $pdf=$xmlreader->to_pdf();
                 $file_oid=$this->db->lo_write($pdf->Output("S"));
 
                 //@var $file_oid OID of the large object saved in DB

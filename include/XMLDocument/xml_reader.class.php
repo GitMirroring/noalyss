@@ -404,12 +404,13 @@ abstract class XML_Reader
      * @param \Database $cn
      * @returns \PDF
      */
-    public function to_pdf(\Database $cn): \PDF
+    public function to_pdf(): \PDF_Core
     {
-        $pdf = new \PDF($cn);
+        //$pdf = new PDF($cn);
+        $pdf = new \PDF_Core;
         $result = $this->get_info();
 
-        $pdf->setDossierInfo(_(" id ") . " " . $result['id']);
+    //    $pdf->setDossierInfo(_(" id ") . " " . $result['id']);
         $pdf->AliasNbPages();
         $pdf->setAuthor("Noalyss");
         $pdf->AddPage();
@@ -440,7 +441,7 @@ abstract class XML_Reader
         $pdf->setFont("DejaVu", "", 7);
         $pdf->write_cell(60, 4, $supplier['name']);
         $pdf->write_cell(60, 4, $supplier['company_id']);
-        $pdf->write_cell(60, 4, $supplier['ID']);
+        $pdf->write_cell(60, 4,$supplier['scheme'].":". $supplier['ID']);
         $pdf->line_new();
         $pdf->write_cell(60, 4, $supplier['street']);
         $pdf->write_cell(30, 4, $supplier['postcode']);
@@ -455,7 +456,7 @@ abstract class XML_Reader
         $pdf->setFont("DejaVu", "", 7);
         $pdf->write_cell(60, 4, $customer['name']);
         $pdf->write_cell(60, 4, $customer['company_id']);
-        $pdf->write_cell(60, 4, $customer['ID']);
+        $pdf->write_cell(60, 4, $customer['scheme'].":".$customer['ID']);
         $pdf->line_new();
         $pdf->write_cell(60, 4, $customer['street']);
         $pdf->write_cell(40, 4, $customer['postcode']);
