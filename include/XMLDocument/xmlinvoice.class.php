@@ -506,7 +506,7 @@ abstract class XMLInvoice extends \DOMDocument
          * @TODO vérifier qu'il contient bien BE
          */
         
-        $result['COUNTRY_CODE']=$a_parameter['COUNTRY_CODE']?? substr($result['supplier_vat_id'], 0, 2);
+        $result['COUNTRY_CODE']=$a_parameter['MY_COUNTRY_CODE']?? substr($result['supplier_vat_id'], 0, 2);
         $result['COMPANY_LEGAL_REGISTRATION']=$a_parameter['COMPANY_LEGAL_REGISTRATION']??"";
         $result['COMPANY_LEGAL_ENTITY']=$a_parameter['COMPANY_LEGAL_ENTITY']??"";
         $result['INVOICE_CONTACT_NAME']=$a_parameter['INVOICE_CONTACT_NAME']??"";
