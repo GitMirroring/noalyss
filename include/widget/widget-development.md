@@ -92,11 +92,19 @@ Ce DIV doit avoir comme classe **box** et **widget-box** , le **widget-box** per
 
 Exemple :
 
-      $this->open_div();
-      echo h2('Planifications','class="title"');
-        // Code pour le widget
+```php
+    // création de la boite 
       $this->open_div();
 
+    // création du titre avec les boutons "refresh et agrandissement"
+      $this->title(_("Planifications"));
+
+    // Code pour le widget
+    /// .....
+
+     // fermeture
+      $this->close_div();
+```
 Voir aussi "Paramètres"
 
 
