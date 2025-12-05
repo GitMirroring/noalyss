@@ -4289,7 +4289,7 @@ function event_display_detail(p_dossier, p_detail) {
                         return;
                     }
                     if (!document.getElementById(dgbox)) {
-                        var div_style = "position:fixed;" + ";top:30%";
+                        var div_style = "position:fixed;" + ";top:30%;z-index:"+get_next_layer();
                         add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: true});
 
                     }
@@ -4839,6 +4839,7 @@ Noalyss.prototype.activate_tinymce=function (domid,mode,p_height) {
 
 }
 /**
+ * @deprecated not used
  * Input NOTE on operation from Detail Operation
  * @param {int} dossier_id
  * @param {int} jrn_id
