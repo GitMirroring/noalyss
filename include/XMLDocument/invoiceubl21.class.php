@@ -54,6 +54,7 @@ class InvoiceUBL21 extends XMLInvoice {
         , 'MY_CITY'
         , 'MY_TVA'
         , 'INVOICE_EMAIL_COMPANY'
+        ,'COMPANY_PEPPOL_ID'
         ];
     protected $pdf_filename; //!< PDF file to insert into XML,
                              //       it is the file on the filesystem
