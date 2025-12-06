@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: NOALYSS 672\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-14 14:51+0200\n"
-"PO-Revision-Date: 2025-12-02 18:29+0100\n"
+"PO-Revision-Date: 2025-12-06 07:29+0100\n"
 "Last-Translator: dany <dany@galactee.intra-alchimerys.be>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: en_US\n"
@@ -822,9 +822,8 @@ msgid ""
 msgstr "(optional) The number of bank receipt"
 
 #: include/template/module.php:172
-#, fuzzy
 msgid "-"
-msgstr ""
+msgstr "."
 
 #: include/ext/importbank/bank_constant.php:53
 #: include/ext/importbank/bank_constant.php:55
@@ -849,9 +848,8 @@ msgid "--nouveau--"
 msgstr "-- New --"
 
 #: include/template/profile_menu_display_module.php:72
-#, fuzzy
 msgid "."
-msgstr ""
+msgstr "."
 
 #: include/impress_rapport.inc.php:248 include/impress_rapport.inc.php:273
 #: include/impress_rapport.inc.php:290
@@ -11695,7 +11693,7 @@ msgstr "ERROR "
 
 #: include/lib/manage_table_sql.class.php:1611
 msgid "ERROR"
-msgstr ""
+msgstr "ERROR "
 
 #: include/database/v_currency_last_value_sql.class.php:91
 msgid "EUR ne peut pas être effacé"
@@ -21333,7 +21331,7 @@ msgstr "Password and TOTP"
 
 #: include/user_detail.inc.php:129
 msgid "Mot de passe et code par courriel (ou TOTP) "
-msgstr ""
+msgstr "Password and code by email"
 
 #: include/user.inc.php:56 include/user.inc.php:115 include/user.inc.php:116
 #: include/user.inc.php:117 include/user.inc.php:57 include/user.inc.php:118
@@ -22809,7 +22807,7 @@ msgstr "Available version %s , your version %s"
 #: include/ext/noalyss-portal-client/index.php:77
 #: include/ext/noalyss-portal-client/index.php:92
 msgid "Nouvelles annonces, astuces,"
-msgstr ""
+msgstr "News, announce and tips"
 
 #: include/class/periode.class.php:649 include/class/periode.class.php:651
 #: include/class/periode.class.php:653 include/class/periode.class.php:654
@@ -24303,6 +24301,9 @@ msgid ""
 "Par défault, le poste d'autoliquidation est celui qui est au débit pour les "
 "ventes et au crédit pour les achats"
 msgstr ""
+"By default the accounting for the reverse are the one specified for the other"
+" side. "
+"Credit for Purchase and Debit for Sale"
 
 #: include/ext/import_account/include/template/input_file.php:10
 #: include/ext/import_card/include/template/input_file.php:29
@@ -27099,7 +27100,7 @@ msgstr "REQUEST"
 
 #: include/ext/rapport_avance/include/rapav_report_repository.class.php:123
 msgid "RRR40 : report not found"
-msgstr ""
+msgstr "RRR40 : report not found"
 
 #: include/database.item.php:118 include/database.item.php:121
 #: include/database.item.php:127 include/database.item.php:141
@@ -28410,15 +28411,15 @@ msgstr "Saved"
 
 #: include/otp-link.php:100 include/otp-link.php:200
 msgid "Scanner ce QRCode avec votre application OTP afin de l'ajouter"
-msgstr ""
+msgstr "Scan this QR CODE with your OTP Apps"
 
 #: include/otp-link.php:97
 msgid "Scanner ceci avec freeOTP"
-msgstr ""
+msgstr "Scan this with your OTP Apps"
 
 #: include/otp-link.php:185
 msgid "Scanner ceci avec votre application OTP"
-msgstr ""
+msgstr "Scan this with your OTP Apps"
 
 #: include/lib/ac_common.php:907 include/lib/ac_common.php:916
 #: include/lib/ac_common.php:917 include/lib/ac_common.php:918
@@ -28947,7 +28948,7 @@ msgstr "Date format"
 
 #: include/ext/noalyss_document/ndc_load.php:54
 msgid "Succés"
-msgstr ""
+msgstr "Success"
 
 #: include/ext/importbank/ajax.php:82 include/ext/importbank/ajax.php:83
 #: include/ext/importbank/ajax.php:89 include/ext/importbank/ajax.php:99
@@ -29080,7 +29081,7 @@ msgstr "Suppress first row"
 
 #: include/ext/importbank/include/template/show_list.php:100
 msgid "Supprime statut d'erreur"
-msgstr ""
+msgstr "Suppress error status"
 
 #: include/ext/sav/include/template/sas_spare_part_print_row.php:46
 #: include/ext/sav/include/template/sas_workhour_print_row.php:49

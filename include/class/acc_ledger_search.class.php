@@ -38,7 +38,7 @@ class Acc_Ledger_Search
     private $all; //!< Flag to indicate if all ledgers must be searched (1 for yes)
     private $div; //!< prefix for id of DOM id
     var $id ;    //!< id of the ledger
-
+    private $inject_col; //< inject code into list_operation to add an extra column 
     /**
      * @brief return a HTML string with the form for the search
      * @param  $p_type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN: uppercase !
@@ -60,8 +60,9 @@ class Acc_Ledger_Search
         $this->set_type($p_type);
         $this->all=$p_all;
         $this->div=$p_div;
+        $this->inject_col=null;
     }
-
+    
     public function get_type()
     {
         return $this->type;
