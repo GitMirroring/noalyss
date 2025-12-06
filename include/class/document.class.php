@@ -189,7 +189,7 @@ class Document
 
 
             chdir($dirname);
-            $filename=$row['md_filename'];
+            $filename=($p_filename == "")?$row['md_filename']:$p_filename;
             $exp=$this->db->lo_export($row['md_lob'], $dirname.DIRECTORY_SEPARATOR.$filename);
             if ($exp===false)
             {

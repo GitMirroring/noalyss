@@ -237,11 +237,14 @@ class Acc_Document extends Document {
         // var e_pj (string) receipt nb
         $p_array['e_pj'] = $this->db->get_value("select jr_pj_number from jrn where jr_id=$1"
                 , [$this->d_id]);
-        $filename = "";
         
+        // $filename (string) compute filename based on the template
+        $filename=$this->db->get_value ("select md_filename from document_modele where md_id=$1",
+                [$this->md_id]);
+        $filename = $p_array['e_pj']."-".$filename;
         //  generate the document and set d_lob,d_mimetype,
         // this function will call saveGenerated and save in DB
-        $this->generate($p_array, $p_array['e_pj']);
+        $this->generate($p_array, $filename);
 
         // Update the comment with invoice number, if the comment is empty
         if (!isset($p_array['e_comm']) || noalyss_strlentrim($p_array['e_comm']) == 0) {
