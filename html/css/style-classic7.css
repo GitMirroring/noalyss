@@ -4197,7 +4197,7 @@ h2.h-section {
  */
 #so_event_main_id {
     display:flex;
-    
+    padding: 0.8rem;    
     flex-direction: column;
 }
 #so_event_main_id h2 ,#so_event_main_id h3{
@@ -4226,5 +4226,6 @@ h2.h-section {
 }
 
 .sect1 .highlight {
-    background:wheat
+    background:wheat;
+    border-radius: 10px;
 }
