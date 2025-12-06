@@ -1363,7 +1363,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
         removeDiv(target);
     }
     var str_style = fixed_position(77, 99);
-    str_style += ";width:92%;overflow:auto;";
+    str_style += ";width:92%;overflow:auto;z-index:"+get_next_layer();
     waiting_box();
     var hide_operation = id$(ctl_concern).getAttribute("hide_operation");
     var single_operation = id$(ctl_concern).getAttribute("single_operation");
@@ -1420,6 +1420,7 @@ function search_operation(obj) {
                 onSuccess: function (req) {
                     remove_waiting_box();
                     id$(target).innerHTML = req.responseText;
+                    id$(target).setStyle({ 'z-index':get_next_layer()});
                     req.responseText.evalScripts();
                 }
             }
