@@ -223,7 +223,7 @@ if (isset($_POST['save']))
 		  {
 		    echo '<div class="content">'.$g_succeed.' Mise à jour extrait '.$_POST['ext'].'</div>';
                     // -- chargement fichier
-                    $oid=$cn->upload('file_receipt');
+                    $oid=$cn->upload('file_receipt',true);
                     
                     if ( $oid != false ) {
                         for ($i = 0; $i < count($array); $i++)
