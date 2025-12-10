@@ -38,7 +38,13 @@ class Acc_Ledger_Search
     private $all; //!< Flag to indicate if all ledgers must be searched (1 for yes)
     private $div; //!< prefix for id of DOM id
     var $id ;    //!< id of the ledger
-    private $inject_col; //< inject code into list_operation to add an extra column 
+    public $inject_col; //!< inject_code (callback function ) into list_operation 
+                        //  to add an extra column  
+                        //  (see Acc_Ledger_Search::list_operation). 
+                        //  All the HTML code must be in inject_code, including the TD tag
+                        // example $this->inject_col = function() {echo "} 
+    
+    
     /**
      * @brief return a HTML string with the form for the search
      * @param  $p_type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN: uppercase !
@@ -104,7 +110,6 @@ class Acc_Ledger_Search
      * @see build_search_sql
      * @see display_search_form
      * @see list_operation
-     * @example search_acc_operation.php
      */
     function search_form()
     {
@@ -792,8 +797,35 @@ class Acc_Ledger_Search
      * \see build_search_sql
      * \see display_search_form
      * \see search_form
+     @note  $this->inject_code (string) code into Acc_Ledger_Search::list_operation 
+     *  Example of using inject_col to inject a new column
+     * @code
+ <?php
+     
+function inject_col($param)
+{
+    \Noalyss\Dbg::echo_var(0, $param);
+    if (is_array($param))
+    {
+        return sprintf("<td> %s // %s</td>", $param['jr_id'], $param['jr_montant']);
+    } elseif ($param == 'header')
+    {
+        
+        return '<th> Operation & montant</th>';
+    }
+}
 
-     * \return HTML string
+$acc_ledger_search = new Acc_Ledger_Search('VEN', 1, 1);
+$acc_ledger_search->inject_col = "inject_col";
+        
+list($sql, $where) = $acc_ledger_search->build_search_sql($_GET);
+list($nb_count, $html) = $acc_ledger_search->list_operation($sql . " and " . $where, 0);
+
+printf("There are %s rows", $nb_count);
+print $html;
+     
+     * @endcode 
+     * \return    array($count, $html_code);
      */
     public function list_operation($sql, $offset, $p_paid=0)
     {
@@ -881,6 +913,10 @@ class Acc_Ledger_Search
         }
         $r.="<th>"._('Concerne')."</th>";
         $r.="<th>"._('Document')."</th>";
+        if ( $this->inject_col != null)
+        {
+            $r.=call_user_func($this->inject_col,"header");
+        }
         $r.="</tr>";
         // Total Amount
         $tot=0.0;
@@ -1042,7 +1078,14 @@ class Acc_Ledger_Search
             }
             else
                 $r.="<TD></TD>";
-
+            //< inject_code (string) code into list_operation 
+            //  to add an extra column  
+            //  (see Acc_Ledger_Search::list_operation). 
+            //  All the HTML code must be in inject_code, including the TD tag
+            if ( $this->inject_col != null)
+            {
+                $r.=call_user_func($this->inject_col,$row);
+            }
             // end row
             $r.="</tr>";
         }
