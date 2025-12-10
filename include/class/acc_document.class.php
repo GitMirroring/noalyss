@@ -371,7 +371,22 @@ class Acc_Document extends Document {
                \record_log($e);
                throw new \Exception("X281 ",281,$e);
            }
-        } 
+        } else {
+            $this->d_lob=$oid;
+            $this->d_name=$_FILES['pj']['name'];
+            $this->d_description=$_FILES['pj']['type'];
+            
+              // save extracted document into DB
+            $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
+                                    jr_pj_type=$3  where jr_id=$4",
+                                array(
+                                        $this->d_lob
+                                    ,   $this->d_name
+                                    ,   $this->d_description
+                                    ,   $this->d_id 
+                                )
+                    );
+        }
         $this->db->commit();
 
         return $oid;
