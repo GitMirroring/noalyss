@@ -998,7 +998,8 @@ EXCLUDE                = ./html/addon \
                          ./include/config.inc.php \
                          ./vendor \
                          ./include/tfpdf \
-                         ./tmp/
+                         ./tmp/ \
+						 ./html/js/tinymce
 
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
