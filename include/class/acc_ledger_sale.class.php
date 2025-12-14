@@ -1395,7 +1395,7 @@ EOF;
         $doc_gen->value = $this->db->make_array(
                 "select md_id,md_name " .
                 " from document_modele where md_affect='VEN' ".
-                " union select -2,'"._("0 - Facture PDF Standard")."' ".
+                " union select -2,'"._("Z - Facture PDF Standard")."' ".
                 " order by 2");
         $r.=$doc_gen->input() . '<br>';
         
