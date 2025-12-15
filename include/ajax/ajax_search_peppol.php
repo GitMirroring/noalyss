@@ -62,6 +62,16 @@ class PEPPOL_Entity_Record
     var $name;
     var $countryCode;
     var $regDate;
+    var $additionalInfo;
+    var array $website;
+    var array $contact;
+}
+class PEPPOL_Entity_Contact {
+    var $type;
+    var $name;
+    var $phone;
+    var $email;
+            
 }
 $msg = _("La recherche par nom et numéro de TVA sont limitées à la Belgique");
 
@@ -137,10 +147,31 @@ switch ($filter)
     default:
     throw new \Exception("ASP129 unknown filter",129);
 }
-$str = file_get_contents("https://directory.peppol.eu/search/1.0/xml?" . $search);
-//$str= file_get_contents("/tmp/result.xml");
+try {
+    $curl = curl_init("https://directory.peppol.eu/search/1.0/xml?{$search}");
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+    $str = curl_exec($curl);
+    if ( curl_errno($curl) != 0 ) {
+        $info = "AJX147 connexion fails";
+        if ($curl != null)
+        {
+            $info = curl_error($curl) . "\n----\n";
+            $info .= var_export(curl_getinfo($curl), true);
+        }
+        throw new \Exception($info,147);
+    }
+        
+   curl_close($curl);
+} catch (\Exception $e) {
+    \record_log($e);
+    echo p(_("Vérification impossible"));
+    return;
+}
+
 $xml = new DOMDocument();
 $xml->loadXML($str);
+file_put_contents("/tmp/alchimerys.xml",$xml->saveXML());
 $root = $xml->getElementsByTagName("resultlist");
 if (count($root) == 0)
 {
@@ -175,6 +206,8 @@ for ($i = 0; $i < $nb_match; $i++)
         } elseif ($node->childNodes->item($e)->tagName == 'entity')
         {
             $obj->entity = new PEPPOL_Entity_Record();
+            $obj->entity->contact=array();
+             $obj->entity->website=array();
             for ($f=0;$f< $node->childNodes->item($e)->childElementCount;$f++)
             {
                 if ( $node->childNodes->item($e)->childNodes->item($f)->tagName == 'name')
@@ -183,6 +216,21 @@ for ($i = 0; $i < $nb_match; $i++)
                     $obj->entity->countryCode=$node->childNodes->item($e)->childNodes->item($f)->textContent;
                 if ($node->childNodes->item($e)->childNodes->item($f)->tagName=='regDate')
                     $obj->entity->regDate=$node->childNodes->item($e)->childNodes->item($f)->textContent;
+                if ($node->childNodes->item($e)->childNodes->item($f)->tagName=='additionalInfo')
+                    $obj->entity->additionalInfo=$node->childNodes->item($e)->childNodes->item($f)->textContent;
+                if ($node->childNodes->item($e)->childNodes->item($f)->tagName=='additionalInfo')
+                    $obj->entity->additionalInfo=$node->childNodes->item($e)->childNodes->item($f)->textContent;
+                if ($node->childNodes->item($e)->childNodes->item($f)->tagName=='website')
+                    $obj->entity->website[]=$node->childNodes->item($e)->childNodes->item($f)->textContent;
+                if ($node->childNodes->item($e)->childNodes->item($f)->tagName=='contact')
+                    {  $a=array();
+                        $a['type']=$node->childNodes->item($e)->childNodes->item($f)->getAttribute("type");
+                        $a['name']=$node->childNodes->item($e)->childNodes->item($f)->getAttribute("name");
+                        $a['phone']=$node->childNodes->item($e)->childNodes->item($f)->getAttribute("phone");
+                        $a['email']=$node->childNodes->item($e)->childNodes->item($f)->getAttribute("email");
+                        
+                        $obj->entity->contact[]=$a;
+                    }
             }
 
         }
@@ -205,6 +253,10 @@ $nb_result=count($result);
 <?php
 for ($i=0;$i < $nb_result;$i++)
 {
+    $str_url="";
+    $nb_website=count ($result[$i]->entity->website);
+  
+    ($result[$i]->entity->website != "") ? :"";
 ?>
 <div style="display:flex;align-content: space-evenly">
 <div style="width:20rem;">
@@ -214,9 +266,45 @@ for ($i=0;$i < $nb_result;$i++)
 </div>
 <div>
     <?=$result[$i]->entity->name?>
+    (<?=$result[$i]->entity->countryCode?>)
+</div>
+
     
 </div>
+    <div style="display:flex;align-content: space-evenly;gap:1rem">
+     <div style="display:flex;flex-direction:column">
+         <b> website :</b> 
+        <?php  if ( $nb_website != 0)
+            {
+                for ($x=0;$x < $nb_website;$x++ ) {
+                    $str_url.=sprintf('<div><a href="%s" target="_blank" class="line">%s</a></div>',$result[$i]->entity->website[$x],$result[$i]->entity->website[$x]);
+                }
+            }
+    ?>
+        <?=$str_url?>
 </div>
+<div style="display:flex;flex-direction:column">
+    <b>contact : </b>
+        <?php
+        $nb_contact=count($result[$i]->entity->contact);
+        for ($h=0;$h< $nb_contact;$h++) {
+            $email=mailTo($result[$i]->entity->contact[$h]['email']);
+        ?>
+    <div>
+            <?=$result[$i]->entity->contact[$h]['type']?>
+            <?=$result[$i]->entity->contact[$h]['name']?>
+            <?=$result[$i]->entity->contact[$h]['phone']?>
+            <?=$email?>
+    </div>
+    <?php
+        } // LOOP h : for ($h=0;$h< $nb_contact;$h++) {
+    ?>
+</div>
+<div>
+    <b>Info:</b>
+        <?=$result[$i]->entity->additionalInfo?>
+</div>   
+    </div>
 <?php
 } // end for ($i)
 echo '</div>'; // div class content
