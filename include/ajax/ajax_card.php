@@ -481,7 +481,7 @@ case 'fs':
     if ( strpos($sql," in ()") != 0)
     {
             $html="";
-             $html.=HtmlInput::title_box(_('Recherche de fiche'), 'search_card');
+             $html.=HtmlInput::title_box(_('Recherche de fiches'), 'search_card');
              $html.='<h3 class="notice">';
              $html.=_("Aucune catégorie de fiche ne correspond à".
             " votre demande, le journal pourrait n'avoir accès à aucune fiche");
@@ -545,7 +545,19 @@ case 'fs':
     ob_start();
     require_once NOALYSS_TEMPLATE.'/card_result.php';
     $r.=ob_get_contents();
+    $r.='<ul class="aligned-block ">';
+    $r.='<li>';
     $r.=HtmlInput::button_close("search_card");
+    $r.='</li>';
+    if  ($g_user->check_action(FICADD)==1)
+    {
+        $r.='<li>';
+        $create_card_js='onclick="select_card_type({});"';
+        $r.=HtmlInput::button_anchor(_("Créer fiche"),"javascript:void(0)","",$create_card_js,'smallbutton');
+        $r.='</li>';
+    }
+    $r.='</ul>';
+    
     ob_end_clean();
     $ctl=$ctl.'_content';
     $html=$r;
