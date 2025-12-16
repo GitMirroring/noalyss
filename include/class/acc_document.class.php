@@ -436,7 +436,7 @@ class Acc_Document extends Document {
                 <div class="row" id="<?=$rowid?>">
                     <div class="col">
                         <a href="<?=$download?>" download>      <?=$item->js_filename?></a>
-                    </div>O
+                    </div>
                     <div class="col">
                         <?=$item->js_description?>
                     </div>

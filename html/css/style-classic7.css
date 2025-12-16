@@ -4229,3 +4229,13 @@ h2.h-section {
     background:wheat;
     border-radius: 10px;
 }
+
+span.nb-round {
+    border-radius: 100%;
+    border:1px solid var(--bg-inner-box);
+    padding: 2px 4px;
+    font-size: min(70%,0.7rem);
+    background-color: var(--bg-inner-box);
+    margin-left: 2px;
+    color:navy;
+}

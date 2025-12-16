@@ -33,19 +33,37 @@ $aRap=$oRap->get();
  $periode_id=new Periode($cn,$detail->det->jr_tech_per);
  $exercice=$periode_id->get_exercice();
 
-
+// @var $nb_document (int) number of doc 
 $nb_document=($detail->det->jr_pj_name != "")?1:0;
+// @var $str_nb_doc (string) HTML span number of doc 
+$str_nb_doc=($nb_document==0)?span(""):span($nb_document,'class="nb-round"');
 
+// @var $nb_aRap (int) number of reconciliation 
 $nb_aRap=(is_array($aRap))?count($aRap):0;
+// @var $str_nb_rap (string) HTML span for number of reconciliation 
+$str_nb_rap=($nb_aRap==0)?span(""):span($nb_aRap,'class="nb-round"');
+
+//@var $nb_sup_doc (int) number of supplementary documents
+$nb_sup_doc=$cn->get_value("select count(*) from jrn_sup_document where jr_id=$1",[$jr_id]);
+
+// @var $str_nb_sup_doc (string) HTML span for the number of  supplementary documents
+$x=sprintf('id="%s_%s"',"doc_supp",$div);
+$str_nb_sup_doc=($nb_sup_doc==0)?span("",$x):span($nb_sup_doc,'class="nb-round" '.$x);
+
+// @var $nb_fu (int) number of event in follow-up
+$nb_fu=count($a_followup);
+// @var $str_nb_fu (string) HTML span for the number of followup
+$str_nb_fu=($nb_fu==0)?span(""):span($nb_fu,'class="nb-round"');
+
 // Array of tab
 // 
 $a_tab['writing_div']=array('id'=>'writing_div'.$div,'label'=>_('Ecriture Comptable'),'display'=>'none');
 $a_tab['info_operation_div']=array('id'=>'info_operation_div'.$div,'label'=>_('Information'),'display'=>'none');
-$a_tab['linked_operation_div']=array('id'=>'linked_operation_div'.$div,'label'=>_('Opérations liées').'('.$nb_aRap.')','display'=>'none');
-$a_tab['document_operation_div']=array('id'=>'document_operation_div'.$div,'label'=>_('Document').'('.$nb_document.')','display'=>'block');
-$a_tab['linked_action_div']=array('id'=>'linked_action_div'.$div,'label'=>_('Actions Gestion').'('.count($a_followup).')','display'=>'none');
+$a_tab['linked_operation_div']=array('id'=>'linked_operation_div'.$div,'label'=>_('Opérations liées').$str_nb_rap,'display'=>'none');
+$a_tab['document_operation_div']=array('id'=>'document_operation_div'.$div,'label'=>_('Document').$str_nb_doc,'display'=>'block');
+$a_tab['linked_action_div']=array('id'=>'linked_action_div'.$div,'label'=>_('Actions Gestion').$str_nb_fu,'display'=>'none');
 $a_tab['analytic_div']=array('id'=>'analytic_div'.$div,'label'=>_('Comptabilité Analytique'),'display'=>'none');
-$a_tab['supplemental_doc_div']=array('id'=>'supplemental_doc_div'.$div,'label'=>_('Documents supplémentaires'),'display'=>'none');
+$a_tab['supplemental_doc_div']=array('id'=>'supplemental_doc_div'.$div,'label'=>_('Documents supplémentaires').$str_nb_sup_doc,'display'=>'none');
 //var $g_parameter \Noalyss_Parameter_Folder
 global $g_parameter;
 

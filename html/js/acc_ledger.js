@@ -2090,7 +2090,7 @@ Supplement_Document.delete_document=function (nDossier,sDiv,nJS_ID,nJR_ID)
                                         return;
                                     }
                                     id$("row_js_"+sDiv+"_"+nJS_ID).remove();
-
+                                    Supplement_Document.refresh_list(nDossier,sDiv,nJR_ID);
                                 }
                             }
                         );
@@ -2154,6 +2154,7 @@ Supplement_Document.save_file=function(form_dom_id)
     {
         waiting_box();
         var form_data=$(form_dom_id).serialize();
+        
         var xhr = new XMLHttpRequest();
         var div=id$(form_dom_id).elements["div"].value;
         // check size
@@ -2199,8 +2200,12 @@ Supplement_Document.save_file=function(form_dom_id)
                 if (this.status === 200) {
                         document.getElementById("supplement_div_list"+div).innerHTML += this.responseText ;
                         let dgbox=id$(form_dom_id).elements["dgbox"].value;
+                        var json_form={} ;
+                        json_form['gDossier']=id$(form_dom_id).elements['gDossier'].value;
+                        json_form['div']=id$(form_dom_id).elements['div'].value;
+                        json_form['jr_id']=id$(form_dom_id).elements['jr_id'].value;
+                        Supplement_Document.refresh_list(json_form["gDossier"],json_form["div"],json_form["jr_id"]);
                         removeDiv(dgbox);
-                        
                     } else {
                         document.getElementById("supplement_div_list"+div).innerHTML += "status" + this.statusText + "<br/>";
                     }
@@ -2235,8 +2240,13 @@ Supplement_Document.refresh_list=function (nDossier,sDiv,nJR_id)
                     method: 'GET',
                     parameters: queryString,
                     onSuccess: function (req) {
-                       $("supplement_div_list"+sDiv).update(req.responseText);
-                        
+                        var json=req.responseJSON;
+                       $("supplement_div_list"+sDiv).update(json.html);
+                       id$('doc_supp_'+sDiv).removeClassName("nb-round")
+                       if ( json.count > 0) {
+                            id$('doc_supp_'+sDiv).update(json.count);
+                            id$('doc_supp_'+sDiv).addClassName("nb-round")
+                       }
                     }
                 }
         );

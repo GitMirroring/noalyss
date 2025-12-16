@@ -658,8 +658,14 @@ EOF;
         //------------------------------------------------
         // refresh list of suppemental files
         //------------------------------------------------
-        Acc_Document::display_supplementary_doc($cn, $http->get("div"), $http->get("jr_id"));
-          
+        // @var $jr_id (int) JRN.JR_ID
+        $jr_id=$http->get("jr_id");
+        ob_start();
+        Acc_Document::display_supplementary_doc($cn, $http->get("div"), $jr_id);
+        $html= ob_get_contents();
+        ob_end_clean();
+        $count=$cn->get_value("select count(*) from jrn_sup_document where jr_id=$1",[$jr_id]);
+        echo json_response(["html"=>$html,"count"=>$count]);
         return;
 }
 $html = escape_xml($html);
