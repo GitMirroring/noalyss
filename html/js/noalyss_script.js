@@ -1884,7 +1884,7 @@ function search_action(dossier, ctl_concern) {
 
         var target = "search_action_div";
         removeDiv(target);
-        var str_style = fixed_position(77, 99);
+        var str_style = fixed_position(77, 99)+";z-index:"+get_next_layer();
 
         var div = {id: target, cssclass: 'inner_box', style: str_style, html: loading(), drag: 1};
 
