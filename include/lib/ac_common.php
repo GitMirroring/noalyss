@@ -1887,9 +1887,10 @@ function generate_random_password($car):string
 /**
  * @brief removed invalid character when computing a filename, the suffix is kept
  * @param $filename String filename to sanitize
+ * @param $with_date (bool) true add the date in the filename, false do not add it
  * @return string without offending char
  */
-function sanitize_filename($filename)
+function sanitize_filename($filename,$with_date=true)
 {
     // save the suffix
     $pos_prefix=strrpos($filename, ".");
@@ -1905,8 +1906,11 @@ function sanitize_filename($filename)
     $filename=str_replace(array('/', '*', '<', '>', ';', ',', '\\', '.', ':', '(', ')', ' ', '[', ']'), "-", $filename);
 
     $filename_no=substr($filename, 0, $pos_prefix);
-
-    $new_filename=strtolower($filename_no)."-".date("Ymd-Hi").$filename_suff;
+    if ( $with_date)
+        $new_filename=strtolower($filename_no)."-".date("Ymd-Hi").$filename_suff;
+    else
+        $new_filename=strtolower($filename_no).$filename_suff;
+    
     return $new_filename;
 }
 /**
