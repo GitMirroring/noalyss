@@ -561,6 +561,7 @@ abstract class XML_Reader
         {
             $pdf->write_cell(25, 4, $result[$i]['tax_percent'], align: 'R');
             $pdf->write_cell(5, 4, $result[$i]['tax_id']);
+            $pdf->write_cell(25, 4, $result[$i]['vatex']);
             $pdf->write_cell(50, 4, nbm($result[$i]['taxable_amount']), align: 'R');
             $pdf->write_cell(50, 4, nbm($result[$i]['tax']), align: 'R');
 

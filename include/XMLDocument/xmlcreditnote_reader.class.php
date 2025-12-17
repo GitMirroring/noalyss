@@ -205,10 +205,13 @@ class XMLCreditNote_Reader extends XML_Reader
                 $row ['name'] =$xml->xpath("//cac:CreditNoteLine/cac:Item/cbc:Name")[$e]."";
             else
                 $row['name']="";
-            /**
-             * @TODODNY
-             * Implémenter les allowances
-             */
+
+            if ( isset ($xml->xpath("//cbc:TaxExemptionReasonCode")[$e]))
+            {
+                $row['vatex']=$xml->xpath("//cbc:TaxExemptionReasonCode")[$e];
+            }else {
+                $row['vatex']="";
+            }
             $result[] = $row;
         }
         return $result;
