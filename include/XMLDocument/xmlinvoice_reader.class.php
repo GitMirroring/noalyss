@@ -171,8 +171,13 @@ class XMLInvoice_Reader extends XML_Reader
             }else {
                 $row ['name'] ="";
             }
-           
-            $result[] = $row;
+            if ( isset ($xml->xpath("//cbc:TaxExemptionReasonCode")[$e]))
+            {
+                $row['vatex']=$xml->xpath("//cbc:TaxExemptionReasonCode")[$e];
+            }else {
+                $row['vatex']="";
+            }
+                $result[] = $row;
         }
         return $result;
     }
