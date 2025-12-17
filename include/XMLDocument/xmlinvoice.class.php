@@ -187,6 +187,14 @@ abstract class XMLInvoice extends \DOMDocument
         $result['description']=$operation->det->jr_comment;
         
         // note if any 
+
+        $result['note']= $result['description'];
+        $a_note = $this->cn->get_array("select n_id,n_text from jrn_note where jr_id=$1",[$operation->det->jr_id]);
+        $nb_note=count($a_note);
+        for ($e=0;$e<$nb_note;$e++)
+        {
+            $result['note'].= str_replace('&nbsp;','',$a_note[$e]['n_text']);
+        }
         // goods and services
         $result['operation']=array();
         

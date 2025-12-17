@@ -565,7 +565,10 @@ class InvoiceUBL21 extends XMLInvoice {
         /**
          * add note if any
          */
-        
+         if ( $this->data['note'] != "")
+         {
+                $root->appendChild($this->createElement("cbc:Note",$this->data['note']));
+         }
         $root->appendChild($this->createElement('cbc:DocumentCurrencyCode',$this->data['currency']));
         $root->appendChild($this->createElement('cbc:BuyerReference',$this->data['info']['order']));
         /**

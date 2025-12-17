@@ -276,7 +276,7 @@ abstract class XML_Reader
             $a = $note->length;
             for ($i = 0; $i < $a; $i++)
             {
-                $result['note'][] = $note->item(0)->nodeValue;
+                $result['note'][] = $note->item($i)->nodeValue;
             }
         }
         /**
@@ -391,6 +391,9 @@ abstract class XML_Reader
         $result['DocumentCurrencyCode'] = $this->get_node_value('cbc:DocumentCurrencyCode');
         $result['BuyerReference'] = $this->get_node_value('cbc:BuyerReference');
         $result['ActualDeliveryDate'] = $this->get_node_value('//cac:Delivery[1]/cbc:ActualDeliveryDate[1]');
+        $result['info']=array();
+        
+        $result['info']['note']=$this->get_node_value("//cbc:Note");
         /*
           <cac:Delivery>
           <cbc:ActualDeliveryDate>2018-07-01</cbc:ActualDeliveryDate>
@@ -409,14 +412,15 @@ abstract class XML_Reader
         //$pdf = new PDF($cn);
         $pdf = new PDF();
         $result = $this->get_info();
-
+        $info=$result;
     //    $pdf->setDossierInfo(_(" id ") . " " . $result['id']);
         $pdf->AliasNbPages();
         $pdf->setAuthor("Noalyss");
         $pdf->AddPage();
         // 180 mm large
-        $pdf->setFont("DejaVu", "B", 12);
-        $pdf->write_cell(60, 4, _("Information facture"));
+        $pdf->setFont("DejaVu", "B", 16);
+        $pdf->write_cell(20, 10, "");
+        $pdf->write_cell(170, 10, _("INFORMATION"),1,0,'C');
         $pdf->line_new(10);
         $pdf->setFont("DejaVu", "", 7);
         $pdf->write(4, sprintf(_("Document ID %s"), $result['id']));
@@ -463,7 +467,21 @@ abstract class XML_Reader
         $pdf->write_cell(60, 4, $customer['city']);
         $pdf->write_cell(20, 4, $customer['country_code']);
         $pdf->line_new(10);
-
+        /**
+         * note invoice
+         */
+         if ( $info['info']['note'] != "")
+         {
+            $pdf->setFont("DejaVu", "B", 12);
+            $pdf->write_cell(60, 4, _("Notes"));
+            $pdf->line_new(10);
+            $pdf->setFont("DejaVu", "", 7);
+            $pdf->write_multi(50, 4,$info['info']['note']);
+            $pdf->line_new(10); 
+         }
+        /**
+         * ITEM
+         */
         $pdf->setFont("DejaVu", "B", 12);
         $pdf->write_cell(60, 4, _("Articles"));
         $pdf->line_new(10);
@@ -475,7 +493,7 @@ abstract class XML_Reader
         $pdf->write_cell(25, 4, _("Quantité"), border: 'B', align: 'R');
         $pdf->write_cell(25, 4, _("Montant HT"), border: 'B', align: 'R');
         $pdf->line_new();
-
+        
         $nb_inline = count($result);
         for ($i = 0; $i < $nb_inline; $i++)
         {
@@ -602,7 +620,7 @@ abstract class XML_Reader
         if ( count($result) > 0)
         {
             $pdf->setFont("DejaVu", "B", 12);
-            $pdf->write_cell(50,4,_('Documents'));
+            $pdf->write_cell(60,4,_('Documents inclus'));
             $pdf->line_new();
             $pdf->setFont("DejaVu", "", 7);
             $nb_result=count($result);
