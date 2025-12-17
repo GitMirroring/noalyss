@@ -186,6 +186,7 @@ abstract class XMLInvoice extends \DOMDocument
         // document description
         $result['description']=$operation->det->jr_comment;
         
+        // note if any 
         // goods and services
         $result['operation']=array();
         
@@ -196,7 +197,8 @@ abstract class XMLInvoice extends \DOMDocument
             $card=new \Fiche($this->cn,$operation->det->array[$i]['qs_fiche']);
             $result['operation'][$i]['qcode']=$card->get_attribute(ATTR_DEF_QUICKCODE);
             $result['operation'][$i]['name']=$card->get_attribute(ATTR_DEF_NAME);
-            $result['operation'][$i]['description']=$card->get_attribute(9);
+            $result['operation'][$i]['description']=($operation->det->array[$i]['j_text']=="")?$card->get_attribute(9):$operation->det->array[$i]['j_text'];
+            
             // get the type of unity, if not found then it will be EA
             $x= $card->get_attribute(ATTR_DEF_QUANTITY_TYPE,0);
             $result['operation'][$i]['code_quantity']=($x===false||$x=="")?"EA":$x;

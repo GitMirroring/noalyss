@@ -449,7 +449,7 @@ class InvoiceUBL21 extends XMLInvoice {
         
         // ITEM
         $item=$this->createElement("cac:Item");
-        $item->appendChild($this->createElement("cbc:Description",$row['name']));
+        $item->appendChild($this->createElement("cbc:Description",$row['description']));
         $item->appendChild($this->createElement("cbc:Name", $row['qcode']));
         $classifiedTaxCat=$this->createElement("cac:ClassifiedTaxCategory");
         
@@ -562,6 +562,10 @@ class InvoiceUBL21 extends XMLInvoice {
         }
         $root->appendChild($this->createElement('cbc:DueDate',$this->data['due_date']));
         $root->appendChild($this->createElement('cbc:InvoiceTypeCode',380));
+        /**
+         * add note if any
+         */
+        
         $root->appendChild($this->createElement('cbc:DocumentCurrencyCode',$this->data['currency']));
         $root->appendChild($this->createElement('cbc:BuyerReference',$this->data['info']['order']));
         /**
