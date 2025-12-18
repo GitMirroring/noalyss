@@ -420,7 +420,7 @@ abstract class XML_Reader
         // 180 mm large
         $pdf->setFont("DejaVu", "B", 16);
         $pdf->write_cell(20, 10, "");
-        $pdf->write_cell(170, 10, _("INFORMATION"),1,0,'C');
+        $pdf->write_cell(170, 10, _("Résumé facture"),1,0,'C');
         $pdf->line_new(10);
         $pdf->setFont("DejaVu", "", 7);
         $pdf->write(4, sprintf(_("Document ID %s"), $result['id']));
