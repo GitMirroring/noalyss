@@ -193,7 +193,8 @@ abstract class XMLInvoice extends \DOMDocument
         $nb_note=count($a_note);
         for ($e=0;$e<$nb_note;$e++)
         {
-            $result['note'].= str_replace('&nbsp;','',$a_note[$e]['n_text']);
+            
+            $result['note'].= html_entity_decode($a_note[$e]['n_text']);
         }
         // goods and services
         $result['operation']=array();
