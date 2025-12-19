@@ -196,7 +196,7 @@ class InvoiceUBL21 extends XMLInvoice {
         
         $customer=$this->createElement('cac:AccountingCustomerParty');
         $customer_party=$customer->appendChild($this->createElement('cac:Party'));
-        list($scheme_id,$peppol)=explode( ":",$this->data['customer']['endpoint_id']);
+        list($scheme_id,$peppol)=explode( ":",trim($this->data['customer']['endpoint_id']));
         $customer_party->appendChild($this->createElement('cbc:EndpointID',$peppol))
                 ->setAttribute('schemeID', $scheme_id);
         
@@ -277,7 +277,7 @@ class InvoiceUBL21 extends XMLInvoice {
         
         $supplier=$this->createElement('cac:AccountingSupplierParty');
         $supplier_party=$supplier->appendChild($this->createElement('cac:Party'));
-        list($scheme_id,$peppol)=explode( ":",$company['COMPANY_PEPPOL_ID']);
+        list($scheme_id,$peppol)=explode( ":",trim($company['COMPANY_PEPPOL_ID']));
         $supplier_party->appendChild($this->createElement('cbc:EndpointID',$peppol))
                 ->setAttribute('schemeID', $scheme_id);
         
