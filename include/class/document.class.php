@@ -1757,7 +1757,7 @@ class Document
                 }
                  return $ret;
             case 'NOTE':
-                return $p_array['jrn_note_input']??"";
+                return strip_tags(html_entity_decode($p_array['jrn_note_input']??""));
 
 
 
