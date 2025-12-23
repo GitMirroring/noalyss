@@ -43,7 +43,7 @@ $http=new HttpInput();
 $cn=Dossier::connect();
 $g_user=new Noalyss_user($cn);
 $g_user->check();
-/**
+/** 
  * check if 2FA is completed
  */
 if ( ! $g_user->is_double_identified()) {

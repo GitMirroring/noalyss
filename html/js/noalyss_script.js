@@ -4291,7 +4291,7 @@ function event_display_detail(p_dossier, p_detail) {
                     }
                     if (!document.getElementById(dgbox)) {
                         var div_style = "position:fixed;" + ";top:30%;z-index:"+get_next_layer();
-                        add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: true});
+                        add_div({id: dgbox, cssclass: 'inner_box2', html: loading(), style: div_style, drag: true});
 
                     }
 
