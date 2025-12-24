@@ -102,6 +102,9 @@ if ( in_array("document",$a_show)) {
 ?>
 <div id="document_div_id" style="display:none;height:185px;height:10rem">
   <?php
+  /** 
+   * receipt
+   */
      $file = new IFile();
     $file->setAlertOnSize(true);
     $file->table = 0;
@@ -110,6 +113,11 @@ if ( in_array("document",$a_show)) {
     echo $file->input("pj", "");
     echo '</p>';
     ?>
+    <p  class="decale">
+        <?php
+        echo $this->input_supplemental_document();
+        ?>
+    </p>
 </div>
 <?php 
 

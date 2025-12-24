@@ -534,6 +534,63 @@ class InvoiceUBL21 extends XMLInvoice {
         return $result;
     }
      /**
+     * @brief Insert a PDF in the XML
+     * the document type is not needed for BELGIUM
+     */
+    /**
+     * 
+@code      
+ <cac:AdditionalDocumentReference>
+    <cbc:ID>P01</cbc:ID>
+    <cbc:DocumentDescription>Facture PDF</cbc:DocumentDescription>
+    <cac:Attachment>
+      <cbc:EmbeddedDocumentBinaryObject
+          mimeCode="application/pdf"
+          filename="invoice.pdf">$base64Pdf</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+     <!--     OU -->
+      <cac:AdditionalDocumentReference>
+    <cbc:ID>REF_ODT_001</cbc:ID>
+    <cbc:DocumentDescription>Fichier OpenDocument</cbc:DocumentDescription>
+    <cac:Attachment>
+        <cbc:EmbeddedDocumentBinaryObject
+            mimeCode="application/vnd.oasis.opendocument.text"
+            filename="facture.odt">[base64-encodage du fichier]</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+</cac:AdditionalDocumentReference>
+
+
+@endcode
+     * @return \DOMElement
+     */
+    function include_document($i):\DOMElement
+    {
+        
+        $pdfContent=$this->cn->lo_read($this->data['document'][$i]['oid']);
+        // Lire le fichier PDF  
+
+        $result=$this->createElement("cac:AdditionalDocumentReference");
+        $id=$this->createElement("cbc:ID",sprintf("SD%d",$i));
+        $d=( $this->data['document'][$i]['description'] == "")?"NONE":$this->data['document'][$i]['description'];
+        $document_description=$this->createElement("cbc:DocumentDescription"
+                ,$d );
+        
+        // PDF in base64
+        $base64Pdf = base64_encode($pdfContent);
+        $embeddedDocument=$this->createElement("cbc:EmbeddedDocumentBinaryObject",$base64Pdf);
+        $embeddedDocument->setAttribute("mimeCode", "application/pdf");
+        $embeddedDocument->setAttribute("filename", $this->data['document'][$i]['filename']);
+        $attachment=$this->createElement("cac:Attachment");
+        $attachment->appendChild($embeddedDocument);
+        
+        $result->appendChild($id);
+        $result->appendChild($document_description);
+        $result->appendChild($attachment);
+        
+        return $result;
+    }
+     /**
      * @brief create an XML invoice(UBL2.1) based on JRN.JR_ID operation
      * @parameter $jr_id (int) operation JRN.JR_ID operation
      * @return XML String
@@ -578,7 +635,16 @@ class InvoiceUBL21 extends XMLInvoice {
         if ($x != null  ) {
             $root->appendChild($x);
         }
-
+        /**
+         * insert all Additionnal documents if any
+         */
+        $nb_document=count($this->data['document']);
+        for ($z=0;$z <$nb_document;$z++)
+        {
+            $x= $this->include_document($z);
+            $root->appendChild($x);
+        }
+                
         // add the supplier
         $root->appendChild($this->build_supplier());
         // add the customer

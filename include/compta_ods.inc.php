@@ -78,7 +78,8 @@ if (!isset($_POST['summary']) && !isset($_POST['save'])) {
     try {
         $ledger->save($array);
         $jr_id = $ledger->jr_id;
-
+        $ledger->upload_supplemental_document($jr_id);
+        
         /* save followup */
         $ledger->save_followup($http->request("action_gestion", "string", ""));
 

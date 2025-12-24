@@ -151,7 +151,7 @@ if ( isset($_POST['record']) )
         $Ledger=new Acc_Ledger_Sale($cn,$post_jrn);
         try {
             $internal=$Ledger->insert($_POST);
-            
+            $Ledger->upload_supplemental_document($Ledger->jr_id);
             // var $receipt (string) contains the name of the file name of 
             //              the invoice (document created), if empty there
             //              is no invoice

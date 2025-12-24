@@ -701,8 +701,11 @@ class Acc_Ledger_Fin extends Acc_Ledger
         // check for upload piece
         $file=new IFile();
         $file->setAlertOnSize(true);
-        $r.="<br>"._("Ajoutez une pièce justificative")." ";
+        $r.="<p class=\"decale\">"._("Ajoutez une pièce justificative")." ";
         $r.=$file->input("pj", "");
+        $r.='</p>';
+        
+        $r.=$this->input_supplemental_document();
 
         $r.='</div>';
         //--------------------------------------------------
@@ -1087,6 +1090,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                                         jr_pj_type=$3  where jr_grpt_id=$4",
                             array($oid, $_FILES['pj']['name'], $_FILES['pj']['type'], $seq));
                 }
+                $this->upload_supplemental_document($jr_id);
             } // for nbitem
             // increment pj
             if (noalyss_strlentrim($e_pj)!=0)

@@ -108,6 +108,7 @@ if (isset($_POST['record']))
 
         try {
 		    $internal = $Ledger->insert($_POST);
+                    $Ledger->upload_supplemental_document($Ledger->jr_id);
         } catch (\Exception $e) {
             if ( $e->getCode()==EXC_BALANCE)
             {

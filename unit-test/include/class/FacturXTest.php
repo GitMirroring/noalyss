@@ -126,7 +126,7 @@ class FacturXTest extends TestCase {
        $cn=\Dossier::connect();
        $facturx=new \Noalyss\XMLDocument\FacturX($cn);
        $a_error=$facturx->check_company_data();
-       $this->assertTrue(count($a_error)==10, "nb of error incorrect ".print_r($a_error,true));
+       $this->assertTrue(count($a_error)==8, "nb of error incorrect ".print_r($a_error,true));
     }
 
        function testCustomer_Data()

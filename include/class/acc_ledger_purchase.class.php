@@ -2140,6 +2140,7 @@ EOF;
                                 " from document_modele where md_affect='ACH' order by 2");
             $r.=$doc_gen->input().'<br>';
         }
+        $r.=$this->input_supplemental_document();
         $r.='<br>';
         $obj=new IText();
         $r.=_('Numero de bon de commande : ').$obj->input('bon_comm').'<br>';

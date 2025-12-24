@@ -3668,6 +3668,63 @@ EOF;
             return span (_("Attention ! Numéro de Pièce non automatique mais forcée"),'class="warning"');
         }
     }
+    /**
+     * @brief display INPUT type to ask the supplementary documents
+     * @return HTML string
+     * @throws \Exception 3674 If ledger JRN.JRN_DEF_ID == 0
+     */
+    protected function input_supplemental_document()
+    {
+        if ( $this->id==0) {
+            throw new \Exception ("ACL3674: invalid ledger",3674);
+        }
+         /**
+         * add suppl.documents
+         */
+        $supplemental_doc=new IFile('document_supplemental[]');
+        $supplemental_doc->setAlertOnSize(true);
+        $supplemental_doc->set_multiple(true);
+        $r="";
+        $r.='<p  class="decale">';
+        $r.= _("Ajoutez des documents additionnels");
+        $r.=$supplemental_doc->input();
+        $r.='</p>';
+        return $r;
+    }
+    /**
+     * @brief upload the supplementary documents and attach them to the JRN.JR_ID
+     * start a  new transaction if the connection to the database is not 
+     * already in a transaction
+     * @param $jr_id (int) JRN.JR_ID
+     */
+    public function upload_supplemental_document($jr_id)
+    {
+         if (! isset ($_FILES['document_supplemental']) || count($_FILES['document_supplemental']['name'])==0) {
+            return;
+        }
+        $nb=count($_FILES['document_supplemental']["name"]);
+        if ( $this->db->status() !== PGSQL_TRANSACTION_INTRANS ) {
+            $a=1;
+            $this->db->start();
+        }
+        for ($i=0;$i<$nb;$i++)
+        {
+            $file= tempnam($_ENV["TMP"], "sup_file");
+            if ( move_uploaded_file($_FILES['document_supplemental']['tmp_name'][$i],$file))
+            {
+                if ( ($oid=$this->db->lo_import($file)) != false )
+                {
+                    $jrn_sup=new Jrn_Sup_Document_SQL($this->db);
+                    $jrn_sup->jr_id=$jr_id;
+                    $jrn_sup->js_lob=$oid;
+                    $jrn_sup->js_mimetype=$_FILES['document_supplemental']['type'][$i];
+                    $jrn_sup->js_filename=$_FILES['document_supplemental']['name'][$i];
+                    $jrn_sup->insert();
+                }
+            }
+        }
+        if ( $a == 1) { $this->db->commit(); }
+    }
 }
 
 ?>

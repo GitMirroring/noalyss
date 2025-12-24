@@ -99,7 +99,9 @@ namespace Noalyss\XMLDocument;
                 )
 
         )
-
+        
+ * 
+ *      
 )
    
 
@@ -256,6 +258,8 @@ abstract class XMLInvoice extends \DOMDocument
             }
         }
         $result['info']['communication']=($result['info']['communication']=="")?$result['id']:"";
+        $result['document']=$this->fill_document($jr_id);
+        
          /**
          * Compute totals VAT and AMOUNT
          */
@@ -544,6 +548,29 @@ abstract class XMLInvoice extends \DOMDocument
         }
         $this->pdf_filename = $pdf_filename;
         return $this;
+    }
+    /**
+     * @brief retrieve additionnal documents but only PDF , not other files
+     * @param $jr_id (int) JRN.JR_DEF_ID
+     * @return array : empty or keys= (filename,description, log id) from table from JRN_SUP_DOCUMENT
+     */
+    public function fill_document($jr_id)
+    {
+        $result=[];
+        $a_document=$this->cn->get_array("select js_id,js_filename,js_description,js_lob from jrn_sup_document where js_mimetype='application/pdf' AND jr_id=$1",
+                [$jr_id]);
+        if ($a_document == null) return array();
+        
+        foreach ($a_document as $document)
+        {
+            $result[]=array("filename"=>$document['js_filename']
+                ,"description"=>$document['js_description']
+                ,'oid'=>$document['js_lob']
+                ,'id'=>$document['js_id']
+                );
+        }
+        return $result;
+           
     }
 
 }

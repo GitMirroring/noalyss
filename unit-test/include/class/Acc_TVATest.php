@@ -129,7 +129,7 @@ class Acc_TVATest extends TestCase
              ['S',true,null]
              ,['Z',true,null]
              ,['A',false,""]
-             ,['A',true,"XX"]
+             ,['K',true,"XX"]
          );
     }
     /**

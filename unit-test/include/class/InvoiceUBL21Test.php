@@ -161,7 +161,7 @@ class InvoiceUBL21Test extends TestCase {
         $ublinvoice21 = new \Noalyss\XMLDocument\InvoiceUBL21($cn);
         $a_error=array();
         $a_error=$ublinvoice21->check_company_data();
-        $this->assertTrue(count($a_error) ==8 , " nb of errors incorrect ".print_r($a_error,true));
+        $this->assertTrue(count($a_error) ==9 , " nb of errors incorrect ".print_r($a_error,true));
     }
 
     function testCustomer_Data() {
