@@ -59,8 +59,6 @@ global $g_user, $cn,$g_parameter,$http;
 $g_user = new Noalyss_user($cn);
 $http=new HttpInput();
 
-ITva_Popup::set_vat_code($g_user->get_vat_code_preference());
-
 IDate::set_firstDate($g_user->get_first_week_day());
 ITva_Popup::set_vat_code($g_user->get_vat_code_preference());
 

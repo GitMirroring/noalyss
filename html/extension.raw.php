@@ -84,7 +84,6 @@ if ( $ext->search($http->request("plugin_code")) != -1 )
       fwrite($file_loginput,"\n");
       fclose($file_loginput);
     }
-    define ('ALLOWED',True);
     /* call the ajax script */
     require_once NOALYSS_PLUGIN.DIRECTORY_SEPARATOR.dirname(trim($ext->getp('me_file'))).DIRECTORY_SEPARATOR.'raw.php';
   }

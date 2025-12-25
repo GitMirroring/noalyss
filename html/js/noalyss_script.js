@@ -4752,6 +4752,7 @@ Widget.prototype.toggle_full_size=function (widget_domid) {
 (function(){window.addEventListener("onload", (event) => {remove_waiting_box()});})();
 */
 
+//var bookmark=new Bookmark();
 
 Noalyss = function () {
     
@@ -5112,5 +5113,6 @@ VAT_Code.prototype.filter_country=function()
         return false;
     }
 }
-noalyss=new Noalyss();
+var noalyss=new Noalyss();
+
 var bookmark=new Bookmark();

@@ -17,6 +17,12 @@ CREATE SCHEMA comptaproc;
 
 
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> review-stash
 CREATE SCHEMA tva_belge;
 
 

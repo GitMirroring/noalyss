@@ -379,7 +379,6 @@ td.tool a.mtitle:hover {
 /**
     menu left (not used)
  */
-
 div.lmenu {
     float:left;
     clear:left;
@@ -3994,7 +3993,6 @@ h2.h-section {
      background-color:yellow;
      background-image: linear-gradient(to bottom,yellow,white);
  }
-
 /***
  * Animate menu
  *
@@ -4063,12 +4061,7 @@ h2.h-section {
      opacity: 0.9;
 
  }
-  }
- .text-70 {
-     font-size:70% !important;
-     vertical-align: super;
-
- }
+ 
  .nav-pills {
      font-family:var(--font-title) !important;
  }

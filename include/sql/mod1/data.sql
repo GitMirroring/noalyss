@@ -15,33 +15,12 @@ SET row_security = off;
 
 
 SELECT pg_catalog.lo_create('2346174');
-
-
-
 SELECT pg_catalog.lo_create('2346176');
-
-
-
 SELECT pg_catalog.lo_create('2346177');
-
-
-
 SELECT pg_catalog.lo_create('2346178');
-
-
-
 SELECT pg_catalog.lo_create('2346179');
-
-
-
 SELECT pg_catalog.lo_create('2346181');
-
-
-
 SELECT pg_catalog.lo_create('2346476');
-
-
-
 
 
 INSERT INTO public.action (ac_id, ac_description, ac_module, ac_code) VALUES (800, 'Ajout de fiche', 'fiche', 'FICADD');

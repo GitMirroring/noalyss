@@ -233,7 +233,6 @@ if ($histo->selected   == -1)
         $p_cat=$http->get("cat","number");
         $cond = " where f.fd_id = " . sql_string($p_cat);
         $cond .= " and f.f_enable='1'";
- 
     }
 
 	// Create nav bar
