@@ -170,7 +170,7 @@ function echo_error($p_log, $p_line="", $p_message="")
 {
     $msg="ERREUR :" . $p_log . " " . $p_line . " " . $p_message;
     echo $msg;
-    syslog(LOG_ERR,$msg);
+    record_log($msg);
 
 }
 
@@ -314,7 +314,7 @@ function html_page_start($p_theme="", $p_script="", $p_script2="")
     
     if ($is_msie == 0 ) 
     {
-        echo '<!doctype html>';
+        echo '<!DOCTYPE html>';
         printf("\n");
  
     }
@@ -443,9 +443,11 @@ function html_min_page_start($p_theme="", $p_script="", $p_script2="")
     <script src=\"js/prototype.js\" type=\"text/javascript\"></script>
     <script src=\"js/noalyss_script.js\" type=\"text/javascript\"></script>
     <script src=\"js/acc_ledger.js\" type=\"text/javascript\"></script>
-    <script src=\"js/smoke.js\" type=\"text/javascript\"></script>";
+    <script src=\"js/smoke.js\" type=\"text/javascript\"></script>
+    <script src=\"export.php?loadjs=message\"  type=\"text/javascript\" charset=\"utf-8\"></script>";
+    
     echo "<LINK id=\"pagestyle\" REL=\"stylesheet\" type=\"text/css\" href=\"css/font/fontello/css/fontello.css\" media=\"screen\"/>";
-    include_once NOALYSS_INCLUDE.'/lib/message_javascript.php';
+    
     //  Retrieve colors for this folder
     if ( isset($_REQUEST['gDossier'])  ) {
         $noalyss_appearance=new Noalyss_Appearance();
@@ -517,7 +519,57 @@ function sql_string($p_string)
     $p_string = noalyss_str_replace('\\', '\\\\', $p_string);
     return $p_string;
 }
+/**
+ * @brief Same menu for all extensions, with the right level, it calls 
+ * ShowItem with the right parameters
+ * @global $level (int) global variable of the menu level
+ * @param $p_array (array)
+ * @param $default (string) selected item
+ * @param $p_extra (string) extra code for the table tag (CSS or javascript)
+ * @see ShowItem
+ */
+function show_menu_extension($p_array,$default="",$p_extra="")
+{
+    global $level;
+    
+   
+   $level++;
+    switch ($level) {
+        case 3:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra="noprint nav nav-pills nav-level3";
+            $class_div="menu3";
+            break;
+         case 2:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra="noprint nav nav-pills nav-level2";
+            $class_div="menu2";
+            break;
+        case 1:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra='noprint nav nav-pills nav-fill  ';
+            $class_div="top_menu";
+            break;
+        default:
+            $p_dir='H';
+            $class="nav-item nav-item-underline";
+            $class_ref="nav-link";
+            $p_extra="noprint nav nav-level4";
+            $class_div="menu3";
+            break;
+    }
+   return "<div class=\"$class_div\">"
+           . ShowItem($p_array,$p_dir,$class,$class_ref,$default,$p_extra)
+           ."</div>";
+           
 
+}
 /**
 * \brief store the string which print
  *           the content of p_array in a table
@@ -534,6 +586,7 @@ function sql_string($p_string)
 
 function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link", $default="", $p_extra="nav nav-pills nav-fill")
 {
+      
     $ret = '';
     // for comptability with old application  mtitle for anchor is replace by nav-link
     
@@ -541,9 +594,9 @@ function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link"
     // direction Vertical
     if ($p_dir == 'V')
     { 
-        $ret .= "<ul class=\"$p_extra noprint \"  flex-row>";
+        $ret .= "<ul class=\"$p_extra  \"  style=\"display:flex;flex-direction:column\">";
     } else {
-        $ret .= "<ul class=\"$p_extra noprint \" >";
+        $ret .= "<ul class=\"$p_extra \" >";
        
     }
     
@@ -563,11 +616,11 @@ function ShowItem($p_array, $p_dir='V', $class="nav-item", $class_ref="nav-link"
 
         if ($set==$default)
         {
-            $ret.='<li class="nav-item"><A class="'.$class_ref.' active'.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
+            $ret.='<li class="'.$class.' li-active "><A class="'.$class_ref.'  active'.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
         }
         else
         {
-            $ret.='<li class="nav-item"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
+            $ret.='<li class="'.$class.'"><A class="'.$class_ref.'" HREF="'.$href[0].'" title="'.$title.'" '.$javascript.'>'.$href[1].'</A></li>';
         }
         
     }
@@ -1064,15 +1117,13 @@ function find_default_module()
 
 /**
  * @brief show the module
- * @var $g_user
  * @param $module the $_REQUEST['ac'] exploded into an array
  * @param  $idx the index of the array : the AD code is splitted into an array thanks the slash
  */
 function show_menu($module)
 {
     if ($module == 0)return;
-    static $level=0;
-    global $g_user;
+    global $level, $g_user;
     $http=new HttpInput();
     $access_code=$http->request("ac");
     $cn = Dossier::connect();
@@ -1099,7 +1150,7 @@ function show_menu($module)
     if (!empty($amenu) && count($amenu) > 1)
     {
         $a_style_menu=array('topmenu','menu2','menu3');
-        if ( $level > count($a_style_menu))
+        if ( $level >= count($a_style_menu))
             $style_menu='menu3';
         else {
             $style_menu=$a_style_menu[$level];
@@ -1341,7 +1392,7 @@ function is_msie()
  */
 function record_log($p_message)
 {
-    $date=date('Y.m.d');
+    $date= date ('Y-m-d');
     // variable: $handle_log resource on log file ,
     $handle_log=fopen(NOALYSS_BASE."/log/noalyss-{$date}.log","a+");
 
@@ -1349,9 +1400,16 @@ function record_log($p_message)
     {
 
         if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
-
-            error_log("noalyss exception ".$p_message->getMessage(),0);
-            error_log("noalyss exception".$p_message->getTraceAsString(),0);
+            $exc=$p_message;
+            do {
+                error_log("noalyss exception File [".$exc->getFile().":".$exc->getLine()."]",0);
+                error_log("noalyss exception Message [".$exc->getMessage()."]",0);
+                error_log("noalyss exception Code [".$exc->getCode()."]",0);
+                error_log("noalyss exception Trace ".$exc->getTraceAsString(),0);
+                error_log("------ ",0);
+                $exc=$exc->getPrevious();
+                if ($exc != null )fwrite ($handle_log,"*********************** Previous  *********************** \n");
+            } while ($exc != null);
         } else {
             error_log("noalyss".var_export($p_message,true),0);
 
@@ -1368,7 +1426,7 @@ function record_log($p_message)
 
         }
         
-        $now=date('y-m-d H:i');
+        $now=date ('Y-m-d H:i:s');
         fwrite ($handle_log,str_repeat("=", 80)."\n");
         fwrite ($handle_log,"ERROR: {$now}\n");
         fwrite($handle_log,"noalyss GET [".var_export($_GET,true)."]");
@@ -1376,11 +1434,19 @@ function record_log($p_message)
         fwrite($handle_log,"_POST [".var_export($_POST,true)."]");
         fwrite ($handle_log,"\n");
         if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
-
-            fwrite($handle_log,"noalyss exception ".$p_message->getMessage());
-            fwrite ($handle_log,"\n");
-            fwrite($handle_log,"noalyss exception".$p_message->getTraceAsString());
-            fwrite ($handle_log,"\n");
+            $exc=$p_message;
+            do {
+                fwrite($handle_log,"noalyss exception File [".$exc->getFile().":".$exc->getLine()."]");
+                fwrite ($handle_log,"\n");
+                fwrite($handle_log,"noalyss exception Message [".$exc->getMessage()."]");
+                fwrite ($handle_log,"\n");
+                fwrite($handle_log,"noalyss exception Code [".$exc->getCode()."]");
+                fwrite ($handle_log,"\n");
+                fwrite($handle_log,"noalyss exception Trace \n".$exc->getTraceAsString());
+                fwrite ($handle_log,"\n");
+                $exc=$exc->getPrevious();
+                if ($exc != null )fwrite ($handle_log,"*********************** Previous  *********************** \n");
+            } while ($exc != null);
         } else {
             fwrite($handle_log,"noalyss".var_export($p_message,true));
             fwrite ($handle_log,"\n");
@@ -1388,7 +1454,7 @@ function record_log($p_message)
         }
 
         fwrite ($handle_log,str_repeat("=", 80)."\n");
-
+        fclose($handle_log);
 
     }
 
@@ -1397,7 +1463,8 @@ if(!function_exists('tracedebug')) {
   function tracedebug($file,$var, $label = NULL) {
 
     $tmp_file = sys_get_temp_dir().DIRECTORY_SEPARATOR.$file;
-    if ( ! is_writable($tmp_file)) return;
+    $file_loginput=fopen( $tmp_file,'a+');
+    if ( $file_loginput == false) { return;}
     $output = '';
     $output .= date('d-m-y H:i');
     if(!is_null($label)) {
@@ -1484,9 +1551,9 @@ function generate_random_string($p_length,$special=1)
  */
 function confirm_with_string($p_ctl_name,$p_car)
 {
-    $code=generate_random_string($p_car );
+    $code=generate_random_string($p_car ,0);
     $r =  HtmlInput::hidden("ctlcode",$code);
-    $r.='<span style="margin-left:1.2em;margin-right:1.2em;font-size:112%;font-weight:bold;border:navy solid 1px ; padding:0.5rem">'. $code.'</span>';
+    $r.='<span style="margin-left:1.2em;margin-right:1.2em;font-size:120%;font-weight:bold;border:navy solid 1px ; padding:0.5rem">'. $code.'</span>';
     $ctl=new IText($p_ctl_name);
     $r.=$ctl->input();
     return $r;
@@ -1710,7 +1777,7 @@ function MaintenanceMode($p_file)
 }
 
 /**
- * @brief returns an double array with the error found and code , if the count is 0 then the password is very string, 5 means it is
+ * @brief returns an double array with the error found and code , if the count is 0 then the password is very strong, 5 means it is
  * empty ,4 weak, ... the array contains the errors, [msg]=>array message [code] => array of code
  * Codes are
  *        - 1 : too short
@@ -1820,9 +1887,10 @@ function generate_random_password($car):string
 /**
  * @brief removed invalid character when computing a filename, the suffix is kept
  * @param $filename String filename to sanitize
+ * @param $with_date (bool) true add the date in the filename, false do not add it
  * @return string without offending char
  */
-function sanitize_filename($filename)
+function sanitize_filename($filename,$with_date=true)
 {
     // save the suffix
     $pos_prefix=strrpos($filename, ".");
@@ -1838,8 +1906,147 @@ function sanitize_filename($filename)
     $filename=str_replace(array('/', '*', '<', '>', ';', ',', '\\', '.', ':', '(', ')', ' ', '[', ']'), "-", $filename);
 
     $filename_no=substr($filename, 0, $pos_prefix);
-
-    $new_filename=strtolower($filename_no)."-".date("Ymd-Hi").$filename_suff;
+    if ( $with_date)
+        $new_filename=strtolower($filename_no)."-".date("Ymd-Hi").$filename_suff;
+    else
+        $new_filename=strtolower($filename_no).$filename_suff;
+    
     return $new_filename;
 }
+/**
+ * @brief generate an UUID
+ * @param $data(string) if null use randow
+ * @return string
+ */
+function guidv4($data = null) {
+    // Generate 16 bytes (128 bits) of random data or use the data passed into the function.
+    $data = $data ?? random_bytes(16);
+    
 
+    // Set version to 0100
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+    // Set bits 6-7 to 10
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+    // Output the 36 character UUID.
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+}
+/**
+ * @brief retrieve the index for the key percent, returns -1 if nothing found
+ * @param $array (array) SubTotal
+ * @param $key (string) name of the key 
+ * @param $value (string) value to look for
+ * @return int
+ */
+function find_idx($array,$key,$value) {
+    if ( count($array) == 0 ) { return -1; }
+    $nb_array=count($array);
+    for($i=0;$i <$nb_array;$i++) {
+        if ($array[$i][$key] == $value) { 
+            return $i; 
+        }
+    }
+    return -1;
+}
+
+function compute_letter_value()
+    {
+        global $aLetter,$aLetterValue;
+
+        static $make_string=null;
+        if ( $make_string == null ) {
+            for ($i=65;$i!=91;$i++) {
+                $make_string[chr($i)]=$i-55;
+            }
+            $aLetter=array_keys($make_string);
+            $aLetterValue=array_values($make_string);
+        }
+    }
+/**
+ * @brief check that an IBAN is valid
+ * @param $iban string, this parameter will change:remove of space, comma,...
+ * @return bool false the IBAN is invalid, true IBAN is VALID
+ */
+function check_iban(&$iban): bool
+{
+    global $aLetter, $aLetterValue;
+    if (trim($iban ?? "") == "")
+        return false;
+
+    //------------------------------------------------
+    // Make the letter
+    //------------------------------------------------
+    static $make_string,$aLetter, $aLetterValue=null;
+    
+    if ( $make_string == null ) 
+    {
+        for ($i=65;$i!=91;$i++) 
+        {
+            $make_string[chr($i)]=$i-55;
+        }
+        $aLetter=array_keys($make_string);
+        $aLetterValue=array_values($make_string);
+    }
+
+    $iban = strtoupper($iban);
+    $iban=str_replace([" ", ",", ".", "-"], '', $iban);
+
+    $first = substr($iban, 0, 4);
+    $chain = substr($iban, 4) . $first;
+
+    $replaced = str_replace($aLetter, $aLetterValue, $chain);
+
+    // computed by slice of 10: mod function is limited
+    $start = 0;
+    $slice = 10;
+    $result = "";
+    $length = strlen($replaced);
+    while ($start < $length)
+    {
+        $slice_string = $result . substr($replaced, $start, $slice);
+        $result = $slice_string % 97;
+        $start += $slice;
+    }
+
+    if ($result == 1)
+        return true;
+
+    return false;
+}
+
+/**
+* @brief convert a value in Mbytes, kb ... in byte 
+* @param (string) $p_value containing K , M, G
+* @return int in bytes
+*/
+function convert_ini_unit($p_value)
+{
+    if ($p_value=="") return 0;
+   $a_convert=["k"=>1024,"m"=>1024**2,"g"=>1024**3];
+
+   $p_value=trim($p_value);
+   $last=strtolower($p_value[strlen($p_value)-1]);
+   $p_value=substr($p_value,0,strlen($p_value)-1);
+   if ( isset($a_convert[$last])) {
+       $p_value=$p_value*$a_convert[$last];
+   }
+
+   return $p_value;
+}
+/**
+ * @brief convert an array KEY=>VALUE into a double array useable by \ISelect
+ * @param $array (array) array key=>value
+ * @return double array array (array('value'=>'KEY','label'=>VALUE),...))
+ * @see ISelect
+ */
+function convert_array_select($array)
+{
+    if (count($array) == 0 ) return null;
+    $a_ret=array();$i=0;
+    foreach ($array as $key=>$value) {
+        $a_ret[$i]['value']=$key;
+        $a_ret[$i]['label']=$value;
+        $i++;
+    }
+    return $a_ret;
+}

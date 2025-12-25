@@ -39,7 +39,6 @@ class Agenda extends Widget
         global $g_user;
         /* others report */
         $cal=new \Calendar();
-
         $cal->default_periode=$g_user->get_periode();
 
 

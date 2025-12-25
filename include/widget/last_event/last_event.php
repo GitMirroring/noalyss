@@ -31,7 +31,7 @@ use Dossier;
  */
 class Last_Event extends Widget
 {
-    /**
+        /**
      * @brief display 10 last action
      * @return void
      * @throws \Exception

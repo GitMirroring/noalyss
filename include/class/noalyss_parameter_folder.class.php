@@ -31,10 +31,10 @@ class Noalyss_Parameter_Folder
     var $MY_TVA;
     var $MY_STREET;
     var $MY_NUMBER;
-    var $MY_CP;
-    var $MY_TEL;
-    var $MY_PAYS;
-    var $MY_COMMUNE;
+    var $MY_POSTCODE;
+    var $MY_PHONE;
+    var $MY_COUNTRY;
+    var $MY_CITY;
     var $MY_FAX;
     var $MY_ANALYTIC;
     var $MY_STRICT;
@@ -49,10 +49,12 @@ class Noalyss_Parameter_Folder
     var $MY_DEFAULT_ROUND_ERROR_CRED;
     var $MY_ANC_FILTER;
     var $MY_CURRENCY;
-    var $MY_COUNTRY;
+    var $MY_COUNTRY_CODE;
     var $MY_REPORT; //!< In Belgium , we need a report on the beginning of the exercice , not in France,
-
+    var $MY_INVOICE_FORMAT; //!< Default invoice format : BASIC, UBL21BEL, FACTURXFR
     
+    
+    const VALID_INVOICE_FORMAT=['BASIC','UBL21BEL','FACTURXFR'];
     // constructor
     function __construct($p_cn)
     {
@@ -75,10 +77,11 @@ class Noalyss_Parameter_Folder
 MY_TVA = [	{$this->MY_TVA }]
 MY_STREET = [ 	{$this->MY_STREET }]
 MY_NUMBER= [	{$this->MY_NUMBER }]
-MY_CP= [	{$this->MY_CP }]
-MY_TEL= [	{$this->MY_TEL }]
-MY_PAYS= [	{$this->MY_PAYS }]
-MY_COMMUNE= [	{$this->MY_COMMUNE }]
+MY_POSTCODE= [	{$this->MY_POSTCODE }]
+MY_PHONE= [	{$this->MY_PHONE }]
+MY_COUNTRY= [	{$this->MY_COUNTRY }]
+MY_COUNTRY_CODE= [	{$this->MY_COUNTRY_CODE }]
+MY_CITY= [	{$this->MY_CITY }]
 MY_FAX= [	{$this->MY_FAX }]
 MY_ANALYTIC= [	{$this->MY_ANALYTIC }]
 MY_STRICT= [	{$this->MY_STRICT }]
@@ -93,11 +96,16 @@ MY_DEFAULT_ROUND_ERROR_DEB= [	{$this->MY_DEFAULT_ROUND_ERROR_DEB }]
 MY_DEFAULT_ROUND_ERROR_CRED= [	{$this->MY_DEFAULT_ROUND_ERROR_CRED }]
 MY_ANC_FILTER= [	{$this->MY_ANC_FILTER }]
 MY_REPORT = [ {$this->MY_REPORT } ]
-
+MY_INVOICE_FORMAT = [ {$this->MY_INVOICE_FORMAT} ]
 EOF;
         return $r;
     }
-
+    /**
+     * @brief check that the filter for ANC operation is valid
+     * @param $p_value (string)  list of digit for accounting separated by comma
+     * @return void
+     * @throws  if value contains a no-digit value
+     */
     function check_anc_filter($p_value):void
     {
         $tmp_value=$p_value;
@@ -137,12 +145,17 @@ EOF;
                 }
 
                 break;
+            case 'MY_INVOICE_FORMAT':
+                if ( !in_array($this->MY_INVOICE_FORMAT, Noalyss_Parameter_Folder::VALID_INVOICE_FORMAT))
+                {
+                    throw new \Exception ('Format facture invalide');
+                }
             default :
                 $ret_value=htmlspecialchars($p_value);
         }
         return $ret_value;
     }
-
+    
     /*!
      **************************************************
      * \brief  save the parameter into the database by inserting or updating
@@ -188,10 +201,11 @@ EOF;
         $this->save('MY_TVA');
         $this->save('MY_STREET');
         $this->save('MY_NUMBER');
-        $this->save('MY_CP');
-        $this->save('MY_TEL');
-        $this->save('MY_PAYS');
-        $this->save('MY_COMMUNE');
+        $this->save('MY_POSTCODE');
+        $this->save('MY_PHONE');
+        $this->save('MY_COUNTRY');
+        $this->save('MY_COUNTRY_CODE');
+        $this->save('MY_CITY');
         $this->save('MY_FAX');
         $this->save('MY_ANALYTIC');
         $this->save('MY_STRICT');
@@ -206,6 +220,7 @@ EOF;
         $this->save('MY_DEFAULT_ROUND_ERROR_CRED');
         $this->save("MY_ANC_FILTER");
         $this->save("MY_REPORT");
+        $this->save("MY_INVOICE_FORMAT");
 
     }
     /**
@@ -224,5 +239,15 @@ EOF;
         }
         return FALSE;
     }
-
+    /**
+     * @brief build a SELECT html input
+     * @return \ISelect
+     */
+    function input_select_format() {
+        $select_format_invoice=new \ISelect('invoice_format');
+        $a_label=[_("Basic"),_("UBL21 Belgique"),_("FacturX France")];
+        $select_format_invoice->transform(array_combine(Noalyss_Parameter_Folder::VALID_INVOICE_FORMAT,$a_label));
+        $select_format_invoice->selected=$this->MY_INVOICE_FORMAT;
+        return $select_format_invoice;
+    }
 }

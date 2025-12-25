@@ -78,28 +78,29 @@ class Print_Ledger_Misc extends Print_Ledger
         $this->SetFont('DejaVu', '', 6);
         if ( $a_jrn == null ) return;
         $ledger=$this->get_ledger();
+        $border='0';
         for ( $i=0;$i<count($a_jrn);$i++)
         {
             $row=$a_jrn[$i];
             
-            $this->write_cell(10,5,  smaller_date($row['date']));
-            $this->LongLine(30,5,$row['jr_pj_number']);
-            $this->write_cell(20,5,$row['jr_internal']);
+            $this->write_cell(10,3,  smaller_date($row['date']),border:$border);
+            $this->write_multi(30,3,$row['jr_pj_number'],border:$border);
+            $this->write_cell(20,3,$row['jr_internal'],border:$border);
 	    $type=$this->cn->get_value("select jrn_def_type from jrn_def where jrn_def_id=$1",array($a_jrn[$i]['jr_def_id']));
 	    $other=mb_substr($ledger->get_tiers($type,$a_jrn[$i]['jr_id']),0,25);
-	    $this->LongLine(25,5,$other,0,'L');
+	    $this->write_multi(25,3,$other,$border,'L');
             $positive=$row['montant'];
-            $this->LongLine(60,5,$row['comment'],0,'L');
+            $this->write_multi(60,3,$row['str_comment'],$border,'L');
              if ( $type == 'FIN' ) {
 	       $positive = $this->cn->get_value("select qf_amount from quant_fin  ".
 					  " where jr_id=".$row['jr_id']);
              }
              if ( $row['currency_id'] != 0 )         {
-                 $this->write_cell(20,5,nbm(bcadd($row['sum_ocvat_amount'],$row['sum_ocamount']),2).$row['cr_code_iso'],0,0,'R');
+                 $this->write_cell(20,3,nbm(bcadd($row['sum_ocvat_amount'],$row['sum_ocamount']),2).$row['cr_code_iso'],border:$border);
              } else {
-                 $this->write_cell(20,5,"");
+                 $this->write_cell(20,3,"",border:$border);
              }
-            $this->write_cell(15,5,nbm($positive),0,0,'R');
+            $this->write_cell(15,3,nbm($positive),$border,0,'R');
             $this->line_new(5);
 
         }

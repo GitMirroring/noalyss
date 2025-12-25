@@ -29,6 +29,11 @@
 
 class PDFBalance_simple extends PDF
 {
+    var $dossier; /*!< $dossier (string)  Title */
+    var $from_poste ; /*! $from_poste (text) lowest limit (alpha. order)*/
+    var $to_poste ; /*! $from_poste (text) highest limit (alpha. order)*/
+    var $from ; /*! $from(date dd.mm.yyyy) lowest date */
+    var $to; /*! $to (date dd.mm.yyyy) highest date */
     /**
      *@brief set_info(dossier,from poste,to poste, from periode, to periode)
      *@param $p_from_poste start = poste

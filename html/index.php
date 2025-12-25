@@ -135,7 +135,7 @@
  */
 
 
-if (!file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config.inc.php') )
+if (! file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config.inc.php') )
 {
     echo <<<EOF
 
@@ -144,7 +144,7 @@ window.location="install.php";
 </script>
 EOF;
 
-    header("Location: install.php", true, 307);
+    header("Location: install.php");
 
     exit(0);
 }
@@ -211,10 +211,20 @@ if (strlen(domaine)>0)
 {
     $my_domain=sprintf(_("Domaine")." : %s", domaine);
 }
-
+/**
+ * if request to recover password
+ */
 if (defined("RECOVER")&&isset($_REQUEST['recover']))
 {
     require_once '../include/recover.php';
+}
+/*
+ * if request to see OTP qrcode
+ */
+if ( isset($_GET['otp'])){
+    
+    require_once '../include/otp-link.php';
+    return;
 }
 // reconnect , create a variable to reconnect properly in login.php
 $goto="";
@@ -225,7 +235,7 @@ if (isset($_REQUEST['reconnect'])&&isset($_REQUEST['backurl']))
 ?>
 <div>
     <div class="d-sm-block">
-        <a href="https://www.noalyss.eu"><IMG SRC="image/logo9000.png" id="logo_id" alt="NOALYSS"></a>
+        <a href="https://www.noalyss.eu"><IMG SRC="image/logo10000.png" id="logo_id" alt="NOALYSS"></a>
      
     </div>    
     <div class="container">

@@ -37,7 +37,7 @@ $available_attribut = $cn->get_array('
                     ad_id not in (select ad_id from jnt_fic_attr jfa where fd_id=$1) order by 2', [$this->id]);
 
 ?>
-
+    <?php Noalyss\Dbg::echo_file(__FILE__);?>
 <div class="row">
     <div class="col">
         <h3>Attributs de la classe</h3>

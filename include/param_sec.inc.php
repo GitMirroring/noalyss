@@ -193,9 +193,15 @@ if ( $action == "view" )
     // Show access for journal
     //--------------------------------------------------------------------------------
 
-    $Res=$cn->exec_sql("select jrn_def_id,jrn_def_name  from jrn_def ".
-                               " order by jrn_def_name");
     $sec_User=new Noalyss_user($cn,$user_id);
+    $Res=$cn->exec_sql("
+        select jrn_def_id
+            ,jrn_def_name  
+            ,coalesce(usr1.uj_priv,'X') priv
+        from jrn_def jrn1
+        left join user_sec_jrn usr1 on (usr1.uj_jrn_id=jrn1.jrn_def_id and usr1.uj_login=$1)        
+        order by jrn_def_name",[$sec_User->login]);
+    
     $n_dossier_id=Dossier::id();
     $sHref=http_build_query(["act"=>"PDF:sec","user_id"=>$user_id,"gDossier"=>$n_dossier_id]);
 
@@ -269,6 +275,7 @@ if ( $action == "view" )
         /* set the widget */
         $l_line=Database::fetch_array($Res,$i);
         $jrn_priv->value=$array;
+        $jrn_priv->selected=$l_line['priv'];
         $jrn_priv->id="ledas".uniqid();
         $ie_input=new Inplace_Edit($jrn_priv);
         $ie_input->set_callback("ajax_misc.php");
@@ -276,7 +283,7 @@ if ( $action == "view" )
         $ie_input->add_json_param("op", "ledger_access");
         $ie_input->add_json_param("gDossier", $n_dossier_id);
         $ie_input->add_json_param("user_id", $user_id);
-        $ie_input->set_value($sec_User->get_ledger_access($l_line['jrn_def_id']));
+        $ie_input->set_value($l_line['priv']);
         echo '<TR> ';
         if ( $i == 0 ) echo '<TD class="num"> <B> Journal </B> </TD>';
         else echo "<TD></TD>";

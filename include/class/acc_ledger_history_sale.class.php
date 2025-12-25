@@ -21,16 +21,16 @@
 
 /**
  * @file
- * @brief Acc_Ledger_History : Manage the list (history) of operations for display
+ * @brief Acc_Ledger_History_Sale : Manage the list (history) of operations for display
  * display or export operations in HTML , PDF or CSV 
  */
 
 /**
- * @brief Acc_Ledger_History : Manage the list (history) of operations for display
+ *@class Acc_Ledger_History_Sale
+ *@brief Acc_Ledger_History : Manage the list (history) of operations for display
  */
 class Acc_Ledger_History_Sale extends Acc_Ledger_History
 {
-
 
     
     public function __construct(\Database $cn, $pa_ledger, $p_from, $p_to,

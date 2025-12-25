@@ -88,7 +88,7 @@
 </>
 <body>
 <p align="center">
-  <IMG SRC="image/logo9000.png" style="width: 30%;z-index:-1;position:fixed;top:30%;margin-left: 20%;opacity: 0.2" alt="NOALYSS">
+  <IMG SRC="image/logo10000.png" style="width: 30%;z-index:-1;position:fixed;top:30%;margin-left: 20%;opacity: 0.2" alt="NOALYSS">
 </p>
 <h1>NOALYSS : comptabilité - accountancy </h1>
 
@@ -156,10 +156,10 @@ if ( $_GET['lang'] == "en_US.utf8" || $_GET['lang']=='fr_FR.utf8')
 ?>
  <script type="text/javascript" charset="utf-8" language="javascript" src="js/infobulle.js">
 </script>
+<script>
   <?php
   include_once NOALYSS_INCLUDE.'/lib/message_javascript.php';
   ?>
-<script>
 
 content[200]="<?php echo _("Indiquez ici le répertoire où les documents temporaires peuvent être sauvés exemple c:/temp, /tmp")?>";
 content[201]="<?php echo _("Désactiver le changement de langue (requis pour MacOSX)")?>";
@@ -376,16 +376,15 @@ $fatal=0;
 //------------------------------------------------------------------------------
 // PHP Version
 //------------------------------------------------------------------------------
-if (!defined('PHP_VERSION_ID')) {
-   $version = explode('.',PHP_VERSION);
 
-   define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 ));
-}
+/**
+ * Minimum version  = 8.2 == 80200 
+ */
+if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 80200)  {
 
-if ( PHP_VERSION_ID < 80000)  {
-    echo $g_failed. " ".phpversion()." ". _("Version PHP trop basse , minimum 8.0");
+    echo $g_failed. " ".phpversion()." ". _("Version PHP trop basse , minimum 8.2");
     echo '<p style="color:grey;margin-left:20px">';
-    printf(_("Cette version nécessite au moins une version supérieure ou égale à 8.0"));
+    printf(_("Cette version nécessite au moins une version supérieure ou égale à 8.2"));
     echo '</p>';
     $fatal++;
 } else {
@@ -499,7 +498,7 @@ $majeur=explode(".",$version);
 if ( $majeur[0] < 12  )
   {
 ?>
-  <p><?php echo $failed . _(" Vous devez  utiliser au minimum une version 12 de PostGresql, si votre distribution n'en
+  <p><?php echo $failed . _(" Vous devez  utiliser au minimum une version 12 de PostgreSQL, si votre distribution n'en
 offre pas, installez-en une en la compilant. Lisez attentivement la notice sur postgresql.org pour migrer
 vos bases de données")?>
 </p>

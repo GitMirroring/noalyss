@@ -29,6 +29,7 @@
 $max=Database::num_row($res);
 ?>
 <div id="list_cat_div" class="content">
+    <?php Noalyss\Dbg::echo_file(__FILE__);?>
 	<?php echo _("Cherche"); echo HtmlInput::filter_table("fiche_def_tb", "0,1,2,3,4", "1"); ?>
 <table id="fiche_def_tb" class="result">
 	<tR>

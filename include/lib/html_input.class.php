@@ -76,6 +76,7 @@ class HtmlInput
     var $id;
     var $style;
     var $css_size;
+    var $placeholder; /*< $placeholder string in the INPUT Text */
 
     function __construct($p_name="", $p_value="", $p_id="")
     {
@@ -100,9 +101,26 @@ class HtmlInput
     {
         $this->readOnly=$p_read;
     }
+    /**
+     * @return string HTML placeholder attribut
+     */
+    public function get_placeholder()
+    {
+        return $this->placeholder;
+    }
+
+    /**
+     * @brief set HTML placeholder attribut
+     * @param string $placeholder
+     */
+    public function set_placeholder($placeholder)
+    {
+        $this->placeholder = $placeholder;
+        return $this;
+    }
 
     /*!
-     * \brief set the extra javascript property for the INPUT field
+     * \brief add an HTML attribute for the INPUT field
      * \param $p_name name of the parameter
      * \param $p_value default value of this parameter
      */
@@ -248,8 +266,8 @@ class HtmlInput
     /*!\brief create a button with a ref
      * \param $p_label the text
      * \param $p_value the location of the window,
-     * \param $p_name the id of the span
-     * \param $p_javascript javascript for this button
+     * \param $p_name the id of the span (button will be "btn".$p_name
+     * \param $p_javascript javascript for this button, needed to add the event : onclick,...
      * \return string with htmlcode
      */
 
@@ -259,8 +277,8 @@ class HtmlInput
         $href="";
         if ($p_value!="")
             $href=sprintf('  href ="%s"  ', $p_value);
-        $r=sprintf('<span id="%s" > <A class="'.$p_class.'" style="display:inline-block;"  %s %s >%s</A></span>',
-                $p_name, $href, $p_javascript, $p_label);
+        $r=sprintf('<span id="%s" > <A class="'.$p_class.'" id="btn%s" style="display:inline-block;"  %s %s >%s</A></span>',
+                $p_name, $p_name,$href, $p_javascript, $p_label);
         return $r;
     }
     /**
@@ -307,8 +325,9 @@ class HtmlInput
 
     /**
      * @brief return a string containing the html code for calling the modifyModeleDocument
+     * @deprecated since 9.3.0.6
      */
-    static function detail_modele_document($p_id, $p_mesg)
+    static function detail_modele_document_deprecated($p_id, $p_mesg)
     {
         return sprintf('<A class="detail" style="text-decoration:underline" HREF="javascript:modifyModeleDocument(%d,%d)">%s</A>',
                 $p_id, dossier::id(), $p_mesg);
@@ -477,10 +496,11 @@ class HtmlInput
      * @param type $div_name
      * @return type
      */
-    static function button_hide($div_name)
+    static function button_hide($div_name,$class='smallbutton')
     {
         $a=new IButton('Fermer');
         $a->label=_("Fermer");
+        $a->class=$class;
         $a->javascript="$('".$div_name."').hide()";
         $html=$a->input();
 
@@ -1015,6 +1035,30 @@ class HtmlInput
      * @param string $p_col , column to search example 0,1,2
      * @param int $start_row row to always keep (header)
      * @param string $p_name name of the input field
+     * @param string $domid domid containing the second filter, it could be an HIDDEN, TEXT, SELECT field
+     * @return string HTML
+     */
+    static function filter_table_DOM($p_table_id, $p_col, $start_row, $p_name
+            ,$domid)
+    {
+        
+        $r="
+			<span>
+                        <span  class=\"icon\"  >&#xf50d;</span>
+			<input id=\"lk_".$p_table_id."\" name=\"$p_name\" autocomplete=\"off\" class=\"input_text\" name=\"filter\" onkeyup=\"filter_table(this, '$p_table_id','$p_col',$start_row ,'$domid')\" type=\"text\" placeholder=\""._("Filtre rapide")."\">
+			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row,'$domid' );\" value=\"X\">
+			</span>
+			";
+        $r.=' <span class="notice" style="display:none" id="info_'.$p_table_id.'"></span>';
+        return $r;
+    }
+    
+    /**
+     * @brief  filter the rows in a table and keep the colored row in alternance
+     * @param dom_id $p_table_id table
+     * @param string $p_col , column to search example 0,1,2
+     * @param int $start_row row to always keep (header)
+     * @param string $p_name name of the input field
      * @param string $p_old_value search value sent by $_GET (or $_REQUEST)
      * @return string HTML
      */
@@ -1028,7 +1072,7 @@ class HtmlInput
 			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row );\" value=\"X\">
 			</span>
 			";
-        $r.=' <span class="notice" id="info_'.$p_table_id.'"></span>';
+        $r.=' <span class="notice" style="display:none" id="info_'.$p_table_id.'"></span>';
         return $r;
     }
     /**
@@ -1048,7 +1092,7 @@ class HtmlInput
 			<input type=\"button\" class=\"smallbutton\" onclick=\"$('lk_".$p_table_id."').value='';filter_table($('lk_".$p_table_id."'), '$p_table_id','$p_col',$start_row );\" value=\"X\">
 			</span>
 			";
-        $r.=' <span class="notice" id="info_'.$p_table_id.'"></span>';
+        $r.=' <span class="notice" style="display:none" id="info_'.$p_table_id.'"></span>';
         return $r;
     }
     /**
@@ -1150,7 +1194,7 @@ class HtmlInput
      */
     static function show_receipt_document($p_jr_id, $p_name="")
     {
-        global $cn;
+        $cn=\Dossier::connect();
         $image=$p_name;
 
         // Check the jr_id has a receipt document

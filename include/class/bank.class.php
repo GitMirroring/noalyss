@@ -33,12 +33,10 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 class Bank extends Fiche
 {
 
-    var $name;        /*!< $name name of the company */
-    var $street;      /*!< $street Street */
-    var $country;     /*!< $country Country */
-    var $cp;          /*!< $cp Zip code */
-    var $vat_number;  /*!< $vat_number vat number */
 
+    
+    use Trait_Card; 
+    
     /*! \brief Constructor     only a db connection is needed */
     function __construct($p_cn,$p_id=0)
     {

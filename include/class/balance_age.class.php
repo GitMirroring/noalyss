@@ -63,8 +63,8 @@ class Balance_Age
                 $fiche=new Fiche($this->cn, $p_extra);
                 $this->afiche[0]['f_id']=$fiche->id;
                 $this->afiche[0]['quick_code']=$fiche->get_quick_code();
-                $this->afiche[0]['name']=$fiche->strAttribut(ATTR_DEF_NAME, 0);
-                $this->afiche[0]['first_name']=$fiche->strAttribut(ATTR_DEF_FIRST_NAME, 0);
+                $this->afiche[0]['name']=$fiche->get_attribute(ATTR_DEF_NAME, 0);
+                $this->afiche[0]['first_name']=$fiche->get_attribute(ATTR_DEF_FIRST_NAME, 0);
                 break;
             case 'F':
                 $this->afiche=$this->cn->get_array("

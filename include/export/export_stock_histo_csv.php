@@ -36,23 +36,33 @@ $max_row=Database::num_row($res);
 $export->send_header();
 
 $export->write_header(array(_("Date"),
+                            _("N° pièce"),
                             _('Code Stock'),
                             _('Depot'),
-                            _('Fiche'),
+                            _('Code Stock'),
+                            _('Nom Stock'),
+                            _("Code Tiers"),
+                            _("Nom Tiers"),
                             _('Commentaire'),
                             _('Quantité'),
+                            _('Prix unitaire'),
                             _('IN/OUT')));
 		
 for ($i=0;$i<$max_row;$i++)
 {
 	$row=Database::fetch_array($res,$i);
 	$export->add($row['cdate']);
+	$export->add($row['jr_pj_number']);
 	$export->add($row['sg_code']);
 	$export->add($row['r_name']);
 	$export->add($row['qcode']);
+	$export->add($row['fname']);
+	$export->add($row['qcode_tiers']);
+	$export->add($row['fname_tiers']);
 	$row['ccomment']=noalyss_str_replace('"','',$row['ccomment']);
 	$export->add($row['ccomment']);
 	$export->add($row['sg_quantity'],"number");
+	$export->add($row['j_montant'],"number");
 	$export->add($row['direction']);
 	$export->write();
 

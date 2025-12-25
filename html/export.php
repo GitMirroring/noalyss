@@ -33,20 +33,43 @@ global $g_user,$cn,$g_parameter;
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
-$gDossier=dossier::id();
+
+//
+// for loading javascripts or style-sheet, it is needed to know the user 
+// global preference, but the user is not yet connected
+// to a folder. So the Database is the repository
+if ( defined("noalyss_user") || defined("phpcompta_user")) {
+    $g_user=new Noalyss_user(new Database());
+    set_language();
+}
+// load message for javascript
+if (isset ($_REQUEST['loadjs']) && $_REQUEST['loadjs']=='message')
+{
+    header('Content-Type: text/javascript');
+    include_once NOALYSS_INCLUDE."/lib/message_javascript.php";
+    return;
+}
+// Connect the user to the current folder and export file
 $cn=Dossier::connect();
+$g_user=new Noalyss_user($cn);
+$gDossier=dossier::id();
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 mb_internal_encoding("UTF-8");
-$g_user=new Noalyss_user($cn);
 $g_user->Check();
+/**
+ * check if 2FA is completed
+ */
+if ( ! $g_user->is_double_identified()) {
+   exit();
+}
 $action=$g_user->check_dossier($gDossier);
-set_language();
+
 $hi=new HttpInput();
 $action=$hi->get("act");
 
 if ( $action=='X'  || $g_user->check_print($action)==0 )
   {
-    echo alert(_('Accès interdit'));
+    echo alert(_('Accès interdit'));    
     redirect("do.php?".dossier::get());
     exit();
   }

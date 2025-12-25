@@ -24,7 +24,6 @@
  * javascript for searching a card
  */
 
-var card_layer=1;
 /**
  * search a card an display the result into a inner box
  */
@@ -47,7 +46,7 @@ function boxsearch_card(p_dossier)
                                                     return;
                                                 }
 						var y=calcy(15);
-						var div_style="position:absolute;"+";top:"+y+"px";
+						var div_style="position:absolute;"+";top:"+y+"px;z-index:"+get_next_layer();
 						add_div({id:'boxsearch_card_div',cssclass:'inner_box',html:loading(),style:div_style,drag:true});
 						id$('boxsearch_card_div').innerHTML=req.responseText;
 						sorttable.makeSortable(id$('tb_fiche'));
@@ -117,7 +116,7 @@ function search_card(obj)
 	if (  document.getElementById('search_card') ) {
 	    removeDiv('search_card');
 	}
-
+        
 
         waiting_box();
 
@@ -204,7 +203,7 @@ function action_concerned_list(p_obj) {
                             {
                                 sx = document.body.scrollTop + 60;
                             }
-                            var div_style = "top:" + sx + "px;";
+                            var div_style = "top:" + sx + "px;z-index:"+get_next_layer();
                             add_div({id: 'action_concerned_list_dv', cssclass: 'inner_box', html: "",
                                 style: div_style, drag: true});
                             remove_waiting_box();
@@ -335,7 +334,7 @@ function action_concerned_search_card(obj)
                         {
                             sx = document.body.scrollTop + 60;
                         }
-                        var div_style = "top:" + sx + "px;height:52rem";
+                        var div_style = "top:" + sx + "px;height:52rem;z-index:"+get_next_layer();
                         if ( ! document.getElementById('search_card')) { add_div({id: 'search_card', cssclass: 'inner_box', html: "", style: div_style, drag: true}); }
                         id$('search_card').innerHTML = code_html;
                         id$('query').focus();
@@ -465,7 +464,7 @@ function result_card_search(req)
             sx=document.body.scrollTop+60;
 	}
 
-        var div_style="top:"+sx+"px;min-height:80%;height:auto";
+        var div_style="top:"+sx+"px;min-height:80%;height:auto;z-index:"+get_next_layer();;
         add_div({id:'search_card',cssclass:'inner_box',html:"",style:div_style,drag:false,effect:'blinddown'});
 
         id$('search_card').innerHTML=code_html;
@@ -577,7 +576,7 @@ function fill_fin_data(text,li)
 function fill_ipopcard(obj)
 {
 
-    card_layer++;
+    var card_layer=get_next_layer();
 
     var content='card_'+card_layer;
     var nTop=170+card_layer;
@@ -586,7 +585,7 @@ function fill_ipopcard(obj)
     }
     var str_top="top:"+calcy(nTop)+"px";
 
-    var str_style=str_top+";height:auto;position:absolute";
+    var str_style=str_top+";height:auto;position:absolute;z-index:"+get_next_layer();
     waiting_box();
     var popup={'id':  content,'cssclass':'inner_box2','style':str_style,'html':"",'drag':false};
 
@@ -691,7 +690,7 @@ function select_card_type(obj)
     var sx=0;
     sx=calcy(160);
 
-    var str_style="top:"+sx+"px;height:auto";
+    var str_style="top:"+sx+"px;height:auto;z-index:"+get_next_layer();
     waiting_box();
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':"",'drag':false};
 
@@ -783,7 +782,7 @@ function dis_blank_card(obj)
     var content='div_new_card';
     var nTop=calcy(150);
     var nLeft=posX;
-    var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto;width:45rem;";
+    var str_style="top:"+nTop+"px;right:"+nLeft+"px;height:auto;width:45rem;z-index:"+get_next_layer();
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':false};
 
@@ -825,7 +824,7 @@ function form_blank_card(obj)
     var content='div_new_card';
     var nTop=posY-40;
     var nLeft=posX-20;
-    var str_style="top:"+nTop+"px;left:"+nLeft+"px;width:60em;height:auto";
+    var str_style="top:"+nTop+"px;left:"+nLeft+"px;width:60em;height:auto;z-index:"+get_next_layer();
 
     var popup={'id':  content,'cssclass':'inner_box','style':str_style,'html':loading(),'drag':true};
     if ( document.getElementById(content)) {removeDiv(content);}
@@ -960,7 +959,7 @@ function add_category(obj)
             sx=document.body.scrollTop+120;
 	}
 
-	var div_style="top:"+sx+"px;width:60%;height:80%";
+	var div_style="top:"+sx+"px;width:60%;height:80%;z-index:"+get_next_layer();
     // show ipopup
 	var div={id:obj.ipopup,
 			cssclass:"inner_box",drag:1,style:div_style};
@@ -994,7 +993,7 @@ function add_category(obj)
  */
 function save_card_category(obj)
 {
-    if ( ! document.getElementById(obj).ipopup)
+    if ( ! $(obj).ipopup)
     {
         alert_box('Erreur pas d\' attribut ipopup '+obj.id);
         return;
@@ -1009,15 +1008,29 @@ try {
     queryString+='&op=card'; 	// sc for save card
 
     var action=new Ajax.Request ( 'ajax_misc.php',
-                                  {
-                                  method:'get',
-                                  parameters:queryString,
-                                  onFailure:errorFid,
-                                  onSuccess:fill_box
-                                  }
+                            {
+                                method:'POST',
+                                parameters:queryString,
+                                onFailure:errorFid,
+                                onSuccess:function (req) 
+                                { 
+                                    fill_box(req);
+                                    // populate
+                                     var answer = req.responseXML;
+                                     var a = answer.getElementsByTagName('id');
+                                     var b = answer.getElementsByTagName('name');
+                                     if ( a.length == 1 && b.length == 1) {
+                                         let option=new Element('option');
+                                         option.value=getNodeText(a[0]);
+                                         option.text=getNodeText(b[0]);
+                                         id$('cat').add(option);
+                                     }
+                                }
+                              }
                                 );
 	} catch(e)
 	{
+            
 		alert_box(e.message);
 		return false;
 	}
@@ -1194,7 +1207,7 @@ function delete_card(obj) {
 function modify_card(p_fiche_id)
 {
     /* window with result */
-    card_layer++;
+     var card_layer=get_next_layer();
 
     var content = 'card_' + card_layer;
     var nTop = 170 + card_layer;

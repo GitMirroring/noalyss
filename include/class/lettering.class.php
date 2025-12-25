@@ -44,21 +44,25 @@
 #[\AllowDynamicProperties]
 class Lettering
 {
-
+ ///@todo Lettering must be rewritten and use __set and __get
+ /// instead of an array + data_member
     protected $variable=array("account"=>"account", /* the accounting of the j_id (use by Lettering_Account) */
         "quick_code"=>"quick_code", /* the quick_code of the j_id (used by Lettering_Card) */
         "start"=>"start", /* date of the first day */
         "end"=>"end", /* date of the last day */
         "sql_ledger"=>"sql_ledger" /*   the sql clause to filter on the available ledgers */
             )
-
-    ;
+    ;//!< $variable (array)  data member 
     var $db;
     var $start;
     var $end;
     var $sql_ledger;
     var $object_type;
     var $content;
+    var $fil_amount_max;
+    var $fil_amount_min;
+    var $fil_deb;
+    var $linked;
 
     /**
      * constructor
@@ -304,7 +308,7 @@ class Lettering
         catch (Exception $exc)
         {
             echo $exc->getMessage();
-            error_log($exc->getTraceAsString());
+            record_log($exc);
             $this->db->rollback();
             return;
         }

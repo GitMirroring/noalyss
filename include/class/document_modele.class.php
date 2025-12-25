@@ -23,7 +23,7 @@
 /*!
  * \brief Class for the document template
  */
-class Document_modele
+class Document_Modele
 {
     var $cn;         	/*!< $cn  database connection */
     var $md_id;	        /*!< $md_id pk */
@@ -33,8 +33,9 @@ class Document_modele
     var $md_sequence;     /*!<  $md_sequence sequence name (autogenerate) */
     var $sequence;        /*!< $sequence sequence number used by the create sequence start with */
     var $md_affect;	/*!< $md_affect if you can use it in VEN for sale, ACH for purchase or GES for follow-up */
-    var $md_filename;   /*! < $md_filename is the filename of the template */
-    var $start;   /*! < $md_filename is the filename of the template */
+    var $md_filename;   /*!< $md_filename is the filename of the template */
+    var $start;   /*!< $md_filename is the filename of the template */
+    var $md_mimetype; /*!< $md_mimetype is the mimetype of the LOB*/
     //Constructor parameter = database connexion
     function __construct($p_cn,$p_id=-1)
     {
@@ -61,7 +62,7 @@ class Document_modele
 
 	  $r.='<p><form method="post">';
 	  $r.=dossier::hidden();
-      $r.=\HtmlInput::filter_table("document_template_tb",'0,1,2',1);
+      $r.=\HtmlInput::filter_table("document_template_tb",'0,1,2,3',1);
 	  $r.='<table id="document_template_tb" class="result" >';
 	  $r.="<tr> ";
 	  $r.=th(_('Nom'));
@@ -92,8 +93,7 @@ class Document_modele
 	      $c->name="dm_remove_".$row['md_id'];
 	      $r.=$c->input();
 	      $r.="</td>";
-	      $r.=td(HtmlInput::detail_modele_document($row['md_id'],_('Modifier')));
-
+              $r.=td(\Icon_Action::modify(uniqid(),sprintf("modifyModeleDocument('%s','%s')",$row['md_id'],$dosid) ));
 	      $r.="</tr>";
 	    }
 	  $r.="</table>";

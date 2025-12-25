@@ -196,84 +196,119 @@ class Card_Property
             return $result;
 
         }
-        elseif ($this->ad_id == ATTR_DEF_NUMTVA) {
+        if($this->ad_id == ATTR_DEF_BQ_NO)
+        {
+            $result['input']=new IBan_Number("av_text{$this->ad_id}",$this->av_text);
+            $result['label']=$this->ad_text;
+            return $result;
+        }
+        if ($this->ad_id == ATTR_DEF_NUMTVA) {
             /// Propose a button to check VAT
             $result['input']=new IVATNumber( "av_text" . $this->ad_id,$this->av_text);
             $result['label']=$this->ad_text;
             return $result;
        }
-        elseif ($this->ad_id == ATTR_DEF_TVA) {
-            $result['input'] = new ITva_Popup('popup_tva');
+       if ( $this->ad_id == ATTR_DEF_QUANTITY_TYPE){
+          $result['input']=new IText( "av_text" . $this->ad_id,$this->av_text);
+          $array=$this->cn->get_array("select qc_code,format('%s %s',qc_code,qc_label) label from quantity_code_ref order by qc_label",p_mode: PGSQL_NUM);
+          $result['input']->set_datalist($array);
+          $result['label']=$this->ad_text;
+          return $result;
+       }
+       if ( $this->ad_id == ATTR_DEF_PEPPOLID)
+       {
+           /// Propose a button to check VAT
+            $result['input']=new IPEPPOL_ID( "av_text" . $this->ad_id,$this->av_text);
+            $result['label']=$this->ad_text;
+            return $result;
+       }
+       
+       if ($this->ad_id == ATTR_DEF_TVA) {
+            $result['input'] = new ITva_Popup( "av_text" . $this->ad_id);
             $result['input']->table = 0;
             $result['input']->value = $this->av_text;
             $result['label']=$this->ad_text;
-        } else {
-            switch ($this->ad_type) {
-                case 'text':
-                    $result['input'] = new IText();
-                    $result['input']->css_size = "100%";
-                    $result['input']->value = $this->av_text;
-                    break;
-                case 'numeric':
-                    $result['input'] = new INum();
-                    $result['input']->prec = ($this->ad_extra == "") ? 2 : $this->ad_extra;
-                    $result['input']->size = $this->ad_size;
-                    $result['input']->value = $this->av_text;
-                    break;
-                case 'date':
-                    $result['input'] = new IDate();
-                    $result['input']->value = $this->av_text;
-                    break;
-                case 'zone':
-                    $result['input'] = new ITextArea();
-                    $result['input']->style = ' class="itextarea" style="margin:0px;width:100%"';
-                    $result['input']->value = $this->av_text;
-                    break;
-                case 'poste':
-                    $result['input'] = new IPoste("av_text" . $this->ad_id);
-                    $result['input']->set_attribute('ipopup', 'ipop_account');
-                    $result['input']->set_attribute('account', "av_text" . $this->ad_id);
-                    $result['input']->table = 1;
-                    $bulle = Icon_Action::infobulle(14);
-                    $result['input']->value = $this->av_text;
-                    break;
-                case 'check':
-                    $result['input'] = new InputSwitch("av_text" . $this->ad_id);
-                    $result['input']->value = (empty($this->av_text) ) ? 0 : 1;
-                    break;
-                case 'select':
-                    $result['input'] = new ISelect("av_text" . $this->ad_id);
-                    $result['input']->value = $this->cn->make_array($this->ad_extra);
-                    $result['input']->style = 'style="width:100%"';
-                    $result['input']->selected = $this->av_text;
-                    break;
-                case 'card':
-                    $result['input'] = new ICard("av_text" . $this->ad_id);
-                    // filter on frd_id
-                    $result['input']->extra = $this->ad_extra;
-                    $result['input']->extra2 = 0;
-                    $result['input']->id = uniqid();
-                    $result['label'] = new ISpan();
-                    $filter = $this->ad_extra;
-                    $result['input']->width = $this->ad_size;
-                    $result['input']->extra = $filter;
-                    $result['input']->extra2 = 0;
-                    $result['input']->limit = 6;
-                    $result['label']->name = "av_text" . $this->ad_id . $result['input']->id . "_label";
-                    $result['input']->set_attribute('ipopup', 'ipopcard');
-                    $result['input']->set_attribute('typecard', $this->ad_extra);
-                    $result['input']->set_attribute('inp', $result['input']->id);
-                    $result['input']->set_attribute('label', "av_text" . $this->ad_id . $result['input']->id . "_label");
-                    $result['input']->autocomplete = 1;
-                    $result['input']->dblclick = "fill_ipopcard(this);";
-                    $result['msg'] = $result['input']->search();
-                    $result['msg'] .= $result['label']->input();
-                    $result['input']->value = $this->av_text;
-                    break;
-            }
-            $result['input']->table = 0;
+            return $result;
+        } 
+         // Warning length quickcode
+        if ($this->ad_id == ATTR_DEF_QUICKCODE) {
+            $result['input'] = new IText();
+            $result['input']->css_size = "100%";
+            $result['input']->label = $this->ad_text;
+            $result['input']->name = "av_text" . $this->ad_id;
+            $result['input']->value = $this->av_text;
+            $result['input']->placeholder= "999NOM";
+            $result['bulle'] = Icon_Action::warnbulle(76);
             $result['label']=$this->ad_text;
+            return $result;
+        }       
+        
+        switch ($this->ad_type) {
+            case 'text':
+                $result['input'] = new IText();
+                $result['input']->css_size = "100%";
+                $result['input']->value = $this->av_text;
+                break;
+            case 'numeric':
+                $result['input'] = new INum();
+                $result['input']->prec = ($this->ad_extra == "") ? 2 : $this->ad_extra;
+                $result['input']->size = $this->ad_size;
+                $result['input']->value = $this->av_text;
+                break;
+            case 'date':
+                $result['input'] = new IDate();
+                $result['input']->value = $this->av_text;
+                break;
+            case 'zone':
+                $result['input'] = new ITextArea();
+                $result['input']->style = ' class="itextarea" style="margin:0px;width:100%"';
+                $result['input']->value = $this->av_text;
+                break;
+            case 'poste':
+                $result['input'] = new IPoste("av_text" . $this->ad_id);
+                $result['input']->set_attribute('ipopup', 'ipop_account');
+                $result['input']->set_attribute('account', "av_text" . $this->ad_id);
+                $result['input']->table = 1;
+                $bulle = Icon_Action::infobulle(14);
+                $result['input']->value = $this->av_text;
+                break;
+            case 'check':
+                $result['input'] = new InputSwitch("av_text" . $this->ad_id);
+                $result['input']->value = (empty($this->av_text) ) ? 0 : 1;
+                break;
+            case 'select':
+                $result['input'] = new ISelect("av_text" . $this->ad_id);
+                $result['input']->value = $this->cn->make_array($this->ad_extra);
+                $result['input']->style = 'style="width:100%"';
+                $result['input']->selected = $this->av_text;
+                break;
+            case 'card':
+                $result['input'] = new ICard("av_text" . $this->ad_id);
+                // filter on frd_id
+                $result['input']->extra = $this->ad_extra;
+                $result['input']->extra2 = 0;
+                $result['input']->id = uniqid();
+                $result['label'] = new ISpan();
+                $filter = $this->ad_extra;
+                $result['input']->width = $this->ad_size;
+                $result['input']->extra = $filter;
+                $result['input']->extra2 = 0;
+                $result['input']->limit = 6;
+                $result['label']->name = "av_text" . $this->ad_id . $result['input']->id . "_label";
+                $result['input']->set_attribute('ipopup', 'ipopcard');
+                $result['input']->set_attribute('typecard', $this->ad_extra);
+                $result['input']->set_attribute('inp', $result['input']->id);
+                $result['input']->set_attribute('label', "av_text" . $this->ad_id . $result['input']->id . "_label");
+                $result['input']->autocomplete = 1;
+                $result['input']->dblclick = "fill_ipopcard(this);";
+                $result['msg'] = $result['input']->search();
+                $result['msg'] .= $result['label']->input();
+                $result['input']->value = $this->av_text;
+                break;
         }
+        $result['input']->table = 0;
+        $result['label']=$this->ad_text;
+        
 
         $result['input']->label = $this->ad_text;
         $result['input']->name = "av_text" . $this->ad_id;
@@ -281,10 +316,7 @@ class Card_Property
             $result['bulle'] = Icon_Action::infobulle(21);
         }
 
-        // Warning length quickcode
-        if ($this->ad_id == ATTR_DEF_QUICKCODE) {
-            $result['bulle'] = Icon_Action::warnbulle(76);
-        }
+      
 
         return $result;
     }
@@ -304,7 +336,7 @@ class Card_Property
         if ($fiche->id==0 && $fiche->fiche_def !=0 )
         {
             $fiche_def=new Fiche_Def($fiche->cn,$fiche->fiche_def);
-            $aProperty=$fiche_def->getAttribut();
+            $aProperty=$fiche_def->load_attribute();
             $fiche->attribut=$aProperty;
             return;
         } elseif ($fiche->id==0 && $fiche->fiche_def ==0 )
@@ -339,7 +371,7 @@ class Card_Property
             $fiche->attribut[$i]=$t;
         }
         $e=new Fiche_Def($fiche->cn, $fiche->fiche_def);
-        $e->GetAttribut();
+        $e->load_attribute();
 
         if (sizeof($fiche->attribut)!=sizeof($e->attribut))
         {
@@ -475,7 +507,7 @@ class Card_Property
             $p_fiche->cn->exec_sql("update fiche set f_enable=$1 where f_id=$2",
                     array($p_fiche->get_f_enable(), $p_fiche->id));
 
-            $name = $p_fiche->strAttribut(ATTR_DEF_NAME);
+            $name = $p_fiche->get_attribute(ATTR_DEF_NAME);
 
             // parse the attribute
             foreach ($p_fiche->attribut as $value)
@@ -692,5 +724,19 @@ class Card_Property
             if ($a_property[$i]->get_ad_id() == $attr_def_id) return $a_property[$i];
         }
         return null;
+    }
+    /**
+     * @brief returns the property value of a card without creating a card
+     * @param \Database $conx
+     * @param $card_id (int) FICHE.F_ID
+     * @param $property_id (int) ad_value
+     * @return string or false if nothing was found
+     */
+    static function get_attribute(\Database $conx, $card_id,$property_id)
+    {
+        $r=$conx->get_value("select ad_value from fiche_detail where
+            ad_id = $1 and f_id=$2",[$property_id,$card_id]);
+        if ( $conx->count() == 0) { return false;}
+        return $r;
     }
 }

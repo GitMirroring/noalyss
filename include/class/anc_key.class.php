@@ -39,6 +39,13 @@ class Anc_Key
 {
 
     private $key; /*!  the distribution key */
+    protected $a_ledger ; /*!<  array of ledger (JRN_DEF.JRN_DEF_ID) for 
+                            * which the key is available*/
+    protected $a_activity; /*!<  array of activity for 
+                            * which the key is available*/
+    protected $a_row;  /*!<  array of row from key_distribution_detail
+                        * , detail of the key*/
+    
     /**
      *@brief  Return the number of keys available.
      *  Return the number of keys available for the ledger given in parameter
@@ -312,7 +319,7 @@ class Anc_Key
     {
         global $cn;
         /* number is the index of the plan, he's computed from p_target */
-        $number=preg_replace('/det[0-9]/', '', $p_target);
+        $number=preg_replace('/det[0-9]*/', '', $p_target);
         $number=noalyss_str_replace('t', '', $number);
         $number=noalyss_str_replace('popup', '', $number);
         

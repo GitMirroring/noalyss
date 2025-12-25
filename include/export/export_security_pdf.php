@@ -33,7 +33,7 @@ try
 }
 catch (Exception $exc)
 {
-    error_log($exc->getTraceAsString());
+    record_log($exc);
     return;
 }
 
@@ -103,7 +103,7 @@ if ( $SecUser->active==0)
 if ( $SecUser->admin==1)
 {
     $pdf->SetTextColor(0,0,0);
-    $pdf->setFillColor(239,251,255);
+    $pdf->fill_row(0);
     $pdf->write_cell(40,7,_('Administrateur'),1,1,'R');
     $pdf->line_new();
 }

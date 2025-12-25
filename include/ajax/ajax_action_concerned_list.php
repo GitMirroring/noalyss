@@ -18,6 +18,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * @file
+ * @brief display list of other concerned person in Follow Up
+ */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 $http=new HttpInput();
 try {

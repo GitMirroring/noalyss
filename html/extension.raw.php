@@ -43,6 +43,12 @@ $http=new HttpInput();
 $cn=Dossier::connect();
 $g_user=new Noalyss_user($cn);
 $g_user->check();
+/** 
+ * check if 2FA is completed
+ */
+if ( ! $g_user->is_double_identified()) {
+   exit();
+}
 $only_plugin=$g_user->check_dossier(dossier::id());
 
 
@@ -56,6 +62,7 @@ if ( $ext->search($http->request("plugin_code")) != -1 )
       {
 		exit();
       }
+    define ('ALLOWED',True);
     if ( LOGINPUT)
     {
       $file_loginput=fopen($_ENV['TMP'].'/plugin-export-'.$ext->me_code.'-'.$_SERVER['REQUEST_TIME'].'.php','a+');
@@ -71,6 +78,7 @@ if ( $ext->search($http->request("plugin_code")) != -1 )
       fwrite($file_loginput,"\n");
       fwrite($file_loginput,' $_REQUEST=array_merge($_GET,$_POST);');
       fwrite($file_loginput,"\n");
+   
       $string='require_once "'.NOALYSS_PLUGIN.DIRECTORY_SEPARATOR.dirname(trim($ext->getp('me_file'))).DIRECTORY_SEPARATOR.'raw.php'.'";';
       fwrite($file_loginput,sprintf("%s",$string));
       fwrite($file_loginput,"\n");

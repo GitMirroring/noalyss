@@ -40,6 +40,7 @@ class Event extends Widget
         $sql="select ag_ref
         ,ag_hour
         ,coalesce(vw_name,'Interne') as vw_name
+        ,coalesce(quick_code,'interne') as quick_code
         ,ag_id
         ,ag_title
         ,ag_ref
@@ -52,7 +53,7 @@ class Event extends Widget
                   left join vw_fiche_attr on (f_id=f_id_dest) 
                   where 
                   ag_state not in (1,4)
-                  and to_char(ag_remind_date,'DDMMYYYY')<=to_char(now()+interval '14 days','DDMMYYYY')
+                  and to_char(ag_remind_date,'YYYYMMDD')<=to_char(now()+interval '14 days','YYYYMMDD')
                   and ". \Follow_Up::sql_security_filter($this->db,'R')
         ." order by ag_remind_date asc";
         $array=$this->db->get_array($sql);

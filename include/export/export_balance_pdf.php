@@ -49,8 +49,8 @@ try {
     $to_poste = $http->request("to_poste");
     $p_filter = $http->request("p_filter", "string");
 } catch (Exception $exc) {
-    error_log("Missing parameters");
-    error_log($exc->getTraceAsString());
+    record_log("Missing parameters");
+    record_log($exc);
     return;
 }
 
@@ -101,7 +101,7 @@ if (sizeof($array) == 0) {
 $pPeriode = new Periode($cn);
 $a = $pPeriode->get_date_limit($from_periode);
 $b = $pPeriode->get_date_limit($to_periode);
-$per_text = sprintf(_("Du %s au %s" ), $a['p_start'] ,$b['p_end']);
+$per_text = sprintf(_("du %s au %s" ), $a['p_start'] ,$b['p_end']);
 
 // If compare with previous exercice ,
 // we use the landscape mode
@@ -117,8 +117,8 @@ $pdf->AddPage();
 $pdf->SetAuthor('NOALYSS');
 $pdf->SetFont('DejaVuCond', '', 7);
 $pdf->setTitle(_("Balance comptable"), true);
-$pdf->write_cell(30, 6, _('poste'));
-$pdf->LongLine(60, 6, _('Libellé'));
+$pdf->write_multi(30, 3, _('Poste'));
+$pdf->write_multi(60, 3, _('Libellé'));
 if ($previous == 1) {
     $pdf->write_cell(20, 6, 'Débit N-1', 0, 0, 'R');
     $pdf->write_cell(20, 6, 'Crédit N-1', 0, 0, 'R');
@@ -128,7 +128,7 @@ $pdf->write_cell(25, 6, _('Ouverture'), 0, 0, 'R');
 $pdf->write_cell(25, 6, _('Total Débit'), 0, 0, 'R');
 $pdf->write_cell(25, 6, _('Total Crédit'), 0, 0, 'R');
 $pdf->write_cell(25, 6, _('Solde'), 0, 0, 'R');
-$pdf->line_new();
+$pdf->line_new(10);
 
 $pdf->SetFont('DejaVuCond', '', 8);
 $tp_deb = 0;
@@ -171,7 +171,7 @@ if (!empty($array)) {
             if (${'lvl' . $ind . '_old'} != substr($r['poste'], 0, $ind)) {
                 $pdf->SetFont('DejaVu', 'B', 7);
                 $strTotal=sprintf(_("Totaux %s "),${'lvl' . $ind . '_old'});
-                $pdf->LongLine(30, 6, $strTotal,"TB");
+                $pdf->write_multi(30, 3, $strTotal,"TB");
                 $delta = bcsub(${'nlvl' . $ind}['solde_cred'], ${'nlvl' . $ind}['solde_deb']);
                 $side = ($delta < 0) ? "D" : "C";
                 if ($previous == 1) {
@@ -223,8 +223,8 @@ if (!empty($array)) {
 
             $label.=" ".mb_chr(0x26a0);
         }
-        $pdf->LongLine(30, 6, $label, 0, 'L', $fill);
-        $pdf->LongLine(60, 6, $value['label'], 0, 'L', $fill);
+        $pdf->write_multi(30, 5, $label, 0, 'L', $fill);
+        $pdf->write_multi(60, 5, $value['label'], 0, 'L', $fill);
         $summary_tab = $bal->summary_add($summary_tab, $value['poste'],
             $value['sum_deb'],
             $value['sum_cred']);
@@ -232,8 +232,6 @@ if (!empty($array)) {
             $pdf->write_cell(22, 6, nbm($value['sum_deb_previous']), 0, 0, 'R', $fill);
             $pdf->write_cell(22, 6, nbm($value['sum_cred_previous']), 0, 0, 'R', $fill);
 
-//            $pdf->write_cell(22,6,nbm($value['solde_deb_previous']),0,0,'R',$fill);
-//            $pdf->write_cell(22,6,nbm($value['solde_cred_previous']),0,0,'R',$fill);
             $solde_previous = bcsub($value['solde_cred_previous'], $value['solde_deb_previous']);
             $side_previous = ($solde_previous < 0) ? " D" : " C";
             $side_previous = ($solde_previous == 0) ? "" : $side_previous;
@@ -306,8 +304,7 @@ if (!empty($array)) {
     if ($previous == 1) {
         $pdf->write_cell(22, 6, nbm($tp_deb_previous), 'T', 0, 'R', 0);
         $pdf->write_cell(22, 6, nbm($tp_cred_previous), 'T', 0, 'R', 0);
-        $pdf->write_cell(22, 6, nbm($tp_sold_previous), 'T', 0, 'R', 0);
-        $pdf->write_cell(22, 6, nbm($tp_solc_previous), 'T', 0, 'R', 0);
+         $pdf->write_cell(22, 6, nbm(bcsub($tp_cred_previous,$tp_deb_previous,2)), 'T', 0, 'R', 0);
     }
     $solde = bcsub($tp_sold,$tp_solc);
 

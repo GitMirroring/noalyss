@@ -225,7 +225,7 @@ class Follow_Up
 
         // Description
         $desc=new ITextArea();
-        $desc->set_enrichText("enrich");
+        $desc->set_enrichText("full");
         $desc->style=' class="itextarea" style="width:80%;margin-left:5%;"';
         $desc->name="ag_comment";
         $desc->readOnly=$readonly;
@@ -339,8 +339,8 @@ class Follow_Up
         {
             $tiers=new Fiche($this->db);
             $tiers->get_by_qcode($this->qcode_dest);
-            $qcode_dest_label=strtoupper($tiers->strAttribut(1));
-            $qcode_dest_label.=" ".$tiers->strAttribut(ATTR_DEF_FIRST_NAME,0);
+            $qcode_dest_label=strtoupper($tiers->get_attribute(1));
+            $qcode_dest_label.=" ".$tiers->get_attribute(ATTR_DEF_FIRST_NAME,0);
             $this->f_id_dest=$tiers->id;
         }
         else
@@ -411,8 +411,8 @@ class Follow_Up
 
         if ($fiche_contact->id!=0)
         {
-            $spcontact->value=strtoupper($fiche_contact->strAttribut(ATTR_DEF_NAME)??"");
-            $spcontact->value.=" ".$fiche_contact->strAttribut(ATTR_DEF_FIRST_NAME,0);
+            $spcontact->value=strtoupper($fiche_contact->get_attribute(ATTR_DEF_NAME)??"");
+            $spcontact->value.=" ".$fiche_contact->get_attribute(ATTR_DEF_FIRST_NAME,0);
         }
 
 
@@ -535,7 +535,7 @@ class Follow_Up
         }
         $this->dt_id=$this->ag_type;
         $aexp=new Fiche($this->db, $this->f_id_dest);
-        $this->qcode_dest=$aexp->strAttribut(ATTR_DEF_QUICKCODE);
+        $this->qcode_dest=$aexp->get_attribute(ATTR_DEF_QUICKCODE);
     }
 
     /**
@@ -632,7 +632,7 @@ class Follow_Up
         if (noalyss_trim($this->ag_comment??"")!='' && Document_Option::can_add_comment($this->ag_id))
         {
             $this->db->exec_sql("insert into action_gestion_comment (ag_id,tech_user,agc_comment,agc_comment_raw) values ($1,$2,$3,$4)"
-                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], strip_tags($this->ag_description),$this->ag_comment));
+                , array($this->ag_id, $_SESSION[SESSION_KEY.'g_user'], strip_tags($this->ag_comment),$this->ag_comment));
         }
         if (noalyss_trim($this->ag_description)!='' && Document_Option::can_add_comment($this->ag_id))
         {
@@ -1202,7 +1202,7 @@ class Follow_Up
         $sql="select ag_ref,ag_hour,coalesce(vw_name,'Interne') as vw_name,ag_id,ag_title,ag_ref, dt_value,to_char(ag_remind_date,'DD.MM.YYYY') as ag_timestamp_fmt,ag_timestamp ".
                 " from action_gestion join document_type ".
                 " on (ag_type=dt_id) left join vw_fiche_attr on (f_id=f_id_dest) where ag_state not in  (1,4)
-				and to_char(ag_remind_date,'YYMMDD') < to_char(now(),'YYMMDD') and ".self::sql_security_filter($this->db,'R');
+				and to_char(ag_remind_date,'YYMMDD') < to_char(now(),'YYMMDD') and ".self::sql_security_filter($this->db,'R')." order by ag_remind_date desc ";
         $array=$this->db->get_array($sql);
         return $array;
     }

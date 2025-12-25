@@ -41,6 +41,7 @@ $menu[]=_('Export définition d\'un raport');
 $menu[]=_('Export Action Gestion');  
 $menu[]=_('Export Historique mouvement stock');  
 $menu[]=_('Export Résumé list stock');  
+$menu[]=_('Extension');  $desc[]=_('Extensions (plugins)');$desc_long[]=_('Menu regroupant les plugins');
 $menu[]=_('Plan Compt. analytique');  $desc[]=_('Plan analytique');$desc_long[]=_('Axe analytique');
 $menu[]=_('Groupe');  $desc[]=_('Groupe analytique');$desc_long[]=_('Regroupement de compte analytique');
 $menu[]=_('Contact');  $desc[]=_('Liste des contacts');$desc_long[]=_('Liste de tous vos contacts');
@@ -49,12 +50,12 @@ $menu[]=_('Nouvel extrait');  $desc[]=_('Nouvel extrait bancaire');$desc_long[]=
 $menu[]=_('Recherche');  $desc[]=_('Recherche');$desc_long[]=_('Historique de toutes vos opérations un menu de recherche dans une nouvelle fenêtre, vous permettra de retrouver rapidement l\'opération qui vous intéresse');
 $menu[]=_('Lettrage par Fiche');  $desc[]=_('Lettrage par fiche');$desc_long[]=_('Lettrage par fiche');
 $menu[]=_('Historique achat');  $desc[]=_('Historique achat');$desc_long[]=_('Historique de toutes vos opérations dans les journaux d\'achats un menu de recherche, vous permettra de retrouver rapidement l\'opération qui vous intéresse');
-$menu[]=_('Extension');  $desc[]=_('Extensions (plugins)');$desc_long[]=_('Menu regroupant les plugins');
 $menu[]=_('Nouvelle vente');  $desc[]=_('Nouvelle vente ou recette');$desc_long[]=_('Encodage de tous vos revenus ou vente');
 $menu[]=_('Historique opérations diverses');  $desc[]=_('Historique opérations diverses');$desc_long[]=_('Historique de toutes vos opérations dans les journaux d\'opérations diverses un menu de recherche, vous permettra de retrouver rapidement l\'opération qui vous intéresse');
-$menu[]=_('Fiche');  $desc[]=_('Paramètrage des fiches');$desc_long[]=_('Menu regroupant ce qui concerne les fiches');
+$menu[]=_('Modèle de fiches');  $desc[]=_('Gestion de modèle de fiches');$desc_long[]=_('Permet de changer le poste comptable de base des modèles de fiches');
+$menu[]=_('Poste');  $desc[]=_('Impression du détail d\'un poste comptable');$desc_long[]=_('Impression du détail d\'un poste comptable');
 $menu[]=_('Config. Menu');  $desc[]=_('Configuration des menus et plugins');$desc_long[]=_('Ajout de menu ou de plugins');
-$menu[]=_('Document Suivi');  $desc[]=_('Configuration des documents dans le suivi');$desc_long[]=_('Vous permet d\'ajouter de nouveaux type de documents pour le suivi (bordereau de livraison, devis..)');
+$menu[]=_('TVA');  $desc[]=_('Config. de la tva');$desc_long[]=_('Permet d\'ajouter des taux de TVA ou de les modifier ainsi que les postes comptables de ces TVA, ces TVA sont utilisables dans les menus de vente et d\'achat');
 $menu[]=_('Achat');  $desc[]=_('Menu achat');$desc_long[]=_('Regroupement pour les menus d\'achats(nouvelle opération, historique...)');
 $menu[]=_('Menu et profil');  $desc[]=_('Menu ');$desc_long[]=_('Regroupement pour les menus et les profils');
 $menu[]=_('Banque');  $desc[]=_('Information Banque');$desc_long[]=_('Regroupement des menus des journaux de trésorerie');
@@ -73,22 +74,26 @@ $menu[]=_('Histo. Changement');  $desc[]=_('Liste des changements manuels des st
 $menu[]=_('Historique');  $desc[]=_('Historique');$desc_long[]=_('Historique de toutes vos opérations un menu de recherche, vous permettra de retrouver rapidement l\'opération qui vous intéresse');
 $menu[]=_('Rapprochement');  $desc[]=_('Rapprochement bancaire');$desc_long[]=_('Permet de faire correspondre vos extraits bancaires avec les opérations de vente ou d\'achat, le lettrage se fait automatiquement');
 $menu[]=_('Soldes');  $desc[]=_('Solde des comptes en banques, caisse...');$desc_long[]=_('Solde des journaux de trésorerie cela concerne les comptes en banques, caisse , les chèques... ');
+$menu[]=_('Sortie &#9094');  $desc[]=_('Sortie');$desc_long[]=_('Déconnexion ');
 $menu[]=_('Lettrage par Poste');  $desc[]=_('lettrage par poste comptable');$desc_long[]=_('lettrage par poste comptable');
 $menu[]=_('Balance');  $desc[]=_('Balance par catégorie de fiche');$desc_long[]=_('Balance par catégorie de fiche ou pour toutes les fiches ayant un poste comptable');
-$menu[]=_('Sortie &#9094');  $desc[]=_('Sortie');$desc_long[]=_('Déconnexion ');
 $menu[]=_('Historique vente');  $desc[]=_('Historique des ventes');$desc_long[]=_('Historique de toutes vos opérations dans les journaux de vente un menu de recherche, vous permettra de retrouver rapidement l\'opération qui vous intéresse');
 $menu[]=_('Historique financier');  $desc[]=_('Historique financier');$desc_long[]=_('Historique de toutes vos opérations dans les journaux de trésorerie un menu de recherche, vous permettra de retrouver rapidement l\'opération qui vous intéresse');
-$menu[]=_('Stock');  $desc[]=_('Stock');$desc_long[]=_('Permet d\'ajouter de nouvelles catégorie de fiche, d\'ajouter des attributs à ces catégories (numéro de téléphone, gsm, email...)');
-$menu[]=_('Opérations diverses');  $desc[]=_('Menu opérations diverses');$desc_long[]=_('Regroupement pour les menus d\'opérations diverses (nouvelle opération, historique...)');
+$menu[]=_('Autre Taxe');  
 $menu[]=_('Principal');  $desc[]=_('Parametre societe');$desc_long[]=_('Information sur votre société : nom, adresse... utilisé lors de la génération de documents');
-$menu[]=_('Vente / Recette');  $desc[]=_('Menu ventes et recettes');$desc_long[]=_('Regroupement des menus ventes et recettes');
+$menu[]=_('Navigateur &#x1F9ED');  $desc[]=_('Menu simplifié pour retrouver rapidement un menu');$desc_long[]=_('Le navigateur vous présente une liste de menu auquel vous avez accès et vous permet d\'accèder plus rapidement au menu que vous souhaitez');
 $menu[]=_('Grand Livre');  $desc[]=_('Impression du grand livre');$desc_long[]=_('Impression du grand livre');
 $menu[]=_('Balance');  $desc[]=_('Impression des balances comptables');$desc_long[]=_('Impression des balances comptables');
 $menu[]=_('Rapprochement');  $desc[]=_('Impression des rapprochements');$desc_long[]=_('Impression des rapprochements : opérations non rapprochées ou avec des montants différents');
+$menu[]=_('Rapport');  $desc[]=_('Impression de rapport');$desc_long[]=_('Impression de rapport personnalisé, il est aussi possible d\'exporter en CSV afin de faire des graphiques');
 $menu[]=_('Poste');  $desc[]=_('Config. poste comptable de base');$desc_long[]=_('Config. poste comptable de base');
 $menu[]=_('Document');  $desc[]=_('Config. modèle de document');$desc_long[]=_('Chargement de modèles de documents qui seront générés par NOALYSS, les formats utilisables sont libreoffice, html, text et rtf');
 $menu[]=_('Sécurité');  $desc[]=_('configuration de la sécurité');$desc_long[]=_('Configuration de la sécurité, vous permet de donner un profil à vos utilisateurs, cela leur permettra d\'utiliser ce que vous souhaitez qu\'ils puissent utiliser');
 $menu[]=_('Plan Comptable');  $desc[]=_('Config. du plan comptable');$desc_long[]=_('Modification de votre plan comptable, parfois il est plus rapide d\'utiliser le plugin "Poste Comptable"');
+$menu[]=_('Attribut de fiche');  $desc[]=_('Gestion des attributs de fiches ');$desc_long[]=_('Permet d\'ajouter de nouveaux attributs que vous pourrez par la suite ajouter à des catégories de fiches');
+$menu[]=_('Stock');  $desc[]=_('Stock');$desc_long[]=_('Permet d\'ajouter de nouvelles catégorie de fiche, d\'ajouter des attributs à ces catégories (numéro de téléphone, gsm, email...)');
+$menu[]=_('Opérations diverses');  $desc[]=_('Menu opérations diverses');$desc_long[]=_('Regroupement pour les menus d\'opérations diverses (nouvelle opération, historique...)');
+$menu[]=_('Vente / Recette');  $desc[]=_('Menu ventes et recettes');$desc_long[]=_('Regroupement des menus ventes et recettes');
 $menu[]=_('Impression');  $desc[]=_('Impression compta. analytique');$desc_long[]=_('Impression compta. analytique');
 $menu[]=_('Compta Analytique');  $desc[]=_('Module comptabilité analytique');$desc_long[]=_('Module comptabilité analytique');
 $menu[]=_('Tableau de bord');  $desc[]=_('Tableau de bord');$desc_long[]=_('Tableau de suivi, vous permet de voir en un coup d\'oeil vos dernières opérations, un petit calendrier, une liste de chose à faire...');
@@ -96,8 +101,7 @@ $menu[]=_('Avancé');  $desc[]=_('Menu avancé');$desc_long[]=_('Menu regroupant
 $menu[]=_('Liste Suivi');  $desc[]=_('Document de suivi sous forme de liste');$desc_long[]=_('Liste de vos suivis, en fait de tous les documents, réunions ... dont vous avez besoin afin de suivre vos clients, fournisseurs ou administrations. Il permet la génération de documents comme les devis, les bordereau de livraison...');
 $menu[]=_('Administration');  $desc[]=_('Suivi administration, banque');$desc_long[]=_('Suivi des administrations : courrrier, déclarations.');
 $menu[]=_('Prévision');  $desc[]=_('Prévision');$desc_long[]=_('Prévision de vos achats, revenus, permet de suivre l\'évolution de votre société. Vos prévisions sont des formules sur les postes comptables et vous permettent aussi vos marges brutes.');
-$menu[]=_('Export opérations rapprochées');  $desc[]=_('Export opérations rapprochées en CSV');$desc_long[]=_('');
-$menu[]=_('Administrateur');  $desc[]=_('Suivi des gérants, administrateurs et salariés');$desc_long[]=_('Suivi de vos salariés, managers ainsi que des administrateurs, pour les documents et les opérations comptables');
+$menu[]=_('Export opérations rapprochées');  $desc[]=_('Export opérations rapprochées en CSV');$desc_long[]=_('-');
 $menu[]=_('Export pièce PDF');  
 $menu[]=_('Export Balance agée');  $desc[]=_('Balance agée');$desc_long[]=_('Balance agée pour les clients et fournisseurs');
 $menu[]=_('Exporte la pièce');  
@@ -114,46 +118,94 @@ $menu[]=_('Devise');  $desc[]=_('Résumé par devise');$desc_long[]=_('Résumé 
 faire de calculer les écarts de conversion (différence de change) pour les actifs et passifs');
 $menu[]=_('Export Devise CSV');  
 $menu[]=_('Export Devise PDF');  
+$menu[]=_('Fiche');  $desc[]=_('Paramètrage des fiches');$desc_long[]=_('Menu regroupant ce qui concerne les fiches');
 $menu[]=_('Document');  $desc[]=_('Paramètrage des documents');$desc_long[]=_('Meu regroupant ce qui concene les documents ');
 $menu[]=_('Comptabilité');  $desc[]=_('Paramètrage comptabilité');$desc_long[]=_('Menu regroupant ce qui concerne la comptabilité');
-$menu[]=_('Modèle de fiches');  $desc[]=_('Gestion de modèle de fiches');$desc_long[]=_('Permet de changer le poste comptable de base des modèles de fiches');
-$menu[]=_('Autre Taxe');  
-$menu[]=_('Apparence');  $desc[]=_('Couleur de NOALYSS');$desc_long[]=_('Personnalisation des couleurs de NOYALYSS');
-$menu[]=_('Catégorie fiche');  $desc[]=_('Configuration de catégorie de fiches');$desc_long[]=_('Permet d\'ajouter de nouvelles catégorie de fiche, d\'ajouter des attributs à ces catégories (numéro de téléphone, gsm, email...)');
-$menu[]=_('Résumé TVA');  $desc[]=_('totaux  par TVA et par journal');$desc_long[]=_('Calcul des totaux  par TVA et par journal');
-$menu[]=_('Balance agée');  $desc[]=_('Balance agée');$desc_long[]=_('Balance agée pour les clients et fournisseurs');
-$menu[]=_('Profil');  $desc[]=_('Configuration profil');$desc_long[]=_('Configuration des profils des utilisateurs, permet de fixer les journaux, profils dans les documents et stock que  ce profil peut utiliser. Cela limite les utilisateurs puisque ceux-ci ont un profil');
-$menu[]=_('Financier');  $desc[]=_('Menu Financier');$desc_long[]=_('Regroupement pour les menus de trésorerie (nouvelle opération, historique...)');
-$menu[]=_('Ouvert./Fermeture');  $desc[]=_('Opération de cloture ou d\'ouverture d\'exercice');$desc_long[]=_('Ecriture d\'ouverture ou de fermeture , , reporte les soldes des comptes de l\'année passé du poste comptable 0xxx à 5xxxx sur l\'année courante ou ferme les comptes de 6 à 7 de l\'année ');
-$menu[]=_('export Fiche détail PDF');  
-$menu[]=_('Navigateur &#x1F9ED;');  $desc[]=_('Menu simplifié pour retrouver rapidement un menu');$desc_long[]=_('Le navigateur vous présente une liste de menu auquel vous avez accès et vous permet d\'accèder plus rapidement au menu que vous souhaitez');
-$menu[]=_('Configuration &#x1F527;');  $desc[]=_('Configuration de votre dossier');$desc_long[]=_('Module paramètres');
-$menu[]=_('Recherche  &#x1F50E;');  $desc[]=_('Recherche');$desc_long[]=_('Historique de toutes vos opérations dans tous  les journaux auquels vous avez accès, vous permettra de retrouver rapidement l\'opération qui vous intéresse sur base de la date, du poste comptable, des montants...');
-$menu[]=_('Agenda  &#x1f4c5;');  $desc[]=_('Agenda');$desc_long[]=_('Agenda, présentation du suivi sous forme d\'agenda ');
+$menu[]=_('Export Historique Compt. Analytique');  
+$menu[]=_('Agenda  &#x1f4c5');  $desc[]=_('Agenda');$desc_long[]=_('Agenda, présentation du suivi sous forme d\'agenda ');
 $menu[]=_('Bilan');  $desc[]=_('Impression de bilan');$desc_long[]=_('Impression de bilan, ce module est basique, il est plus intéressant d\'utiliser le plugin "rapport avancés"');
 $menu[]=_('Impression Journaux');  $desc[]=_('Impression des journaux');$desc_long[]=_('Impression des journaux avec les détails pour les parties privés, la TVA et ce qui est non déductibles en ce qui concerne les journaux de vente et d\'achat');
-$menu[]=_('Poste');  $desc[]=_('Impression du détail d\'un poste comptable');$desc_long[]=_('Impression du détail d\'un poste comptable');
-$menu[]=_('Rapport');  $desc[]=_('Impression de rapport');$desc_long[]=_('Impression de rapport personnalisé, il est aussi possible d\'exporter en CSV afin de faire des graphiques');
-$menu[]=_('Détail TVA');  $desc[]=_('Détail TVA  par journal');$desc_long[]=_('Détail des TVA ');
-$menu[]=_('Export Détail TVA');  
-$menu[]=_('Journal');  $desc[]=_('Configuration des journaux');$desc_long[]=_('Création et modification des journaux, préfixe des pièces justificatives, numérotation, catégories de fiches accessibles à ce journal');
-$menu[]=_('Etat des actions');  $desc[]=_('Etat des actions dans le suivi');$desc_long[]=_('Permet d\'ajouter des état pour les documents utilisés dans le suivi (à faire, à suivre...)');
 $menu[]=_('Menu par défaut');  $desc[]=_('Configuration des menus par défaut');$desc_long[]=_('Configuration des menus par défaut, ces menus sont appelés par des actions dans d\'autres menus');
-$menu[]=_('Moyen de paiement');  $desc[]=_('Config. des méthodes de paiement');$desc_long[]=_('Configuration des moyens de paiements que vous voulez utiliser dans les journaux de type VEN ou ACH, les moyens de paiement permettent de générer l\'opération de trésorerie en même temps que l\'achat, la note de frais ou la vente');
 $menu[]=_('Devises');  $desc[]=_('Configuration des devises');$desc_long[]=_('Permet de configurer les devises');
 $menu[]=_('Option Fiches');  
 $menu[]=_('Dépôt');  $desc[]=_('Configuration dépôts');$desc_long[]=_('Configuration des entrepots de dépôts');
-$menu[]=_('TVA');  $desc[]=_('Config. de la tva');$desc_long[]=_('Permet d\'ajouter des taux de TVA ou de les modifier ainsi que les postes comptables de ces TVA, ces TVA sont utilisables dans les menus de vente et d\'achat');
-$menu[]=_('Attribut de fiche');  $desc[]=_('Gestion des attributs de fiches ');$desc_long[]=_('Permet d\'ajouter de nouveaux attributs que vous pourrez par la suite ajouter à des catégories de fiches');
+$menu[]=_('Etat des documents');  $desc[]=_('Etat des documents');$desc_long[]=_('Permet d\'ajouter des état pour les documents utilisés dans le suivi (à faire, à suivre...)');
+$menu[]=_('Personnel');  
+$menu[]=_('Apparence');  $desc[]=_('Couleur de NOALYSS');$desc_long[]=_('Personnalisation des couleurs de NOYALYSS');
+$menu[]=_('Catégorie fiche');  $desc[]=_('Configuration de catégorie de fiches');$desc_long[]=_('Permet d\'ajouter de nouvelles catégorie de fiche, d\'ajouter des attributs à ces catégories (numéro de téléphone, gsm, email...)');
+$menu[]=_('Financier');  $desc[]=_('Menu Financier');$desc_long[]=_('Regroupement pour les menus de trésorerie (nouvelle opération, historique...)');
+$menu[]=_('Ouvert./Fermeture');  $desc[]=_('Opération de cloture ou d\'ouverture d\'exercice');$desc_long[]=_('Ecriture d\'ouverture ou de fermeture , , reporte les soldes des comptes de l\'année passé du poste comptable 0xxx à 5xxxx sur l\'année courante ou ferme les comptes de 6 à 7 de l\'année ');
+$menu[]=_('export Fiche détail PDF');  
+$menu[]=_('Configuration &#x1F527');  $desc[]=_('Configuration de votre dossier');$desc_long[]=_('Module paramètres');
+$menu[]=_('Recherche  &#x1F50E');  $desc[]=_('Recherche');$desc_long[]=_('Historique de toutes vos opérations dans tous  les journaux auquels vous avez accès, vous permettra de retrouver rapidement l\'opération qui vous intéresse sur base de la date, du poste comptable, des montants...');
+$menu[]=_('Résumé TVA');  $desc[]=_('totaux  par TVA et par journal');$desc_long[]=_('Calcul des totaux  par TVA et par journal');
+$menu[]=_('Balance agée');  $desc[]=_('Balance agée');$desc_long[]=_('Balance agée pour les clients et fournisseurs');
+$menu[]=_('Détail TVA');  $desc[]=_('Détail TVA  par journal');$desc_long[]=_('Détail des TVA ');
+$menu[]=_('Export Détail TVA');  
+$menu[]=_('Profil');  $desc[]=_('Configuration profil');$desc_long[]=_('Configuration des profils des utilisateurs, permet de fixer les journaux, profils dans les documents et stock que  ce profil peut utiliser. Cela limite les utilisateurs puisque ceux-ci ont un profil');
+$menu[]=_('Journal');  $desc[]=_('Configuration des journaux');$desc_long[]=_('Création et modification des journaux, préfixe des pièces justificatives, numérotation, catégories de fiches accessibles à ce journal');
+$menu[]=_('Moyen de paiement');  $desc[]=_('Config. des méthodes de paiement');$desc_long[]=_('Configuration des moyens de paiements que vous voulez utiliser dans les journaux de type VEN ou ACH, les moyens de paiement permettent de générer l\'opération de trésorerie en même temps que l\'achat, la note de frais ou la vente');
+$menu[]=_('Document Suivi');  $desc[]=_('Configuration des documents dans le suivi');$desc_long[]=_('Vous permet d\'ajouter de nouveaux type de documents pour le suivi (bordereau de livraison, devis..)');
 $menu[]=_('Extension');  $desc[]=_('Configuration des extensions');$desc_long[]=_('Permet d\'installer et d\'activer facilement des extensions');
 $menu[]=_('Clef de répartition');  $desc[]=_('Clef de répartition pour la comptabilité analytique');$desc_long[]=_('Permet de gèrer les clefs de répartition en comptabilité analytique');
-$menu[]=_('Etiquette');  $desc[]=_('Configuration des étiquettes');$desc_long[]=_('Configuration des étiquettes(tags) ou dossiers, on l\'appele tag ou dossier suivant la façon dont vous utilisez
-cette fonctionnalité. Vous pouvez en ajouter, en supprimer ou les modifier');
-$menu[]=_('Preference &#128100;');  $desc[]=_('Préférence');$desc_long[]=_('Préférence de l\'utilisateur, apparence de l\'application pour l\'utilisateur, période par défaut et mot de passe');
-$menu[]=_('Impression &#x1F4CA;');  $desc[]=_('Menu impression');$desc_long[]=_('Menu impression');
-$menu[]=_('Rapports avancés&#x1F4CA;');  $desc[]=_('Création de rapports avancés');$desc_long[]=_('Dany De Bontridder');
-$menu[]=_('Fiche &#x1F4C7;');  $desc[]=_('Liste,Balance,Historique par fiche');$desc_long[]=_('Permet d\'avoir la balance de toutes vos fiches, les résumés exportables en CSV, les historiques avec ou sans lettrages');
-$menu[]=_('Favori &#x2728;');  $desc[]=_('Raccourci vers vos menus préférés');$desc_long[]=_('Ce menu vous présente  un menu rapide de vos menus préférés');
+$menu[]=_('Préférence &#128100');  $desc[]=_('Préférence');$desc_long[]=_('Préférence de l\'utilisateur, apparence de l\'application pour l\'utilisateur, période par défaut et mot de passe');
+$menu[]=_('Impression &#x1F4CA');  $desc[]=_('Menu impression');$desc_long[]=_('Menu impression');
+$menu[]=_('Fiche &#x1F4C7');  $desc[]=_('Liste,Balance,Historique par fiche');$desc_long[]=_('Permet d\'avoir la balance de toutes vos fiches, les résumés exportables en CSV, les historiques avec ou sans lettrages');
+$menu[]=_('Favori &#x2728');  $desc[]=_('Raccourci vers vos menus préférés');$desc_long[]=_('Ce menu vous présente  un menu rapide de vos menus préférés');
+$menu[]=_('Importation operations');  $desc[]=_('OBSOLETE Importation et exportation d\'operations
+	    remplacé par noalyss-export et import-advanced');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Portal Client');  $desc[]=_('Plugin to manage the client');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Saisie présence');  $desc[]=_('Saisie des heures dans les feuilles de présence (timesheet)');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Administration TS');  $desc[]=_('Paramètre, utilisateurs et sécurité pour l\'extension feuilles de présence (timesheet)');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Impression TS');  $desc[]=_('Impressions avancées pour l\'extension  feuilles de présence (timesheet)');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Backup');  $desc[]=_('Backup dossier');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Importation Avancée');  $desc[]=_('Importation et exportation d\'operations comptables et analytiques. 
+	    Version modifiée de import_account.
+            Supporte les devises');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Import de fiches');  $desc[]=_('Importation de fiches');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Etiquette');  $desc[]=_('Configuration des étiquettes');$desc_long[]=_('Configuration des étiquettes(tags) ou dossiers, on l\'appele tag ou dossier suivant la façon dont vous utilisez cette fonctionnalité. Vous pouvez en ajouter, en supprimer ou les modifier');
+$menu[]=_('Facturation');  $desc[]=_('Facturation, envoi de facture, téléchargement');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Listing');  $desc[]=_('Création de listes , envoi de courriers');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Modification');  $desc[]=_('Modification d\'opération');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Exportation données');  $desc[]=_('Permet l\'export des données de Noalyss , en différent format : FEC, CSV');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Validation Formulaire');  $desc[]=_('Validation d\'un formulaire reçu depuis Internet');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Création Formulaire');  $desc[]=_('Définition de formulaire qu\'on pourrait recevoir');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Import Banque');  $desc[]=_('Importation de fichiers CSV dans les journaux financiers');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('WebService Setting');  $desc[]=_('Configuration du webservice pour Noalyss');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('WebService');  $desc[]=_('Webservice pour Noalyss');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Stock');  $desc[]=_('Etats annexes stocks SMT OHADA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Paramètre OHADA');  $desc[]=_('Paramètre Etats Annexes OHADA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Bilan SMT');  $desc[]=_('Bilan SMT OHADA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Skeleton for plugin');  $desc[]=_('Example of an XML File for developing a plugin.');$desc_long[]=_('votre nom');
+$menu[]=_('Import/export plan');  $desc[]=_('Import/export plan comptable');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Outils comptables');  $desc[]=_('Outils comptable, chgt poste,fiche...');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Transformation');  $desc[]=_('Transformation de données dans un autre format');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('TVA');  $desc[]=_('Plugin  : Cette extension permettait de faire les listings et declarations TVA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Amortissement');  $desc[]=_('Gestion des amortissements');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Bilan Interne');  $desc[]=_('Generation d\'un bilan interne');$desc_long[]=_('Thierry Nancy');
+$menu[]=_('Copropriété');  $desc[]=_('Outils pour les copropriétés');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Dossier Démo');  $desc[]=_('Permet la restauration de différent dossiers dans le but d\'avoir des dossiers de démonstration');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Saisie et Chargement Document');  $desc[]=_('Encodage rapide');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Chargement Document');  $desc[]=_('Chargement documents');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Paiement SEPA');  $desc[]=_('création de fichier XML pour les paiements SEPA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Trésorerie SMT');  $desc[]=_('Etats annexes Trésorerie SMT OHADA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Dettes impayées');  $desc[]=_('Etats annexes dettes impayées SMT OHADA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Créance impayées');  $desc[]=_('Etats annexes créances impayées SMT OHADA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Créance impayées dues');  $desc[]=_('Etats annexes créances impayées SMT OHADA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Compte de résultat SMT');  $desc[]=_('Compte de résultat SMT OHADA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Gestion Profil');  $desc[]=_('Permet d\'importer et d\'exporter des profiles, avec toutes dépendances');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Rapports avancés 📊');  $desc[]=_('Création de rapports avancés');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('RASH');  $desc[]=_('Le but de l’application est de gérer l’entrée des bénéficiaires et le suivi de ceux-ci ainsi que
+            le reporting vers la Région Wallonne qui inclut des données spécifiques à indiquer.');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('RASH Administration');  $desc[]=_('Permet de gérer la sécurité de l\'extension RASH');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('RASH Export');  $desc[]=_('Permet d\'exporter des données de RASH');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Service après-vente');  $desc[]=_('Encodage de fiche pour service après-vente');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Dettes impayées dues');  $desc[]=_('Etats annexes dettes impayées SMT OHADA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Amortissement');  $desc[]=_('Etats annexes amortissements SMT OHADA');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Export - Import XML');  $desc[]=_('Export and import backup as compressed XML files');$desc_long[]=_('Dany De Bontridder');
+$menu[]=_('Validation TS');  $desc[]=_('Permet de valider les feuilles de présence(Timesheet) des personnes dont on est responsable');$desc_long[]=_('Dany De Bontridder');
+?>
+<?php 
 $attr_def[]=_('Nom');
 $attr_def[]=_('Prénom');
 $attr_def[]=_('Description');
@@ -181,30 +233,31 @@ $attr_def[]=_('Partie fiscalement non déductible');
 $attr_def[]=_('Contrepartie pour dépense fiscal. non déd.');
 $attr_def[]=_('TVA non déductible');
 $attr_def[]=_('Contrepartie pour TVA non Ded.');
+$attr_def[]=_('TVA non déductible récupérable par l\'impôt');
 $attr_def[]=_('Contrepartie pour TVA récup par impot');
 $attr_def[]=_('Contrepartie pour dépense à charge du gérant');
 $attr_def[]=_('Dépense  charge du grant (partie privé) ');
 $attr_def[]=_('Quick Code');
+$attr_def[]=_('Numéro national');
+$attr_def[]=_('Numéro TVA');
 $attr_def[]=_('Email ');
 $attr_def[]=_('Téléphone ');
 $attr_def[]=_('Pays ');
-$attr_def[]=_('Numéro TVA');
-$attr_def[]=_('TVA non déductible récupérable par l\'impôt');
 ?>
 <?php 
-$document_type[]=_('Document Interne');
+$document_type[]=_('Réception commande Fournisseur');
+$document_type[]=_('Réception magazine');
+$document_type[]=_('Réception commande Client');
+$document_type[]=_('Proposition');
+$document_type[]=_('Note de frais');
+$document_type[]=_('Lettre de rappel');
+$document_type[]=_('Facture');
 $document_type[]=_('Bons de commande client');
 $document_type[]=_('Bon de commande Fournisseur');
-$document_type[]=_('Facture');
-$document_type[]=_('Lettre de rappel');
-$document_type[]=_('Courrier');
-$document_type[]=_('Proposition');
-$document_type[]=_('Email');
+$document_type[]=_('Document Interne');
 $document_type[]=_('Divers');
-$document_type[]=_('Note de frais');
-$document_type[]=_('Réception commande Fournisseur');
-$document_type[]=_('Réception commande Client');
-$document_type[]=_('Réception magazine');
+$document_type[]=_('Courrier');
+$document_type[]=_('Email');
 ?>
 <?php 
 $action[]=_('Ajout de fiche');
@@ -224,37 +277,28 @@ $action[]=_('Modifier la date d\'une operation');
 ?>
 <?php 
 $mdp[]=_('Caisse');
-$mdp[]=_('Par gérant ou administrateur');
 $mdp[]=_('Paiement électronique');
 $mdp[]=_('Caisse');
-$mdp[]=_('Caisse');
+$mdp[]=_('Par gérant ou administrateur');
 ?>
 <?php 
-$jrn_def_name[]=_('Frais Divers');
-$jrn_def_name[]=_('Vente différée');
-$jrn_def_name[]=_('Vente');
-$jrn_def_name[]=_('Caisse en dollar');
-$jrn_def_name[]=_('Opération Diverses');
 $jrn_def_name[]=_('Financier');
 $jrn_def_name[]=_('Achat');
-$jrn_def_name[]=_('Banque Privée');
+$jrn_def_name[]=_('Opération Diverses');
+$jrn_def_name[]=_('Salaire');
+$jrn_def_name[]=_('Vente');
 ?>
 <?php 
-$jrn_def_description[]=_('Contient des frais divers');
-
-$jrn_def_description[]=_('Concerne toutes les ventes, notes de crédit envoyées');
-$jrn_def_description[]=_('Caisse en dollars');
-$jrn_def_description[]=_('Concerne toutes les opérations comme les amortissements, les comptes TVA, ...');
 $jrn_def_description[]=_('Concerne tous les mouvements financiers (comptes en banque, caisses, visa...)');
 $jrn_def_description[]=_('Concerne tous les achats, factures reçues, notes de crédit reçues et notes de frais');
-$jrn_def_description[]=_('Compte fermé');
+$jrn_def_description[]=_('Concerne toutes les opérations comme les amortissements, les comptes TVA, ...');
+
+$jrn_def_description[]=_('Concerne toutes les ventes, notes de crédit envoyées');
 ?>
 <?php 
 $jrn_type[]=_('Financier');
 $jrn_type[]=_('Vente');
 $jrn_type[]=_('Achat');
 $jrn_type[]=_('Opérations Diverses');
-?>
-<?php
-$jrn_def_negative_warning[]=_('Attention, ce journal doit utiliser des montants négatifs');
+$jrn_type[]=_('Attention, ce journal doit utiliser des montants négatifs');
 ?>

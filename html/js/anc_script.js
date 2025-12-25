@@ -230,7 +230,7 @@ function search_ca(p_dossier, p_target, p_source)
                 onSuccess: function(req) {
                     try {
                         remove_waiting_box();
-                        var pos = fixed_position(250, 150) + ";width:30%;height:50%";
+                        var pos = fixed_position(250, 150) + ";width:30%;height:50%;z-index:"+get_next_layer();
                         add_div({
                             id: "searchanc",
                             drag: 1,
@@ -489,7 +489,7 @@ function anc_key_choice(p_dossier, p_table, p_amount,p_ledger)
 
                             var code_html = getNodeText(html[0]); // Firefox ne prend que les 4096 car.
                             code_html = unescape_xml(code_html);
-                            var position=fixed_position(50,120);
+                            var position=fixed_position(50,120)+";z-index:"+get_next_layer();
                             add_div({id: name_ctl, cssclass: 'inner_box', style: position, drag: 1});
                             id$(name_ctl).innerHTML = code_html;
                         } catch (e)
@@ -626,7 +626,7 @@ function anc_detail_op(p_oa_group,gDossier) {
                         method:"get",
                         parameters:{"gDossier":gDossier,"op":"anc_detail_op","oa_group":p_oa_group},
                         onSuccess:function (req) {
-                            add_div({"id":"anc_detail_op_div","cssclass":"inner_box","style":"position:fixed;top:5%"});
+                            add_div({"id":"anc_detail_op_div","cssclass":"inner_box","style":"position:fixed;top:5%;z-index:"+get_next_layer()});
                             id$('anc_detail_op_div').update(req.responseText);
                             remove_waiting_box();
                         }

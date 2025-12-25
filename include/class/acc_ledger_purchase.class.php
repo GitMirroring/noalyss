@@ -29,9 +29,86 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 /*!
  * \class Acc_Ledger_Purchase
- * \brief Handle the ledger of purchase,
- *
- *
+ ** @brief : input, confirm and save new operations in edger of purchase
+ the $_POST data is an array with these keys
+ @code
+ Array
+(
+    
+// =====================
+// ANALYTIC  PART
+// =====================
+    [pa_id] => Array 
+        (
+            [0] => 1
+        )
+
+    [op] => Array
+        (
+            [0] => 0
+        )
+
+    [amount_t0] => 10
+    [hplan] => Array
+        (
+            [0] => Array
+                (
+                    [0] => -1
+                )
+
+        )
+
+    [val] => Array
+        (
+            [0] => Array
+                (
+                    [0] => 10
+                )
+
+        )
+// =====================
+// SALES DATA
+// =====================
+
+    [e_client] => QuickCode supplier
+    [nb_item] => number of items (lines of invoice)
+    [p_jrn] => JRN_DEF.JRN_DEF_ID id of the ledger
+    [jrn_note_input] =>  Note JRN_NOTE.N_TEXT
+    [mt] => 1759130008.8134
+    [p_currency_rate] => Currency Rate
+    [p_currency_code] => Currency Code
+    [e_comm] => Description of invoice
+    [e_date] => date invoice
+    [e_ech] =>  limit date
+    [e_pj] => Receipt number
+    [e_pj_suggest] => suggested receipt number
+    [e_mp] => payment means (
+    [jrn_type] => Type of ledger (always ACH)
+ //---------------------------------------------
+ // For each invoice line 
+ //---------------------------------------------
+    [e_march0] => QuickCode of the item
+    [e_march0_label] => label
+    [e_march0_price] => unit price
+    [e_march0_tva_id] => VAT ID
+    [e_march0_tva_amount] => amount of VAT
+    [e_quant0] => quantity of item
+//======================== 
+// MISC
+//========================
+    [repo] => 1 (repository)
+    [gen_invoice] => on (it is asked to generate an invoice
+    [gen_doc] => Document template id
+    [bon_comm] => JRN_INFO.
+    [other_info] = JRN_INFO.> 
+    [opd_name] =>  Name of operation template
+    [od_description] => Description of operation template 
+    [reverse_date] =>  if reverse is asked
+    [ext_label] =>  Label for revese operation
+    [jr_optype] => Type of operation NOR:Normal,, EXT; reverse, ..
+)
+ @endcode   
+ 
  */
 class  Acc_Ledger_Purchase extends Acc_Ledger
 {
@@ -125,7 +202,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
 
         /* get the account and explode if necessary */
-        $sposte=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+        $sposte=$fiche->get_attribute(ATTR_DEF_ACCOUNT);
         // if 2 accounts, take only the credit one for supplier
         if ( strpos($sposte,',') != 0 )
         {
@@ -202,7 +279,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 throw new Exception(_('La fiche ').${'e_march'.$i}._('n\'a pas de poste comptable'),8);
 
             /* get the account and explode if necessary */
-            $sposte=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+            $sposte=$fiche->get_attribute(ATTR_DEF_ACCOUNT);
             // if 2 accounts, take only the  debit
             if ( strpos($sposte,',') != 0 )
             {
@@ -246,7 +323,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 		  }
 		if ( ! $fiche->empty_attribute($key[0]) &&  ! $fiche->empty_attribute($key[2]))
 		  {
-		    $nd_str=$fiche->strAttribut($key[2]);
+		    $nd_str=$fiche->get_attribute($key[2]);
 		    if ( $nd_str != '')
 		      {
 			$poste_nd=new Acc_Account_Ledger($this->db,$nd_str);
@@ -305,23 +382,23 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
     {
         if (!$p_fiche->empty_attribute(ATTR_DEF_DEPENSE_NON_DEDUCTIBLE))
         {
-            $p_nd_amount->amount_nd_rate = $p_fiche->strAttribut(ATTR_DEF_DEPENSE_NON_DEDUCTIBLE);
+            $p_nd_amount->amount_nd_rate = $p_fiche->get_attribute(ATTR_DEF_DEPENSE_NON_DEDUCTIBLE);
             $p_nd_amount->compute_nd();
         }
         if (!$p_fiche->empty_attribute(ATTR_DEF_TVA_NON_DEDUCTIBLE) )
         {
-            $p_nd_amount->nd_vat_rate = $p_fiche->strAttribut(ATTR_DEF_TVA_NON_DEDUCTIBLE);
+            $p_nd_amount->nd_vat_rate = $p_fiche->get_attribute(ATTR_DEF_TVA_NON_DEDUCTIBLE);
             $p_nd_amount->compute_nd_vat();
         }
         if (!$p_fiche->empty_attribute(ATTR_DEF_TVA_NON_DEDUCTIBLE_RECUP) )
         {
-            $p_nd_amount->nd_ded_vat_rate = $p_fiche->strAttribut(ATTR_DEF_TVA_NON_DEDUCTIBLE_RECUP);
+            $p_nd_amount->nd_ded_vat_rate = $p_fiche->get_attribute(ATTR_DEF_TVA_NON_DEDUCTIBLE_RECUP);
             $p_nd_amount->compute_ndded_vat();
         }
 
         if (!$p_fiche->empty_attribute(ATTR_DEF_DEP_PRIV))
         {
-            $p_nd_amount->amount_perso_rate = $p_fiche->strAttribut(ATTR_DEF_DEP_PRIV);
+            $p_nd_amount->amount_perso_rate = $p_fiche->get_attribute(ATTR_DEF_DEP_PRIV);
             $p_nd_amount->compute_perso();
         }
 
@@ -357,7 +434,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             /* save op. */
             if (!$p_fiche->empty_attribute(ATTR_DEF_ACCOUNT_ND))
             {
-                $dna = $p_fiche->strAttribut(ATTR_DEF_ACCOUNT_ND);
+                $dna = $p_fiche->get_attribute(ATTR_DEF_ACCOUNT_ND);
             } else
             {
                 $dna = $dna_default->p_value;
@@ -368,7 +445,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $p_acc_operation->amount = $p_nd_amount->amount_nd;
             $p_acc_operation->poste = $dna;
             $p_acc_operation->qcode = '';
-            $p_acc_operation->desc=$this->find_label($dna)." ND ".$p_fiche->strAttribut(ATTR_DEF_QUICKCODE);
+            $p_acc_operation->desc=$this->find_label($dna)." ND ".$p_fiche->get_attribute(ATTR_DEF_QUICKCODE);
             if ($p_nd_amount->amount_nd > 0)
                 $p_tot_debit = bcadd($p_tot_debit, $p_nd_amount->amount_nd );
             $j_id = $p_acc_operation->insert_jrnx();
@@ -384,7 +461,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $p_acc_operation->type = 'd';
             if (!$p_fiche->empty_attribute(ATTR_DEF_ACCOUNT_ND_PERSO))
             {
-                $dna = $p_fiche->strAttribut(ATTR_DEF_ACCOUNT_ND_PERSO);
+                $dna = $p_fiche->get_attribute(ATTR_DEF_ACCOUNT_ND_PERSO);
             } else
             {
                 $dna = $dna_default->p_value;
@@ -394,7 +471,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $p_acc_operation->amount = $p_nd_amount->amount_perso ;
             $p_acc_operation->poste = $dna;
             $p_acc_operation->qcode = '';
-            $p_acc_operation->desc=$this->find_label($dna)." ND_PRIV ".$p_fiche->strAttribut(ATTR_DEF_QUICKCODE);
+            $p_acc_operation->desc=$this->find_label($dna)." ND_PRIV ".$p_fiche->get_attribute(ATTR_DEF_QUICKCODE);
             if ($p_nd_amount->amount_perso> 0)
                 $p_tot_debit = bcadd($p_tot_debit, $p_nd_amount->amount_perso);
             $j_id = $p_acc_operation->insert_jrnx();
@@ -408,7 +485,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $p_acc_operation->qcode = '';
             if (!$p_fiche->empty_attribute(ATTR_DEF_ACCOUNT_ND_TVA_ND) )
             {
-                $dna = $p_fiche->strAttribut(ATTR_DEF_ACCOUNT_ND_TVA_ND);
+                $dna = $p_fiche->get_attribute(ATTR_DEF_ACCOUNT_ND_TVA_ND);
             } else
             {
                 $dna = $dna_default->p_value;
@@ -417,10 +494,10 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
 
             $p_acc_operation->amount = $p_nd_amount->nd_vat;
             $p_acc_operation->poste = $dna;
-            $p_acc_operation->desc=$this->find_label($dna)." ND_TVA ".$p_fiche->strAttribut(ATTR_DEF_QUICKCODE);
+            $p_acc_operation->desc=$this->find_label($dna)." ND_TVA ".$p_fiche->get_attribute(ATTR_DEF_QUICKCODE);
             $j_id = $p_acc_operation->insert_jrnx();
             if ( $g_parameter->MY_ANALYTIC != "nu" 
-                    &&  $g_parameter->match_analytic($p_fiche->strAttribut(ATTR_DEF_ACCOUNT))
+                    &&  $g_parameter->match_analytic($p_fiche->get_attribute(ATTR_DEF_ACCOUNT))
                )
             {
                 $op=new Anc_Operation($this->db);
@@ -443,7 +520,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             /* save op. */
             if (!$p_fiche->empty_attribute(ATTR_DEF_ACCOUNT_ND_TVA) )
             {
-                $dna = $p_fiche->strAttribut(ATTR_DEF_ACCOUNT_ND_TVA);
+                $dna = $p_fiche->get_attribute(ATTR_DEF_ACCOUNT_ND_TVA);
             } else
             {
                 $dna = $dna_default->p_value;
@@ -456,12 +533,12 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $p_acc_operation->qcode = '';
             $p_acc_operation->amount = $p_nd_amount->nd_ded_vat;
             $p_acc_operation->poste = $dna;
-            $p_acc_operation->desc=$this->find_label($dna)." DED_TVA ".$p_fiche->strAttribut(ATTR_DEF_QUICKCODE);
+            $p_acc_operation->desc=$this->find_label($dna)." DED_TVA ".$p_fiche->get_attribute(ATTR_DEF_QUICKCODE);
             if ($p_nd_amount->nd_ded_vat > 0)
                 $p_tot_debit = bcadd($p_tot_debit, $p_nd_amount->nd_ded_vat);
             $j_id = $p_acc_operation->insert_jrnx();
            if ( $g_parameter->MY_ANALYTIC != "nu" 
-                 &&  $g_parameter->match_analytic($p_fiche->strAttribut(ATTR_DEF_ACCOUNT))
+                 &&  $g_parameter->match_analytic($p_fiche->get_attribute(ATTR_DEF_ACCOUNT))
               )
             {
                 $op=new Anc_Operation($this->db);
@@ -526,11 +603,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $this->id=$p_jrn;
 
         $internal=$this->compute_internal_code($seq);
-        $this->internal=$internal;
+        $this->jr_internal=$internal;
 
         $cust=new Fiche($this->db);
         $cust->get_by_qcode($e_client);
-        $sposte=$cust->strAttribut(ATTR_DEF_ACCOUNT);
+        $sposte=$cust->get_attribute(ATTR_DEF_ACCOUNT);
         // if 2 accounts, take only the credit Supplier
         if ( strpos($sposte,',') != 0 )
         {
@@ -665,7 +742,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $tot_amount=round(bcadd($tot_amount,$acc_amount->amount_perso),2);
 
                 /* get the account and explode if necessary */
-                $sposte=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+                $sposte=$fiche->get_attribute(ATTR_DEF_ACCOUNT);
                 // if 2 accounts, take only the debit one for customer
                 if ( strpos($sposte,',') != 0 )
                 {
@@ -678,11 +755,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 }
                 if ($g_parameter->MY_UPDLAB=='Y')
                 {
-                    $acc_operation->desc=strip_tags(${"e_march".$i."_label"});
+                    $acc_operation->desc=strip_tags(${"e_march".$i."_label"}??"");
                 }
                 else
                 {
-                    $acc_operation->desc=null;
+                    $acc_operation->desc="";
                 }
                 $acc_operation->poste=$poste_val;
                 $acc_operation->amount=$acc_amount->amount;
@@ -962,7 +1039,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $this->pj=$acc_operation->update_receipt();
 
             // Set Internal code
-            $this->grpt_id=$seq;
+            $this->jr_grpt_id=$seq;
             $this->update_internal_code($internal);
             /* update quant_purchase */
             $this->db->exec_sql('update quant_purchase set qp_internal = $1 where j_id in (select j_id from jrnx where j_grpt=$2)',
@@ -975,10 +1052,11 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             }
 
             /* Save the attachment */
-            if ( isset ($_FILES))
+            if ( isset ($_FILES) &&  sizeof($_FILES) != 0 && $_FILES["pj"]["name"] != 0 )
             {
-                if ( sizeof($_FILES) != 0 )
-                    $this->db->save_receipt($seq);
+                    $acc_document=new \Acc_Document($this->db, $this->jr_id);
+                    $acc_document->save_receipt();
+                    $this->doc=HtmlInput::show_receipt_document($this->jr_id,h($_FILES['pj']['name']));
             }
             $str_file="";
             /* Generate an document  and save it into the database (Note de frais only)
@@ -1008,7 +1086,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 if ( $acjrn->get_type()=='FIN') {
                    $acjrn=new Acc_Ledger_Fin($this->db, $mp->get_parameter('ledger_target'));
                    $acfiche=new Fiche($this->db,$acjrn->get_bank());
-                   $fqcode=$acfiche->strAttribut(ATTR_DEF_QUICKCODE);
+                   $fqcode=$acfiche->get_attribute(ATTR_DEF_QUICKCODE);
                 } else {
                    $fqcode = ${'e_mp_qcode_' . $e_mp};
                   $acfiche = new Fiche($this->db);
@@ -1019,7 +1097,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 $acc_pay->date=$e_date;
 
                 /* get the account and explode if necessary */
-                $sposte=$acfiche->strAttribut(ATTR_DEF_ACCOUNT);
+                $sposte=$acfiche->get_attribute(ATTR_DEF_ACCOUNT);
                 // if 2 accounts, take only the debit one for customer
                 if ( strpos($sposte,',') != 0 )
                 {
@@ -1090,7 +1168,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 // insert into the table JRN
                 $mp_jr_id=$acc_pay->insert_jrn();
                 $this->payment_operation=$mp_jr_id;
-                $acjrn->grpt_id=$acseq;
+                $acjrn->jr_grpt_id=$acseq;
                 $acjrn->update_internal_code($acinternal);
                 // add an automatic PJ if ODS
                 if ($acjrn->get_type()=="ODS") {
@@ -1333,10 +1411,10 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         {
             $fClient=new Fiche($this->db);
             $fClient->get_by_qcode($e_client);
-            $e_client_label=$fClient->strAttribut(ATTR_DEF_NAME).' '.
-                            ' Adresse : '.$fClient->strAttribut(ATTR_DEF_ADRESS).' '.
-                            $fClient->strAttribut(ATTR_DEF_CP).' '.
-                            $fClient->strAttribut(ATTR_DEF_CITY).' ';
+            $e_client_label=$fClient->get_attribute(ATTR_DEF_NAME).' '.
+                            ' Adresse : '.$fClient->get_attribute(ATTR_DEF_ADRESS).' '.
+                            $fClient->get_attribute(ATTR_DEF_POSTCODE).' '.
+                            $fClient->get_attribute(ATTR_DEF_CITY).' ';
 
 
         }
@@ -1402,10 +1480,10 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             {
                 $fMarch=new Fiche($this->db);
                 $fMarch->get_by_qcode($march);
-                $march_label=$fMarch->strAttribut(ATTR_DEF_NAME);
+                $march_label=$fMarch->get_attribute(ATTR_DEF_NAME);
                 /* vat use */
                 if ( ! isset($march_tva_id) && $g_parameter->MY_TVA_USE=='Y' )
-                    $march_tva_id=$fMarch->strAttribut(ATTR_DEF_TVA);
+                    $march_tva_id=$fMarch->get_attribute(ATTR_DEF_TVA);
             }
             // Show input
             //--
@@ -1414,6 +1492,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $W1->name="e_march".$i;
             $W1->value=$march;
             $W1->table=0;
+            $W1->setAfter_clean("compute_all_ledger()");
             $W1->set_dblclick("fill_ipopcard(this);");
             $W1->set_attribute('ipopup','ipopcard');
 
@@ -1485,6 +1564,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
                 // vat label
                 //--
                 $Tva=new ITva_Popup($this->db);
+                $Tva->id="e_march$i"."_tva_id";
                 $Tva->js="onblur=\"clean_tva($i);compute_ledger($i)\"";
                 $Tva->in_table=true;
                 $Tva->set_attribute('compute',$i);
@@ -1589,9 +1669,9 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $client->get_by_qcode($e_client,true);
 
         $client_name=h($client->getName().
-                       ' '.$client->strAttribut(ATTR_DEF_ADRESS).' '.
-                       $client->strAttribut(ATTR_DEF_CP).' '.
-                       $client->strAttribut(ATTR_DEF_CITY));
+                       ' '.$client->get_attribute(ATTR_DEF_ADRESS).' '.
+                       $client->get_attribute(ATTR_DEF_POSTCODE).' '.
+                       $client->get_attribute(ATTR_DEF_CITY));
         $lPeriode=new Periode($this->db);
         if ($this->check_periode() == true)
         {
@@ -1606,14 +1686,14 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
         $r .= '<div id="summary_op1">';
         $r.='<TABLE>';
         if ( $p_summary ) {
-            $jr_id=$this->db->get_value('select jr_id from jrn where jr_internal=$1',array($this->internal));
+            $jr_id=$this->db->get_value('select jr_id from jrn where jr_internal=$1',array($this->jr_internal));
             $r.="<tr>";
             $r.='<td>';
             $r.=_('Détail opération ');
             $r.='</td>';
             $r.='<td>';
             $r.=sprintf ('<a class="line" style="display:inline" href="javascript:modifyOperation(%d,%d)">%s</a>',
-                    $jr_id,dossier::id(),$this->internal);
+                    $jr_id,dossier::id(),$this->jr_internal);
             $r.='</td>';
             $r.="</tr>";
         }
@@ -1713,7 +1793,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             if ( $g_parameter->MY_UPDLAB=='Y')
                 $fiche_name=h(${"e_march".$i."_label"});
             else
-                $fiche_name=$fiche->strAttribut (ATTR_DEF_NAME);
+                $fiche_name=$fiche->get_attribute (ATTR_DEF_NAME);
             $amount=bcmul(${"e_march".$i."_price"},${'e_quant'.$i});
             if ( $g_parameter->MY_TVA_USE=='Y')
             {
@@ -1794,7 +1874,7 @@ class  Acc_Ledger_Purchase extends Acc_Ledger
             $r.='</td>';
             // encode the pa
             if ( $g_parameter->MY_ANALYTIC!='nu' 
-                     && $g_parameter->match_analytic($fiche->strAttribut(ATTR_DEF_ACCOUNT))==TRUE
+                     && $g_parameter->match_analytic($fiche->get_attribute(ATTR_DEF_ACCOUNT))==TRUE
                     ) // use of AA
             {
                 // show form
@@ -2060,6 +2140,7 @@ EOF;
                                 " from document_modele where md_affect='ACH' order by 2");
             $r.=$doc_gen->input().'<br>';
         }
+        $r.=$this->input_supplemental_document();
         $r.='<br>';
         $obj=new IText();
         $r.=_('Numero de bon de commande : ').$obj->input('bon_comm').'<br>';

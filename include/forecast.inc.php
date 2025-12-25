@@ -171,7 +171,7 @@ if ($sa=='list')
 {
 
 
-    $aForecast=Forecast::load_all($cn);
+    $aForecast= Anticipation::load_all($cn);
     $menu=array();
     $get_dossier=dossier::get();
     require_once NOALYSS_TEMPLATE."/forecast-new.php";

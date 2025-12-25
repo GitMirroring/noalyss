@@ -34,9 +34,9 @@ class Default_Menu
     private $a_menu_def;
 
     /**
-     * Possible value
+     * Possible values code_follow,code_invoice,code_feenote
      */
-    private $code; // array with the valid code
+    private $code; //!< array with the valid code
 
     function __construct()
     {
@@ -74,10 +74,17 @@ class Default_Menu
         global $cn;
         $count = $cn->get_value('select count(*) from v_menu_description_favori where '
                 . 'code = $1', array($p_string));
-        if ($count == 0)
+        if ($count != 0)
         {
-            throw new Exception('code_inexistant');
+            return ;
         }
+        $count = $cn->get_value('select count(*) from menu_ref where '
+                . 'me_code = $1', array($p_string));
+        if ($count != 0)
+        {
+            return ;
+        }
+        throw new Exception('code_inexistant');
     }
 
     function verify()
@@ -107,10 +114,10 @@ class Default_Menu
         try
         {
             $this->verify();
-            foreach ($this->code as $key => $value)
+            foreach ($this->a_menu_def as $key => $value)
             {
                 $cn->exec_sql('update menu_default set me_code=$1 where
-                        md_code =$2', array($value,$this->a_menu_def[$value]));
+                        md_code =$2', array($value,$key));
             }
         } catch (Exception $e)
         {
@@ -120,43 +127,5 @@ class Default_Menu
         }
     }
 
-    static function test_me()
-    {
-        global $cn, $g_user, $g_succeed, $g_failed;
-
-        echo h2('Constructor', '');
-        $a = new Default_Menu();
-        echo $g_succeed . 'constructor';
-        if (count($a->a_menu_def) != 2)
-            echo $g_failed;
-        else
-            echo $g_succeed;
-        echo h2("input_value", "");
-        $a->input_value();
-        echo h2('verify');
-        $a->verify();
-        try {
-            echo h2('Verify must failed');
-            $a->set('code_follow', 'MEMNU/MEMEM/');
-            $a->verify();   
-        } catch (Exception $e) {
-            echo $g_succeed. " OK ";
-        }
-        echo h2('Verify must succeed');
-        try {
-            $a->set('code_follow', 'GESTION/FOLLOW');
-            $a->verify();
-            echo $g_succeed. " OK ";
-        } catch (Exception $e)
-        {
-            echo $g_failed."NOK";
-        }
-        echo h2('Save');
-        $a->save();
-        echo h2('GET');
-        echo ( assert($a->get('code_follow')=='GESTION/FOLLOW') )?$g_succeed.$a->get('code_follow'):$g_failed.$a->get('code_follow');
-        echo ( assert($a->get('code_invoice')=='COMPTA/VENMENU/VEN') )?$g_succeed.$a->get('code_invoice'):$g_failed.$a->get('code_invoice');
-        echo $a->get('code_invoice');
-    }
-
+   
 }

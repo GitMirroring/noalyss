@@ -52,10 +52,10 @@ class Noalyss_Parameter_FolderTest extends TestCase
                                     "MY_TVA,".                     
                                     "MY_STREET,".                  
                                     "MY_NUMBER,".                  
-                                    "MY_CP,".                      
-                                    "MY_TEL,".                     
-                                    "MY_PAYS,".                    
-                                    "MY_COMMUNE,".                 
+                                    "MY_POSTCODE,".                      
+                                    "MY_PHONE,".                     
+                                    "MY_COUNTRY,".                    
+                                    "MY_CITY,".                 
                                     "MY_FAX,".                     
                                     "MY_ANALYTIC,".                
                                     "MY_STRICT,".                  
@@ -67,7 +67,8 @@ class Noalyss_Parameter_FolderTest extends TestCase
                                     "MY_UPDLAB,".                  
                                     "MY_ANC_FILTER,".                  
                                     "MY_REPORT,".
-                                    "MY_STOCK");
+                                    "MY_STOCK,".
+                                    "MY_COUNTRY_CODE");
                 
     }
     public function testNew()

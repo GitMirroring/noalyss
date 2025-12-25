@@ -30,16 +30,16 @@
  */
 class Document_Type
 {
+
     var $db;          //!< Database Connection
     var $dt_id;       //!< primary key see SQL DOCUMENT_TYPE.DT_ID
     var $dt_value;    //!< description of the document see SQL DOCUMENT_TYPE.DT_VALUE
     var $dt_prefix;   //!< prefix for numbering see SQL DOCUMENT_TYPE.DT_PREFIX
 
 	/**
-     * \brief
 	 * \brief constructor document_type
 	 * \param $p_cn database connx
-     * \param $dt_id primary key see SQL DOCUMENT_TYPE.DT_ID
+         * \param $dt_id primary key see SQL DOCUMENT_TYPE.DT_ID
 	 */
 	function __construct(\Database $p_cn, int $dt_id = -1)
 	{

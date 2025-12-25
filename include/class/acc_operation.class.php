@@ -64,14 +64,14 @@ class Acc_Operation
      * \brief constructor set automatically the attributes user and periode
      * \param $p_cn the databse connection
      */
-    function __construct($p_cn)
+    function __construct($p_cn,$p_jrid=0)
     {
         global $g_user;
         $this->db=$p_cn;
         $this->qcode="";
         $this->user=$_SESSION[SESSION_KEY.'g_user'];
         $this->periode=$g_user->get_periode();
-        $this->jr_id=0;
+        $this->jr_id=$p_jrid;
         $this->jr_optype="NOR";
         $this->amount=0;
         $this->currency_rate=1;
@@ -84,16 +84,16 @@ class Acc_Operation
         $r=<<<EOF
    Acc_Operation Object 
      [   
-        db {$this->db} 
+       
         qcode {$this->qcode}
         user {$this->user}
         periode {$this->periode}
         jr_id {$this->jr_id}
         jr_optype {$this->jr_optype}
         amount  {$this->amount}
-        currency_rate {$this->amount}
-        currency_rate_ref {$this->amount}
-        currency_id {$this->amount}
+        currency_rate {$this->currency_rate}
+        currency_rate_ref {$this->currency_rate_ref}
+        currency_id {$this->currency_id}
     ]
 EOF;
         return $r;
@@ -394,7 +394,7 @@ EOF;
     {
         if ( ! isset($this->jr_id) )
             throw new Exception('jr_id is not set',1);
-        $Res=$this->db->exec_sql("select jr_internal from jrn where jr_id=".$this->jr_id);
+        $Res=$this->db->exec_sql("select jr_internal from jrn where jr_id=$1",[$this->jr_id]);
         if ( Database::num_row($Res) == 0 ) return null;
         $l_line=Database::fetch_array($Res);
         $this->jr_internal= $l_line['jr_internal'];
@@ -436,19 +436,25 @@ EOF;
         $all=Database::fetch_all($res);
         return $all;
     }
-    /*!\brief add a comment to the line (jrnx.j_text) */
+    /*!
+     * \brief add a comment to the line (jrnx.j_text) 
+     */
     function update_comment($p_text)
     {
         $sql="update jrnx set j_text=$1 where j_id=$2";
         $this->db->exec_sql($sql,array($p_text,$this->jrnx_id));
     }
-    /*!\brief add a comment to the operation (jrn.jr_text) */
+    /*!
+     * \brief add a comment to the operation (jrn.jr_text) 
+     */
     function operation_update_comment($p_text)
     {
         $sql="update jrn set jr_comment=$1 where jr_id=$2";
         $this->db->exec_sql($sql,array($p_text,$this->jr_id));
     }
-    /*!\brief add a limit of payment to the operation (jrn.jr_ech) */
+    /*!
+     * \brief add a limit of payment to the operation (jrn.jr_ech) 
+     */
     function operation_update_date_limit($p_text)
     {
         if ( isDate($p_text) == null )
@@ -458,7 +464,9 @@ EOF;
         $sql="update jrn set jr_ech=to_date($1,'DD.MM.YYYY') where jr_id=$2";
         $this->db->exec_sql($sql,array($p_text,$this->jr_id));
     }
-    /*!\brief return the jrn_def_id from jrn */
+    /*!
+     * \brief return the jrn_def_id from jrn 
+     */
     function get_ledger()
     {
         $sql="select jr_def_id from jrn where jr_id=$1";
@@ -1023,11 +1031,43 @@ EOF;
 /**
  * @class Acc_Detail
  * @brief Contains the detail of an operation Acc_Operation
+ * propery :
+ *      - $det 
+            - jr_id PKfrom table JRN
+            -  jr_def_id id of the ledger (FK to - _DEF- _DEF_ID)from table JRN
+            -  jr_montant AMOUNT of the operationfrom table JRN
+            -  jr_comment COMMENT from table JRN
+            -  jr_date    DATEfrom table JRN
+            -  jr_grpt_id CODE to group - X rowsfrom table JRN
+            -  jr_internal    INTERNAL CODEfrom table JRN
+            -  jr_tech_date   DATE OF CHANGEfrom table JRN
+            -  jr_tech_per    FK TO PARAM_PERIODEP_IDfrom table JRN
+            -  jrn_ech    from table JRN
+            -  jr_ech DATE LIMIT OF PAYMENTfrom table JRN
+            -  jr_rapt    from table JRN
+            - jr_echfrom table JRN
+            -  jr_validfrom table JRN
+            -  jr_opid    from table JRN
+            -  jr_c_opidfrom table JRN
+            -  jr_pj      OID OF THE DOCUMENTfrom table JRN
+            -  jr_pj_name NAME OF THE DOCUMENTfrom table JRN
+            -  jr_pj_typefrom table JRN
+            -  jr_pj_number RECEIPT NBfrom table JRN
+            -  jr_mt INTERNAL CODEfrom table JRN
+            - jr_raptfrom table JRN
+            - jr_date_paid   DATE OF PAYMENTfrom table JRN
+            - jr_optype TYPE OF OPERATION NOR = NORMAL OPE=OPENING EXT=EXTOURNEfrom table JRN
+            - currency_id FK TO CURRENCYIDfrom table JRN
+            - currency_rate  amountfrom table JRN
+            - currency_rate_ref  amount in CURRENT_HISTORYCH_VALUEfrom table JRN
+ *          - note from table JRN_NOTE
+        - $jr_id JRN.JR_ID
+        - $info
  */
 class Acc_Detail extends Acc_Operation
 {
-    public $det;
-    public $jr_id;
+    public $det;//!< Object with columns from JRN
+    public $jr_id;//! $jr_id (int) JRN.JR_ID
     public $info;
 
     function __construct($p_cn,$p_jrid=0)
@@ -1042,10 +1082,34 @@ class Acc_Detail extends Acc_Operation
      */
     function get()
     {
-        $sql="SELECT jr_id, jr_def_id, jr_montant, jr_comment, jr_date, jr_grpt_id,
-             jr_internal, jr_tech_date, jr_tech_per, jrn_ech, jr_ech, jr_rapt,jr_ech,
-             jr_valid, jr_opid, jr_c_opid, jr_pj, jr_pj_name, jr_pj_type,
-             jr_pj_number, jr_mt,jr_rapt,jr_date_paid,jr_optype,currency_id,currency_rate,currency_rate_ref
+        $sql="SELECT jr_id
+            , jr_def_id
+            , jr_montant
+            , jr_comment
+            , jr_date
+            , jr_grpt_id
+            , jr_internal
+            , jr_tech_date
+            , jr_tech_per
+            , jrn_ech
+            , jr_ech
+            , jr_rapt
+            ,jr_ech
+            , jr_valid
+            , jr_opid
+            , jr_c_opid
+            , jr_pj
+            , jr_pj_name
+            , jr_pj_type,
+             jr_pj_number
+             , jr_mt
+             ,jr_rapt
+             ,jr_date_paid
+             ,jr_optype
+             ,currency_id
+             ,currency_rate
+             ,currency_rate_ref
+             ,jr_document_xml
              FROM jrn where jr_id=$1";
         $array=$this->db->get_array($sql,array($this->jr_id));
         if ( count($array) == 0 ) throw new Exception('Aucune ligne trouvée');
@@ -1053,9 +1117,15 @@ class Acc_Detail extends Acc_Operation
         {
             $this->det->$key=$val;
         }
-	$sql="select n_text from jrn_note where jr_id=$1";
-	$this->det->note=$this->db->get_value($sql,array($this->jr_id));
-	$this->det->note=strip_tags($this->det->note);
+	$sql="select n_text,n_html from jrn_note where jr_id=$1";
+        $a=$this->db->get_row($sql,array($this->jr_id));
+	if ( empty($a)) {
+            $this->det->note="";
+            $this->det->note_html=null;
+        } else {
+            $this->det->note=strip_tags($a['n_text']??"");
+            $this->det->note_html=($a['n_html'] == "")?$a['n_text']:$a['n_html'];
+    }
     }
     /**
      * 
@@ -1069,6 +1139,15 @@ class Acc_Detail extends Acc_Operation
         $array['p_jrn']=$this->det->jr_def_id;
         return $array;
 
+    }
+        function __toString(): string
+    {
+         $r= __CLASS__;
+         $r.="this->signature ".$this->signature."\n";
+         $r.="this->det ".print_r($this->det,true);
+        
+        return $r;
+        
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -1141,6 +1220,15 @@ SELECT jx1.j_id
         return $array;
         
     }
+        function __toString(): string
+    {
+         $r= __CLASS__;
+         $r.="this->signature ".$this->signature."\n";
+         $r.="this->det ".print_r($this->det,true);
+        
+        return $r;
+        
+    }
 }
 /////////////////////////////////////////////////////////////////////////////
 /**
@@ -1155,33 +1243,33 @@ class Acc_Sold extends Acc_Detail
     {
         parent::__construct($p_cn,$p_jrid);
         $this->signature='VEN';
-        $this->det=new stdClass();
+        $this->det->array=new stdClass();
     }
     function get()
     {
         parent::get();
         $sql="
         select qs_id, qs_internal
-, jx1.j_id
-, qs1.qs_fiche
-, qs1.qs_quantite
-, qs1.qs_price
-, qs1.qs_vat
-, qs1.qs_vat_code
-, qs1.qs_client
-, qs1.qs_valid
-, jx1.j_text
-, qs_vat_sided
-, qs_unit 
-, jx1.j_debit
-,oc1.oc_amount
-,oc1.oc_vat_amount 
-,oc1.oc_price_unit 
-from quant_sold qs1
-join jrnx jx1	using(j_id)
-left join operation_currency oc1 using(j_id)
-where jx1.j_grpt = $1
-order by jx1.j_id;
+                , jx1.j_id
+                , qs1.qs_fiche
+                , qs1.qs_quantite
+                , qs1.qs_price
+                , qs1.qs_vat
+                , qs1.qs_vat_code
+                , qs1.qs_client
+                , qs1.qs_valid
+                , jx1.j_text
+                , qs_vat_sided
+                , qs_unit 
+                , jx1.j_debit
+                ,oc1.oc_amount
+                ,oc1.oc_vat_amount 
+                ,oc1.oc_price_unit 
+                from quant_sold qs1
+                join jrnx jx1	using(j_id)
+                left join operation_currency oc1 using(j_id)
+                where jx1.j_grpt = $1
+                order by jx1.j_id;
         ";
         $this->det->array=$this->db->get_array($sql,array($this->det->jr_grpt_id));
     }
@@ -1214,7 +1302,15 @@ order by jx1.j_id;
         return $array;
         
     }
-    
+    function __toString(): string
+    {
+        $r="";
+         $r.="this->signature ".$this->signature."\n";
+         $r.="this->det ".print_r($this->det,true);
+        
+        return $r;
+        
+    }
 }
 /////////////////////////////////////////////////////////////////////////////
 /**
@@ -1297,7 +1393,15 @@ order by jx1.j_id
          return $array;
         
     }
-    
+        function __toString(): string
+    {
+         $r= __CLASS__;
+         $r.="this->signature ".$this->signature."\n";
+         $r.="this->det ".print_r($this->det,true);
+        
+        return $r;
+        
+    }
 
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -1353,6 +1457,15 @@ class Acc_Fin extends Acc_Detail
          }
          $array['correct']=1;
         return $array;
+        
+    }
+        function __toString(): string
+    {
+         $r= __CLASS__;
+         $r.="this->signature ".$this->signature."\n";
+         $r.="this->det ".print_r($this->det,true);
+        
+        return $r;
         
     }
 }

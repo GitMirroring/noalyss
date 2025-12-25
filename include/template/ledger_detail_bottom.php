@@ -9,7 +9,8 @@
  * @brief show the common parts of operation details 
  * 
  * Variables : $div = popup or box (det[0-9]
- * 
+ *@var $obj = Acc_Operation 
+ *@var $str_anc = HTML for analytic
  */
 bcscale(2);
 \Noalyss\Dbg::echo_file(__FILE__);
@@ -32,25 +33,49 @@ $aRap=$oRap->get();
  $periode_id=new Periode($cn,$detail->det->jr_tech_per);
  $exercice=$periode_id->get_exercice();
 
-
+// @var $nb_document (int) number of doc 
 $nb_document=($detail->det->jr_pj_name != "")?1:0;
+// @var $str_nb_doc (string) HTML span number of doc 
+$str_nb_doc=($nb_document==0)?span(""):span($nb_document,'class="nb-round"');
 
+// @var $nb_aRap (int) number of reconciliation 
 $nb_aRap=(is_array($aRap))?count($aRap):0;
+// @var $str_nb_rap (string) HTML span for number of reconciliation 
+$str_nb_rap=($nb_aRap==0)?span(""):span($nb_aRap,'class="nb-round"');
+
+//@var $nb_sup_doc (int) number of supplementary documents
+$nb_sup_doc=$cn->get_value("select count(*) from jrn_sup_document where jr_id=$1",[$jr_id]);
+
+// @var $str_nb_sup_doc (string) HTML span for the number of  supplementary documents
+$x=sprintf('id="%s_%s"',"doc_supp",$div);
+$str_nb_sup_doc=($nb_sup_doc==0)?span("",$x):span($nb_sup_doc,'class="nb-round" '.$x);
+
+// @var $nb_fu (int) number of event in follow-up
+$nb_fu=count($a_followup);
+// @var $str_nb_fu (string) HTML span for the number of followup
+$str_nb_fu=($nb_fu==0)?span(""):span($nb_fu,'class="nb-round"');
+
 // Array of tab
 // 
 $a_tab['writing_div']=array('id'=>'writing_div'.$div,'label'=>_('Ecriture Comptable'),'display'=>'none');
 $a_tab['info_operation_div']=array('id'=>'info_operation_div'.$div,'label'=>_('Information'),'display'=>'none');
-$a_tab['linked_operation_div']=array('id'=>'linked_operation_div'.$div,'label'=>_('Opérations liées').'('.$nb_aRap.')','display'=>'none');
-$a_tab['document_operation_div']=array('id'=>'document_operation_div'.$div,'label'=>_('Document').'('.$nb_document.')','display'=>'block');
-$a_tab['linked_action_div']=array('id'=>'linked_action_div'.$div,'label'=>_('Actions Gestion').'('.count($a_followup).')','display'=>'none');
+$a_tab['linked_operation_div']=array('id'=>'linked_operation_div'.$div,'label'=>_('Opérations liées').$str_nb_rap,'display'=>'none');
+$a_tab['document_operation_div']=array('id'=>'document_operation_div'.$div,'label'=>_('Document').$str_nb_doc,'display'=>'block');
+$a_tab['linked_action_div']=array('id'=>'linked_action_div'.$div,'label'=>_('Actions Gestion').$str_nb_fu,'display'=>'none');
 $a_tab['analytic_div']=array('id'=>'analytic_div'.$div,'label'=>_('Comptabilité Analytique'),'display'=>'none');
+$a_tab['supplemental_doc_div']=array('id'=>'supplemental_doc_div'.$div,'label'=>_('Documents supplémentaires').$str_nb_sup_doc,'display'=>'none');
+//var $g_parameter \Noalyss_Parameter_Folder
+global $g_parameter;
 
 
  
 // show tabs
 if ( $div != "popup") :
  $a_tab['document_operation_div']['display']='block';
+ $tabs=array_column($a_tab,"id");
+
 ?>
+<input type="hidden" id="<?=$div?>tab" value="<?=join(",",$tabs)?>">
 <ul  class="tabs">
     <?php foreach ($a_tab as $idx=>$a_value): ?>
     <?php 
@@ -58,7 +83,11 @@ if ( $div != "popup") :
     ?>
     <li class="<?php echo $class?>">
         <?php $div_tab_id=$a_value['id'];?>
-        <a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);var tab=Array('writing_div<?php echo $div?>','info_operation_div<?php echo $div?>','linked_operation_div<?php echo $div?>','document_operation_div<?php echo $div?>','linked_action_div<?php echo $div?>','analytic_div<?php echo $div?>');this.parentNode.className='tabs_selected' ;show_tabs(tab,'<?php echo $div_tab_id; ?>');"><?php echo _($a_value['label'])?></a>
+        <?php if ( $div_tab_id == "supplemental_doc_div".$div):?>
+            <a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected' ;Supplement_Document.refresh_list('<?=\Dossier::id()?>','<?=$div?>','<?=$obj->jr_id?>');show_tabs($F('<?=$div?>tab').split(','),'<?php echo $div_tab_id; ?>');"><?php echo _($a_value['label'])?></a>
+        <?php else: ?>
+            <a href="javascript:void(0)" onclick="unselect_other_tab(this.parentNode.parentNode);this.parentNode.className='tabs_selected' ;show_tabs($F('<?=$div?>tab').split(','),'<?php echo $div_tab_id; ?>');"><?php echo _($a_value['label'])?></a>
+        <?php endif; ?>
     </li>
     <?php    endforeach; ?>
 </ul>
@@ -120,7 +149,7 @@ endif;
                             // nom de la fiche
                                 $ff = new Fiche($cn);
                                 $ff->get_by_qcode($q[$e]['j_qcode']);
-                                $row.=td($ff->strAttribut(h(ATTR_DEF_NAME)));
+                                $row.=td($ff->get_attribute(h(ATTR_DEF_NAME)));
                             } else
                             {
                                 // libellé du compte
@@ -196,7 +225,7 @@ if ($aRap  != null ) {
     $amount=$array_jr[0]['jr_montant'];
     switch (substr($array_jr[0]['jr_internal'],0,1)) {
         case 'A':
-            $amount = $cn->get_value("select sum(qp_price+qp_vat-qp_vat_sided) from quant_purchase qp 
+            $amount = $cn->get_value("select sum(qp_price+qp_vat+qp_nd_tva+qp_nd_tva_recup-qp_vat_sided) from quant_purchase qp 
                                             where qp_internal=$1",
                 array($internal));
             // add additional tax if any
@@ -288,8 +317,16 @@ echo '</div>';
 ?>
 
 <?php 
-
+//------------------------------------------------
+// Receipt
+//------------------------------------------------
 require_once NOALYSS_TEMPLATE.'/ledger_detail_file.php';
+?>
+<?php
+//------------------------------------------------
+// Receipt supplemental_doc_div
+//------------------------------------------------
+require_once NOALYSS_TEMPLATE."/ledger_detail_sup_files.php";
 ?>
 
 
@@ -317,9 +354,7 @@ require_once NOALYSS_TEMPLATE.'/ledger_detail_file.php';
     </span>
 <?php endif;?>
 </div>
-
-<hr>
-<?php 
+<?php
       echo '<p style="text-align:center">';
 
 if ( $div != 'popup' ) {
@@ -408,4 +443,4 @@ echo '</form>';
 }else {
     echo '</p>';
 }
-?>
+

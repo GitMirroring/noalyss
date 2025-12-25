@@ -1,0 +1,10 @@
+{
+    "require": {
+        "horstoeko/zugferd": "^1.0",
+        "php-curl-class/php-curl-class": "^12.0",
+        "chillerlan/php-authenticator": "^5.2",
+        "endroid/qr-code": "^6.0",
+        "smalot/pdfparser": "^2.12",
+        "phpmailer/phpmailer": "^7.0"
+    }
+}

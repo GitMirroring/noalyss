@@ -1,13 +1,14 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @backupGlobals enabled
  * @coversDefaultClass Acc_Ledger_Purchase
  * @covers Fiche
  * 
  */
+#[\AllowDynamicProperties]
 class Acc_Ledger_PurchaseTest extends TestCase
 {
 
@@ -15,7 +16,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
      * @var Acc_Ledger_Purchase
      */
     protected $object;
-
+    private $array1;
     /**
      * @var array transmitted by _POST
      */
@@ -167,6 +168,10 @@ class Acc_Ledger_PurchaseTest extends TestCase
         $fiche_def=new Fiche_Def($g_connection,5);
         // prepare test , clean 
         $fiche_def->RemoveAttribut([20,21,22,50,51,52,53,31]);
+        $g_connection->exec_sql("delete from jrnx where j_poste=$1",
+                ['4119999']);
+        $g_connection->exec_sql("delete from tmp_pcmn where pcm_val=$1",
+                ['4119999']);
     }
     /**
      * @covers Acc_Ledger_Purchase::verify
@@ -430,7 +435,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
               // check that all card has these attributes
        
     }
-    public function data_no_deductible()
+    public static function data_no_deductible()
     {
         $aValue=array(
             [ ATTR_DEF_DEPENSE_NON_DEDUCTIBLE, 33.33 ,'qp_nd_amount',201.28,ATTR_DEF_ACCOUNT_ND_PERSO,'4890'],
@@ -453,6 +458,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
      * @parameter $p_amount float the corresponding column in quant_purchase
      * @parameter $p_accounting string is the accounting counterpart for this not deductible fee($p_counterpart)
  */
+     #[DataProvider('data_no_deductible')]
     public function testInsertPurchase_No_Ded($p_attribut , $p_value,$p_column,$p_amount,$p_counterpart,$p_accounting)
     {
        global $g_connection;
@@ -461,8 +467,8 @@ class Acc_Ledger_PurchaseTest extends TestCase
         //-- modify card 29 : ELECTR
         $fiche=new Fiche($g_connection,29);
         $fiche->set_f_enable("1");
-        $fiche->setAttribut($p_attribut,$p_value);
-        $fiche->setAttribut($p_counterpart,$p_accounting);
+        $fiche->set_attribute($p_attribut,$p_value);
+        $fiche->set_attribute($p_counterpart,$p_accounting);
         $a_attribut=$fiche->to_array();
         $this->assertEquals($a_attribut['av_text'.$p_attribut],$p_value,"Attribut $p_attribut not set to $p_value%");
         
@@ -506,6 +512,7 @@ class Acc_Ledger_PurchaseTest extends TestCase
      * @parameter $p_amount float the corresponding column in quant_purchase
      * @parameter $p_accounting string is the accounting counterpart for this not deductible fee($p_counterpart)
      */
+     #[DataProvider('data_no_deductible')]
     public function testInsertPurchase_No_Ded_reverse($p_attribut , $p_value,$p_column,$p_amount,$p_counterpart,$p_accounting)
     {
         global $g_connection;
@@ -516,8 +523,8 @@ class Acc_Ledger_PurchaseTest extends TestCase
         //-- modify card 29 : ELECTR
         $fiche=new Fiche($g_connection,29);
         $fiche->set_f_enable("1");
-        $fiche->setAttribut($p_attribut,$p_value);
-        $fiche->setAttribut($p_counterpart,$p_accounting);
+        $fiche->set_attribute($p_attribut,$p_value);
+        $fiche->set_attribute($p_counterpart,$p_accounting);
         $a_attribut=$fiche->to_array();
         $this->assertEquals($a_attribut['av_text'.$p_attribut],$p_value,"Attribut $p_attribut not set to $p_value%");
 

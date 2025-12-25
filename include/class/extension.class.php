@@ -32,13 +32,6 @@
  *
  * Data member
  * - $cn database connection
- * - $variable :
- *    -  id (extension.ex_id)
- *    -  name (extension.ex_name)
- *    - plugin_code (extension.ex_code)
- *    - desc (extension.ex_desc)
- *    - enable (extension.ex_enable)
- *    - filepath (extension.ex_file)
  */
 require_once NOALYSS_INCLUDE.'/database/menu_ref_sql.class.php';
 require_once NOALYSS_INCLUDE.'/database/profile_sql.class.php';
@@ -60,7 +53,7 @@ class Extension extends Menu_Ref_sql
     var $noalyss_version; //!< minimum version of NOALYSS for this plugin
     var $order ; //!< $order in the menu (can be override by config menu)
     var $depend; //!< default depending menu (can be override by config menu)
-
+    var $schema; //!< default database schema to store data for the plugin
     public function verify()
     {
         // Verify that the elt we want to add is correct
@@ -407,6 +400,8 @@ class Extension extends Menu_Ref_sql
             $extension->order=(isset($xml->plugin[$i]->order))?trim($xml->plugin[$i]->order):9000;
             $extension->version=trim($xml->plugin[$i]->version);
             $extension->noalyss_version=(isset($xml->plugin[$i]->noalyss_version))?trim($xml->plugin[$i]->noalyss_version):8000;
+            $extension->schema=(isset($xml->plugin[$i]->schema))?trim($xml->plugin[$i]->schema):"public";
+            
             $a_extension[]=clone $extension;
         }
         return $a_extension;

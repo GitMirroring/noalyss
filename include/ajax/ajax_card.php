@@ -311,7 +311,7 @@ case 'st':
         $r.=_("Choisissez la catégorie de fiche à laquelle vous aimeriez ajouter une fiche").'</p>';
         if ( ! isset($eltid)) $eltid="";
         $msg=_('Choisissez une catégorie svp');
-        $r.='<span id="error_cat" class="notice"></span>';
+        $r.='<span id="error_cat" style="display:none" class="notice"></span>';
         $r.=dossier::hidden();
         $r.=(isset($ref))?HtmlInput::hidden('ref',1):'';
         $r.=_('Cherche').' '.HtmlInput::filter_table("cat_card_table", '0,1', 0);
@@ -481,7 +481,7 @@ case 'fs':
     if ( strpos($sql," in ()") != 0)
     {
             $html="";
-             $html.=HtmlInput::title_box(_('Recherche de fiche'), 'search_card');
+             $html.=HtmlInput::title_box(_('Recherche de fiches'), 'search_card');
              $html.='<h3 class="notice">';
              $html.=_("Aucune catégorie de fiche ne correspond à".
             " votre demande, le journal pourrait n'avoir accès à aucune fiche");
@@ -516,6 +516,9 @@ case 'fs':
                                          $inp,$array[$i]['quick_code']);
         $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
                        $label,j(noalyss_strip_tags($aFound[$i]['vw_name'])));
+        
+         // var $rownb (int) number of the row
+        $rownb=preg_replace('/[^0-9]/','',$label);
 
 
         /* if it is a ledger of sales we use vw_buy
@@ -536,13 +539,25 @@ case 'fs':
          $array[$i]['javascript'].=sprintf("set_value('%s','%s');",
              $tvaid,$tva_code);
          $array[$i]['javascript'].="removeDiv('search_card');";
-
+         $array[$i]['javascript'].=(empty($tva_code))?"":"compute_ledger($rownb);";
     }//foreach
 
     ob_start();
     require_once NOALYSS_TEMPLATE.'/card_result.php';
     $r.=ob_get_contents();
+    $r.='<ul class="aligned-block ">';
+    $r.='<li>';
     $r.=HtmlInput::button_close("search_card");
+    $r.='</li>';
+    if  ($g_user->check_action(FICADD)==1)
+    {
+        $r.='<li>';
+        $create_card_js='onclick="select_card_type({});"';
+        $r.=HtmlInput::button_anchor(_("Créer fiche"),"javascript:void(0)","",$create_card_js,'smallbutton');
+        $r.='</li>';
+    }
+    $r.='</ul>';
+    
     ob_end_clean();
     $ctl=$ctl.'_content';
     $html=$r;
@@ -634,9 +649,9 @@ case 'scc':
     {
         
         $html="";
-        $nom_mod=$http->get("nom_mod");
-        $class_base=$http->get("class_base");
-        $fd_description=$http->get("nom_mod");
+        $nom_mod=$http->post("nom_mod");
+        $class_base=$http->post("class_base");
+        $fd_description=$http->post("fd_description","string","");
         if ( noalyss_strlentrim($nom_mod) != 0 )
         {
             $array=array("FICHE_REF"=>$cat,
@@ -644,7 +659,7 @@ case 'scc':
                          "class_base"=>$class_base,
                           "fd_description"=>$fd_description);
             
-            if ( isset ($_POST['create'])) $array['create']=1;
+            if ( isset ($_POST['create'])) $array['create']="on";
             
             $catcard=new Fiche_Def($cn);
             
@@ -661,7 +676,15 @@ case 'scc':
             }
             else{
                 $script="alert_box('"._('Catégorie sauvée')."');removeDiv('$ctl')";
-            }
+                // add code to update the SELECT in include/template/category_of_card.php
+                $catcard->get();
+               
+                $extra = '<code2>'.
+                        '<id>'.$catcard->id.'</id>'.
+                        '<name>'. escape_xml($catcard->label).'</name>'.
+                        '</code2>';
+                
+            }   
                 
             $html.=create_script($script);
         }

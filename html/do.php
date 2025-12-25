@@ -41,7 +41,7 @@ mb_internal_encoding("UTF-8");
 // if gDossier is not set redirect to form to choose a folder
 if ( ! isset($_REQUEST['gDossier']))
 {
-    redirect('user_login.php');
+    redirect_header('user_login.php');
     exit();
 }
 if ( ! isset ($_SESSION[SESSION_KEY.'g_user']))
@@ -59,11 +59,10 @@ global $g_user, $cn,$g_parameter,$http;
 $g_user = new Noalyss_user($cn);
 $http=new HttpInput();
 
-IDate::set_firstDate($g_user->get_first_week_day());
 ITva_Popup::set_vat_code($g_user->get_vat_code_preference());
 
-// check that the current user is saved into PostgreSQL setting in order to use it in PLPGSQL
-\Noalyss\Dbg::echo_var(1,sprintf("current user is [%s]",$cn->get_value("select current_setting('noalyss.user_login')")));
+IDate::set_firstDate($g_user->get_first_week_day());
+ITva_Popup::set_vat_code($g_user->get_vat_code_preference());
 
 /*
  * check that the database is not empty
@@ -85,6 +84,10 @@ if ($g_user->get_access_mode()=='MOBILE') { require NOALYSS_HOME."/mobile.php"; 
 $style_user=$http->post("style_user","string",$_SESSION[SESSION_KEY.'g_theme']);
 
 html_page_start($style_user);
+
+// check that the current user is saved into PostgreSQL setting in order to use it in PLPGSQL
+\Noalyss\Dbg::echo_var(1,sprintf("current user is [%s]",$cn->get_value("select current_setting('noalyss.user_login')")));
+
 if ( DEBUGNOALYSS > 1 ) {
     /**
      * Debug Design
@@ -96,6 +99,13 @@ if ( DEBUGNOALYSS > 1 ) {
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 
 $g_user->Check();
+if ( ! $g_user->is_double_identified()) {
+     echo "<h2>"._('Vous  êtes déconnecté')."</h2>";
+    $backurl=$_SERVER['REQUEST_URI'];
+    $url="index.php?".http_build_query(array('reconnect'=>1,'backurl'=>urlencode($backurl)));
+    redirect($url);
+    exit();
+}
 $g_user->check_dossier(Dossier::id());
 load_all_script();
 /*  Check Browser version if < IE6 then unsupported */
@@ -271,7 +281,8 @@ if (isset($_REQUEST['ac']))
         // Show module and highligt selected one
         show_module($module_id);
         
-        
+        global $level;
+        $level = 0;
         show_menu( $amenu_id[0]['pm_id_v3']);
 
         show_menu( $amenu_id[0]['pm_id_v2']);

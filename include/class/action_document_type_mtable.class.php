@@ -229,7 +229,7 @@ class Action_Document_Type_MTable extends Manage_Table_SQL
             $cn->rollback();
                     
             echo $exc->getMessage();
-            error_log($exc->getTraceAsString());
+            record_log($exc);
         }
         
     }

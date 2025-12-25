@@ -584,7 +584,7 @@ EOF;
     /**
      * @brief Display each row for the global
      * @param $obj Parm_Periode_SQL
-     * @param $p_nb not used so far
+     * @param $p_nb used to highlight odd rows
      * @param $p_js javascript variable
      */
     static function display_row_global(Parm_Periode_SQL $obj, $p_nb, $p_js)

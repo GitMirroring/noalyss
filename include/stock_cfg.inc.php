@@ -69,8 +69,7 @@ $tb->add(_("Téléphone"), $p_url, " order by r_phone asc", "order by r_phone de
 
 $sql="select * from stock_repository ";
 
-$ord=(isset($_GET['ord']))?$_GET['ord']:"ona";
-
+$ord=$http->get("ord","string","ona");
 $order=$tb->get_sql_order($ord);
 
 $array=$cn->get_array($sql." ".$order);
@@ -114,52 +113,44 @@ $array=$cn->get_array($sql." ".$order);
 <?php endfor;?>
 </table>
 	<?php echo HtmlInput::button("show_add_depot_d", _("Ajout d'un dépot"), "onclick=\"$('add_depot_d').show();\"");?>
-	<div id="add_depot_d" class="inner_box" style="display:none">
+	<div id="add_depot_d" class="inner_box2" style="display:none">
 	<?php echo HtmlInput::title_box(_("Ajouter un dépôt"),"add_depot_d","hide")?>
 	<form method="post">
-		<table>
-			<tr>
-				<td>
-					Nom
-				</td>
-				<td>
-					<?php $name=new IText("r_name",""); echo $name->input();?>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Adresse
-				</td>
-				<td>
-					<?php $name=new IText("r_adress",""); echo $name->input();?>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Ville
-				</td>
-				<td>
-					<?php $name=new IText("r_city",""); echo $name->input();?>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Pays
-				</td>
-				<td>
-					<?php $name=new IText("r_country",""); echo $name->input();?>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Téléphone
-				</td>
-				<td>
-					<?php $name=new IText("r_phone",""); echo $name->input();?>
-				</td>
-			</tr>
+            <div style="display:flex;flex-direction: column;padding:2ch;">
+                <div>
+                    Nom
+                </div>
+                <div>
+                    <?php $name=new IText("r_name","");$name->css_size="80%"; echo $name->input();?>
+                </div>
+                <div>
+                    Adresse
+                </div>
+                <div>
+                <?php $name=new IText("r_adress",""); $name->css_size="80%";echo $name->input();?>
 
-		</table>
+                </div>
+                <div>
+                    Ville
+                </div>
+                <div>
+                    <?php $name=new IText("r_city","");$name->css_size="80%"; echo $name->input();?>
+                </div>
+                <div>
+                    Pays
+                </div>
+                <div>
+                    <?php $name=new IText("r_country",""); $name->css_size="80%";echo $name->input();?>
+                </div>
+                <div>
+                    Téléphone
+                </div>
+                <div>
+                    <?php $name=new IText("r_phone","");$name->css_size="80%"; echo $name->input();?>
+                </div>
+               
+            </div>
+		
 		<?php echo HtmlInput::submit("add_stock",_("Sauver"))?>
 	</form>
 	</div>

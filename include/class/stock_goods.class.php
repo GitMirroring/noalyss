@@ -150,7 +150,7 @@ class Stock_Goods extends Stock_Goods_Sql
 					/*
                                          * check if code stock does exist
                                          */
-                                        $count=$cn->get_value('select count(*) from fiche_detail where ad_id=$1 and ad_value=$2',
+                                        $count=$cn->get_value('select count(*) from fiche_detail where ad_id=$1 and upper(ad_value)=upper($2)',
                                                 array(ATTR_DEF_STOCK,$stock));
                                         if ( $count==0) {
                                             throw new Exception(_("Code stock inutilisé").h($stock));
@@ -193,7 +193,7 @@ class Stock_Goods extends Stock_Goods_Sql
             // Retrieve the good account for stock
             $code = new Fiche($p_cn);
             $code->get_by_qcode($goods);
-            $code_marchandise = $code->strAttribut(ATTR_DEF_STOCK);
+            $code_marchandise = $code->get_attribute(ATTR_DEF_STOCK);
             if ($code_marchandise == NOTFOUND || $code_marchandise=='')
                 return false;
 

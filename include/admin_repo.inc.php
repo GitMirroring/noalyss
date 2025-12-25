@@ -35,7 +35,13 @@ $action = $http->request("action","string", "");
 $rep=new Database();
 $User=new Noalyss_user($rep);
 $User->Check();
-
+$audit=true;
+/**
+ * check if 2FA is completed
+ */
+if ( ! $User->is_double_identified()) {
+   exit();
+}
 $audit=true;
 
 if ($User->admin != 1)

@@ -294,7 +294,7 @@ VALUES(1, 'ACTIVITE', 'Activité commerciale Alchimerys sprl');
     public function testbuild_query()
     {
         $str=$this->object->build_query();
-        $expected=" select po_id,po_name,pa_id,po_amount,po_description,ga_id,po_state from public.poste_analytique where po_id = $1";
+        $expected=" select po_id,po_name,pa_id,po_amount,po_description,ga_id,po_state from public.poste_analytique";
         $this->assertEquals($str,$expected);
     }
 

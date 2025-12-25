@@ -17,7 +17,10 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
-
+/**
+ * @file
+ * @brief Export Main Ledger in CSV
+ */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');
 header('Pragma: public');
 header('Content-type: application/csv');

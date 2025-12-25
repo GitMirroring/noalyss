@@ -53,6 +53,12 @@ include_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 global $g_user;
 $g_user=new Noalyss_user($cn);
 $g_user->Check();
+/**
+ * check if 2FA is completed
+ */
+if ( ! $g_user->is_double_identified()) {
+   exit();
+}
 $act=$g_user->check_dossier($gDossier);
 // AC CODE = SEARCH
 if ($act =='P')

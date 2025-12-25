@@ -21,7 +21,7 @@
 // Copyright Author Dany De Bontridder danydb@noalyss.eu
 /**
  * @file
- * @brief
+ * @brief export in CSV P0TVA , Tax Summary 
  *
  */
 if ( ! defined ('ALLOWED') ) die('Appel direct ne sont pas permis');

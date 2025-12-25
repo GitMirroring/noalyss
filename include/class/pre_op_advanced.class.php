@@ -228,7 +228,7 @@ class Pre_Op_Advanced extends Pre_operation_detail
                 {
                         $Fiche = new Fiche($legder->db);
                         $Fiche->get_by_qcode($quick_code->value);
-                        $label = $Fiche->strAttribut(ATTR_DEF_NAME);
+                        $label = $Fiche->get_attribute(ATTR_DEF_NAME);
                 }
 
 

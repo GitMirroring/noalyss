@@ -34,7 +34,7 @@ require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 class Acc_Ledger_Fin extends Acc_Ledger
 {
-
+    public $bank_id; //! bank_id (int) FICHE.F_ID for bank
     function __construct($p_cn, $p_init)
     {
         parent::__construct($p_cn, $p_init);
@@ -73,7 +73,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
             throw new Exception("Ce journal n'a pas de compte en banque, allez dans paramètre->journal pour régler cela");
         /* check if the accounting of the bank is correct */
         $fBank=new Fiche($this->db, $bank_id);
-        $bank_accounting=$fBank->strAttribut(ATTR_DEF_ACCOUNT);
+        $bank_accounting=$fBank->get_attribute(ATTR_DEF_ACCOUNT);
         if (trim($bank_accounting)=='')
             throw new Exception('Le poste comptable du compte en banque de ce journal est invalide');
 
@@ -149,7 +149,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
             if ($fiche->empty_attribute(ATTR_DEF_ACCOUNT)==true)
                 throw new Exception('La fiche '.${'e_other'.$i}.'n\'a pas de poste comptable', 8);
 
-            $sposte=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+            $sposte=$fiche->get_attribute(ATTR_DEF_ACCOUNT);
             // if 2 accounts, take only the debit one for customer
             if (strpos($sposte, ',')!=0)
             {
@@ -520,7 +520,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
         $filter_year="  j_tech_per in (select p_id from parm_periode where  p_exercice='".$exercice."')";
 
-        $acc_account=new Acc_Account_Ledger($this->db, $fBank->strAttribut(ATTR_DEF_ACCOUNT));
+        $acc_account=new Acc_Account_Ledger($this->db, $fBank->get_attribute(ATTR_DEF_ACCOUNT));
         $asolde=$acc_account->get_solde_detail($filter_year);
         $deb=$asolde['debit'];
         $cred=$asolde['credit'];
@@ -596,7 +596,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
             $fTiers=new Fiche($this->db);
             $fTiers->get_by_qcode($tiers);
 
-            $tiers_label=$fTiers->strAttribut(ATTR_DEF_NAME);
+            $tiers_label=$fTiers->get_attribute(ATTR_DEF_NAME);
 
             $r.="<TR>";
             if ($chdate==2)
@@ -604,7 +604,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
             $r.="<td>".${'e_other'.$i}."</TD>";
             // label
             $r.='<TD style="width:25%;border-bottom:1px dotted grey;">';
-            $r.=$fTiers->strAttribut(ATTR_DEF_NAME);
+            $r.=$fTiers->get_attribute(ATTR_DEF_NAME);
             $r.='</td>';
             // Comment
             $r.='<td style="width:40%">'.$tiers_comment.'</td>';
@@ -624,7 +624,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
             }
             $r.='</td>';
             // encode the pa
-            if ($g_parameter->MY_ANALYTIC!='nu'&&$g_parameter->match_analytic($fTiers->strAttribut(ATTR_DEF_ACCOUNT))==1) // use of AA
+            if ($g_parameter->MY_ANALYTIC!='nu'&&$g_parameter->match_analytic($fTiers->get_attribute(ATTR_DEF_ACCOUNT))==1) // use of AA
             {
                 // show form
                 $anc_op=new Anc_Operation($this->db);
@@ -701,8 +701,11 @@ class Acc_Ledger_Fin extends Acc_Ledger
         // check for upload piece
         $file=new IFile();
         $file->setAlertOnSize(true);
-        $r.="<br>"._("Ajoutez une pièce justificative")." ";
+        $r.="<p class=\"decale\">"._("Ajoutez une pièce justificative")." ";
         $r.=$file->input("pj", "");
+        $r.='</p>';
+        
+        $r.=$this->input_supplemental_document();
 
         $r.='</div>';
         //--------------------------------------------------
@@ -759,10 +762,10 @@ class Acc_Ledger_Fin extends Acc_Ledger
         // Debit = banque
         $bank_id=$this->get_bank();
         $fBank=new Fiche($this->db, $bank_id);
-        $e_bank_account=$fBank->strAttribut(ATTR_DEF_QUICKCODE);
+        $e_bank_account=$fBank->get_attribute(ATTR_DEF_QUICKCODE);
         // Get the saldo
         $pPeriode=new Periode($this->db);
-        $sposte=$fBank->strAttribut(ATTR_DEF_ACCOUNT);
+        $sposte=$fBank->get_attribute(ATTR_DEF_ACCOUNT);
         // if 2 accounts, take only the debit one for customer
         if (strpos($sposte, ',')!=0)
         {
@@ -869,7 +872,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
                 $acc_operation=new Acc_Operation($this->db);
                 $acc_operation->date=$e_date;
-                $sposte=$fPoste->strAttribut(ATTR_DEF_ACCOUNT);
+                $sposte=$fPoste->get_attribute(ATTR_DEF_ACCOUNT);
                 // if 2 accounts
                 if (strpos($sposte, ',')!=0)
                 {
@@ -912,7 +915,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
 
                 $acc_operation=new Acc_Operation($this->db);
                 $acc_operation->date=$e_date;
-                $sposte=$fBank->strAttribut(ATTR_DEF_ACCOUNT);
+                $sposte=$fBank->get_attribute(ATTR_DEF_ACCOUNT);
 
                 // if 2 accounts, use the first one if DEB otherwise the second one
                 if (strpos($sposte, ',')!=0)
@@ -948,8 +951,8 @@ class Acc_Ledger_Fin extends Acc_Ledger
                 if (sql_string(${"e_other$i"."_comment"})==null)
                 {
                     // if comment is blank set a default one
-                    $comment=sprintf(_("  compte : %s a %s "), $fBank->strAttribut(ATTR_DEF_NAME),
-                            $fPoste->strAttribut(ATTR_DEF_NAME)
+                    $comment=sprintf(_("  compte : %s a %s "), $fBank->get_attribute(ATTR_DEF_NAME),
+                            $fPoste->get_attribute(ATTR_DEF_NAME)
                     );
                 }
                 else
@@ -983,6 +986,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                     throw new Exception (_("Erreur de balance"),EXC_BALANCE);
 
                 // 	  $acc_operation->update_receipt();
+                $this->jr_id=&$jr_id;
                 $this->db->exec_sql('update jrn set jr_pj_number=$1 where jr_id=$2', array($acc_operation->pj, $jr_id));
                 $internal=$this->compute_internal_code($seq);
 
@@ -1040,7 +1044,7 @@ class Acc_Ledger_Fin extends Acc_Ledger
                 }
 
                 // Set Internal code
-                $this->grpt_id=$seq;
+                $this->jr_grpt_id=$seq;
                 /**
                  * save also into quant_fin
                  */
@@ -1067,28 +1071,26 @@ class Acc_Ledger_Fin extends Acc_Ledger
                 $row=td($e_date)
                         .td($js_detail)
                         .td(${"e_other$i"})
-                        .td($fPoste->strAttribut(ATTR_DEF_NAME))
+                        .td($fPoste->get_attribute(ATTR_DEF_NAME))
                         .td(${"e_other".$i."_comment"})
                         .td(nbm(${"e_other$i"."_amount"}), 'class="num"');
                 $class=($i%2==0)?' class="even" ':' class="odd" ';
                 $ret.=tr($row, $class);
 
-                if ($i==0)
+                if ($i==0 && isset($_FILES['pj']) )
                 {
                     // first record we upload the files and
                     // keep variable to update other row of jrn
-                    if (isset($_FILES['pj']))
-                        $oid=$this->db->save_receipt($seq);
+                        $acc_document=new Acc_Document($this->db,$jr_id);
+                        $oid=$acc_document->save_receipt();
                 }
-                else
+                elseif ($oid != 0 )
                 {
-                    if ($oid!=0)
-                    {
-                        $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
-                                            jr_pj_type=$3  where jr_grpt_id=$4",
-                                array($oid, $_FILES['pj']['name'], $_FILES['pj']['type'], $seq));
-                    }
+                    $this->db->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
+                                        jr_pj_type=$3  where jr_grpt_id=$4",
+                            array($oid, $_FILES['pj']['name'], $_FILES['pj']['type'], $seq));
                 }
+                $this->upload_supplemental_document($jr_id);
             } // for nbitem
             // increment pj
             if (noalyss_strlentrim($e_pj)!=0)
@@ -1132,9 +1134,9 @@ class Acc_Ledger_Fin extends Acc_Ledger
     {
         $this->bank_id=$this->db->get_value('select jrn_def_bank from jrn_def where jrn_def_id=$1', array($this->id));
         $fBank=new Fiche($this->db, $this->bank_id);
-        $e_bank_account=" : ".$fBank->strAttribut(ATTR_DEF_BQ_NO);
-        $e_bank_name=" : ".$fBank->strAttribut(ATTR_DEF_NAME);
-        $e_bank_qcode=": ".$fBank->strAttribut(ATTR_DEF_QUICKCODE);
+        $e_bank_account=" : ".$fBank->get_attribute(ATTR_DEF_BQ_NO);
+        $e_bank_name=" : ".$fBank->get_attribute(ATTR_DEF_NAME);
+        $e_bank_qcode=": ".$fBank->get_attribute(ATTR_DEF_QUICKCODE);
         return $e_bank_qcode.$e_bank_name.$e_bank_account;
     }
 

@@ -40,13 +40,14 @@ if ( isset ($_POST["ADD"]) )
     $new_user=new Noalyss_user($cn,0);
     $new_user->first_name=$http->post('FNAME');
     $new_user->last_name=$http->post('LNAME');
+    $new_user->setAdmin(0);
     $login=$http->post('LOGIN');
     $login=str_replace("'","",$login);
     $login=str_replace('"',"",$login);
     $login=str_replace(" ","",$login);
     $login=strtolower($login);
     $new_user->login=$login;
-
+    //$new_user->auth_method=
     $new_user->email=$http->post('EMAIL',"string",'');
     if ( trim($login)=="" || strlen($login)<5)
     {
@@ -104,6 +105,7 @@ if ($sbaction == "save")
         $UserChange->active = $http->post('Actif');
         $UserChange->admin = $http->post('Admin');
         $UserChange->email = $http->post('email');
+        $UserChange->authent_method = $http->post('auth_method',"number");
         if ($UserChange->active ==-1 || $UserChange->admin ==-1)
         {
             die ('Missing data');
@@ -118,15 +120,36 @@ if ($sbaction == "save")
                     $msg.="$result <br/>";
                 }
             alert($msg);
+             require_once NOALYSS_INCLUDE.'/user_detail.inc.php';
+            return;
             } else {
                 $UserChange->setPassword(md5($_POST['password']));
-                $UserChange->save();
+
             }
         }
-        else
-	{
-            $UserChange->save();
-	}
+        // if request new secret for OTP
+        if ( $http->post("generate_otp","number",0)==1){
+              
+                $UserChange->generate_otp();
+        }
+       
+        // save user change
+        $UserChange->save();
+        if ( $UserChange->authent_method !=0 && filter_var($UserChange->email, FILTER_VALIDATE_EMAIL) === false ) {
+          echo_warning(_("Email invalide"));
+          require_once NOALYSS_INCLUDE.'/user_detail.inc.php';
+          return;
+        }
+        // send a email with link if authen_method !=0  (freeOTP)
+        if ( $UserChange->authent_method !=0
+                && filter_var($UserChange->email, FILTER_VALIDATE_EMAIL) == true
+                && $http->post('email_otp','number',0) == 1
+                ) {
+            // delete previous send for this user
+            $cn->exec_sql('delete from otp_send_secret where use_id=$1',[$UserChange->getId()]);
+            // send a email with a link to the qcode
+           $UserChange->send_link_otp();
+        }
 
     }
 }
@@ -149,6 +172,12 @@ else if ($sbaction == "delete")
     }
     if ( $code != $ctl_code) {
         echo_warning (_("Code invalide, effacement refusé"));
+        require_once NOALYSS_INCLUDE.'/user_detail.inc.php';
+        return;
+    }
+    if ($uid == 1) {
+        echo_warning(_("Administrateur ne peut pas être effacé"));
+         require_once NOALYSS_INCLUDE.'/user_detail.inc.php';
         return;
     }
     $cn = new Database();
@@ -178,16 +207,16 @@ if ( isset($_REQUEST['det']) && $sbaction=="")
     return;
 }
 ?>
-
-<div id="create_user" style="display:none;width:30%;margin-right: 20%" class="inner_box">
+   <span  id="info_passid"></span>
+<div id="create_user" style="display:none;margin-right: 20%;position:float;" class="inner_box2">
 <?php echo HtmlInput::title_box(_('Ajout Utilisateur'),"create_user","hide");?>
     <form action="admin-noalyss.php?action=user_mgt" method="POST" onsubmit="return check_form()">
     <div style="text-align: center">
-        <span style="position:absolute;font-size:75%" id="info_passid"></span>
+     
 <TABLE class="result" >            
-       <TR><TD style="text-align: right"> <?php echo _('login')?></TD><TD><INPUT id="input_login" class="input_text"  TYPE="TEXT" NAME="LOGIN"></TD></tr>
-        <TR><TD style="text-align: right"> <?php echo _('Prénom')?></TD><TD><INPUT class="input_text" TYPE="TEXT" NAME="FNAME"></TD></tr>
-       <TR><TD style="text-align: right"> <?php echo _('Nom')?></TD><TD><INPUT class="input_text"  TYPE="TEXT" NAME="LNAME"></TD></TR>
+       <TR><TD style="text-align: right"> <?php echo _('login')?></TD><TD><INPUT id="input_login" class="input_text"  TYPE="TEXT" NAME="LOGIN" autocomplete=“off”  required></TD></tr>
+        <TR><TD style="text-align: right"> <?php echo _('Prénom')?></TD><TD><INPUT class="input_text" TYPE="TEXT" NAME="FNAME"  autocomplete=“off”></TD></tr>
+       <TR><TD style="text-align: right"> <?php echo _('Nom')?></TD><TD><INPUT class="input_text"  TYPE="TEXT" NAME="LNAME"  autocomplete=“off” required></TD></TR>
        <TR>
            <TD style="text-align: right"> <?php echo _('Mot de passe')?>
            <?=\Icon_Action::tips("Mot de passe : longueur minimale = 8  dont au moins 1 majuscule, 1 minuscule,1 chiffre et 1 car.spécial")?>
@@ -195,10 +224,16 @@ if ( isset($_REQUEST['det']) && $sbaction=="")
            </TD>
            <TD> <INPUT id="input_password" class="input_text" TYPE="TEXT" NAME="PASS"
                 onkeyup="check_password_strength('input_password','info_passid',true)"
+                autocomplete=“off”
+                required
                >
 
            </TD></TR>
        <TR><TD style="text-align: right"> <?php echo _('Email')?></TD><TD> <INPUT class="input_text" TYPE="TEXT" NAME="EMAIL"></TD></TR>
+       <tr>
+           <td></td>
+           <td></td>
+       <tr>
 </TABLE>
 
 <?php
@@ -230,7 +265,7 @@ echo HtmlInput::button_action(_("Fermer"), "$('create_user').style.display='none
 
     </script>
 </div>
-
+<div>
 <?php
 echo '<p>';
 echo HtmlInput::button_action(_("Ajout utilisateur"), "$('create_user').show();","cu");
@@ -246,15 +281,15 @@ $repo=new Dossier(0);
 $compteur=0;
 $header=new Sort_Table();
 $url=basename($_SERVER['PHP_SELF'])."?action=".$_REQUEST['action'];
-$header->add(_("Login"), $url," order by use_login asc", "order by use_login desc","la", "ld");
-$header->add(_("Nom"), $url," order by use_name asc,use_first_name asc", "order by use_name desc,use_first_name desc","na", "nd");
-$header->add(_('Dossier'),$url,' order by ag_dossier asc','order by ag_dossier desc',
+$header->add(_("Login"), $url," order by use_login asc", "order by use_login desc","la", "ld"); // 0
+$header->add(_("Nom"), $url," order by use_name asc,use_first_name asc", "order by use_name desc,use_first_name desc","na", "nd"); // 1
+$header->add(_("Authentification"), $url," order by use_auth_method asc,use_login asc", "order by use_auth_method desc ,use_login  asc","auth", "nauth"); // 2
+$header->add(_('Dossier'),$url,' order by ag_dossier asc','order by ag_dossier desc', //3
         'da','dd');
-$header->add(_("Actif"), $url," order by use_active asc", "order by  use_active desc","aa", "ad");
-$header->add(_("Email"), $url," order by use_email asc,use_name asc,use_first_name asc", "order by use_email desc,use_name desc,use_first_name desc","na", "nd");
-$ord=(isset($_REQUEST['ord']))?$_REQUEST['ord']:'la';
+$header->add(_("Actif"), $url," order by use_active asc", "order by  use_active desc","aa", "ad"); // 4
+$header->add(_("Email"), $url," order by use_email asc,use_name asc,use_first_name asc", "order by use_email desc,use_name desc,use_first_name desc","na", "nd"); //5
+$ord=$http->request("ord","string","la");
 $sql=$header->get_sql_order($ord);
-
 $a_user=$repo->get_user_folder($sql);
 
 if ( !empty ($a_user) )
@@ -268,12 +303,14 @@ if ( !empty ($a_user) )
     echo '<th>'.$header->get_header(0).'</th>';
     echo '<th>'.$header->get_header(1).'</th>';
     echo th(_("Prénom"));
-    echo '<th>'.$header->get_header(4).'</th>';
-    echo '<th>'.$header->get_header(3).'</th>';
-	echo "<th>"._('Type')."</th>";
+    echo '<th>'.$header->get_header(5).'</th>';
     echo '<th>'.$header->get_header(2).'</th>';
+    echo '<th>'.$header->get_header(4).'</th>';
+	echo "<th>"._('Type')."</th>";
+    echo '<th>'.$header->get_header(3).'</th>';
     echo '</tr>';
-
+    $a_auth=[0=>_("Mot de passe"),1=>'Email et OTP',2=>'OTP'];
+    
     foreach ( $a_user as $r_user)
     {
         $compteur++;
@@ -296,6 +333,8 @@ if ( !empty ($a_user) )
         echo td($r_user['use_name']);
         echo td($r_user['use_first_name']);
         echo td($r_user['use_email']);
+        
+        echo td($a_auth[$r_user['use_auth_method']]);
         echo td($Active);
         $type=($r_user['use_admin']==1)?_("Administrateur"):_("Utilisateur");
         echo "<td>".$type."</td>";

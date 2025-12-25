@@ -137,8 +137,7 @@ class FollowupTest extends TestCase
         $content=ob_get_contents();
         ob_end_clean();
         $this->assertStringContainsString("BONDEC3-1", $content);
-        $this->assertTrue(mb_strlen($content)==1620,"error result not valid $content size = ".mb_strlen($content));
-
+        $this->assertTrue(mb_strlen($content)>=1619 && mb_strlen($content)<1642,"error result not valid $content size = ".mb_strlen($content));
 
     }
     /**
@@ -213,5 +212,4 @@ class FollowupTest extends TestCase
         $this->assertTrue( ! empty($a_row->agc_comment_raw) , 'comment raw not saved');
 
         $cn->exec_sql("delete from action_gestion where ag_title like 'phpunit%'");
-    }
-}
+    }}

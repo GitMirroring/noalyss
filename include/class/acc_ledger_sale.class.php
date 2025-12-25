@@ -28,9 +28,87 @@ require_once NOALYSS_INCLUDE.'/lib/user_common.php';
 require_once NOALYSS_INCLUDE.'/lib/ac_common.php';
 
 /*!
- * \brief Handle the ledger of sold,
- *
- * @exception throw an exception is something is wrong
+ * @class Acc_Ledger_Sale
+ * @brief : input, confirm and save new operations in edger of sales
+ the $_POST data is an array with these keys
+ @code
+ Array
+(
+    
+// =====================
+// ANALYTIC  PART
+// =====================
+    [pa_id] => Array 
+        (
+            [0] => 1
+        )
+
+    [op] => Array
+        (
+            [0] => 0
+        )
+
+    [amount_t0] => 10
+    [hplan] => Array
+        (
+            [0] => Array
+                (
+                    [0] => -1
+                )
+
+        )
+
+    [val] => Array
+        (
+            [0] => Array
+                (
+                    [0] => 10
+                )
+
+        )
+// =====================
+// SALES DATA
+// =====================
+
+    [e_client] => QuickCode customer
+    [nb_item] => number of items (lines of invoice)
+    [p_jrn] => JRN_DEF.JRN_DEF_ID id of the ledger
+    [jrn_note_input] =>  Note JRN_NOTE.N_TEXT
+    [mt] => 1759130008.8134
+    [p_currency_rate] => Currency Rate
+    [p_currency_code] => Currency Code
+    [e_comm] => Description of invoice
+    [e_date] => date invoice
+    [e_ech] =>  limit date
+    [e_pj] => Receipt number
+    [e_pj_suggest] => suggested receipt number
+    [e_mp] => payment means (
+    [jrn_type] => Type of ledger (always VEN)
+ //---------------------------------------------
+ // For each invoice line 
+ //---------------------------------------------
+    [e_march0] => QuickCode of the item
+    [e_march0_label] => label
+    [e_march0_price] => unit price
+    [e_march0_tva_id] => VAT ID
+    [e_march0_tva_amount] => amount of VAT
+    [e_quant0] => quantity of item
+//======================== 
+// MISC
+//========================
+    [repo] => 1 (repository)
+    [gen_invoice] => on (it is asked to generate an invoice
+    [gen_doc] => Document template id
+    [bon_comm] => JRN_INFO.
+    [other_info] = JRN_INFO.> 
+    [opd_name] =>  Name of operation template
+    [od_description] => Description of operation template 
+    [reverse_date] =>  if reverse is asked
+    [ext_label] =>  Label for revese operation
+    [jr_optype] => Type of operation NOR:Normal,, EXT; reverse, ..
+)
+ @endcode   
+ 
  */
 
 class Acc_Ledger_Sale extends Acc_Ledger {
@@ -118,7 +196,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
 
         /* get the account and explode if necessary */
-        $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
+        $sposte = $fiche->get_attribute(ATTR_DEF_ACCOUNT);
         // if 2 accounts, take only the debit one for customer
         if (strpos($sposte, ',') != 0) {
             $array = explode(',', $sposte);
@@ -184,7 +262,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
             }
             // if 2 accounts, take only the credit one
             /* The account exists */
-            $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
+            $sposte = $fiche->get_attribute(ATTR_DEF_ACCOUNT);
 
             if (strpos($sposte, ',') != 0) {
                 $array = explode(',', $sposte);
@@ -275,7 +353,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $seq = $this->db->get_next_seq('s_grpt');
         $this->id = $p_jrn;
         $internal = $this->compute_internal_code($seq);
-        $this->internal = $internal;
+        $this->jr_internal = $internal;
 
         $oPeriode = new Periode($this->db);
         $check_periode = $this->check_periode();
@@ -287,7 +365,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
 
         $cust = new Fiche($this->db);
         $cust->get_by_qcode($e_client);
-        $sposte = $cust->strAttribut(ATTR_DEF_ACCOUNT);
+        $sposte = $cust->get_attribute(ATTR_DEF_ACCOUNT);
 
         // if 2 accounts, take only the debit one for the customer
         //
@@ -337,7 +415,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 $tot_amount = round($tot_amount, 2);
                 $acc_operation = new Acc_Operation($this->db);
                 $acc_operation->date = $e_date;
-                $sposte = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
+                $sposte = $fiche->get_attribute(ATTR_DEF_ACCOUNT);
 
                 // if 2 accounts, take only the credit one
                 if (strpos($sposte, ',') != 0) {
@@ -698,17 +776,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                     where j_id in (select j_id from jrnx where j_grpt=$2)'
                     , array($internal, $seq));
 
-            /* Save the attachment or generate doc */
-            if (isset($_FILES['pj'])) {
-                if (noalyss_strlentrim($_FILES['pj']['name']) != 0)
-                    $this->db->save_receipt($seq);
-                else
-                /* Generate an invoice and save it into the database */
-                if (isset($_POST['gen_invoice'])) {
-                    $file = $this->create_document($internal, $p_array);
-                    $this->doc=HtmlInput::show_receipt_document($this->jr_id,h($file));
-                }
-            }
+           
             //----------------------------------------
             // Save the payer
             //----------------------------------------
@@ -734,7 +802,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 if ( $acjrn->get_type()=='FIN') {
                     $acjrn=new Acc_Ledger_Fin($this->db, $mp->get_parameter('ledger_target'));
                     $acfiche=new Fiche($this->db,$acjrn->get_bank());
-                    $fqcode=$acfiche->strAttribut(ATTR_DEF_QUICKCODE);
+                    $fqcode=$acfiche->get_attribute(ATTR_DEF_QUICKCODE);
                 } else {
                     $fqcode = ${'e_mp_qcode_' . $e_mp};
                     $acfiche = new Fiche($this->db);
@@ -745,7 +813,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 $acc_pay = new Acc_Operation($this->db);
                 $acc_pay->date = $pay_date;
                 /* get the account and explode if necessary */
-                $sposte = $acfiche->strAttribut(ATTR_DEF_ACCOUNT);
+                $sposte = $acfiche->get_attribute(ATTR_DEF_ACCOUNT);
                 // if 2 accounts, take only the debit one for customer
                 if (strpos($sposte, ',') != 0) {
                     $array = explode(',', $sposte);
@@ -805,7 +873,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 
                 /* insert into jrn */
                 $acc_pay->mt = $mt;
-                $acjrn->grpt_id = $acseq;
+                $acjrn->jr_grpt_id = $acseq;
                 $acc_pay->desc = (!isset($e_comm_paiement) || noalyss_strlentrim($e_comm_paiement) == 0) ? $e_comm : $e_comm_paiement;
                 $mp_jr_id = $acc_pay->insert_jrn();
                 $acjrn->update_internal_code($acinternal);
@@ -892,9 +960,9 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $client->get_by_qcode($e_client, true);
 
         $client_name = $client->getName() .
-                ' ' . $client->strAttribut(ATTR_DEF_ADRESS) . ' ' .
-                $client->strAttribut(ATTR_DEF_CP) . ' ' .
-                $client->strAttribut(ATTR_DEF_CITY);
+                ' ' . $client->get_attribute(ATTR_DEF_ADRESS) . ' ' .
+                $client->get_attribute(ATTR_DEF_POSTCODE) . ' ' .
+                $client->get_attribute(ATTR_DEF_CITY);
         $lPeriode = new Periode($this->db);
         if ($this->check_periode() == true) {
             $lPeriode->p_id = $period;
@@ -906,14 +974,14 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $r .= '<div id="summary_op1" >';
         $r.='<TABLE>';
         if ( $p_summary ) {
-            $jr_id=$this->db->get_value('select jr_id from jrn where jr_internal=$1',array($this->internal));
+            $jr_id=$this->db->get_value('select jr_id from jrn where jr_internal=$1',array($this->jr_internal));
             $r.="<tr>";
             $r.='<td>';
             $r.=_('Détail opération ');
             $r.='</td>';
             $r.='<td>';
             $r.=sprintf ('<a class="line" style="display:inline" href="javascript:modifyOperation(%d,%d)">%s</a>',
-                    $jr_id,dossier::id(),$this->internal);
+                    $jr_id,dossier::id(),$this->jr_internal);
             $r.='</td>';
             $r.="</tr>";
         }
@@ -932,6 +1000,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
                 $r.='<td>' . _('Numéro Pièce') .$span.'</td><td>'. hb($this->pj) . '</td>';
             }
         }
+        $e_comm=($e_comm == "")?_('Facture')." $e_pj":$e_comm;
         $r.='</tr>';
         $r.='<tr>';
         $r.='<td> ' . _('Date') . '</td><td> ' . hb($e_date) . '</td>';
@@ -954,10 +1023,10 @@ class Acc_Ledger_Sale extends Acc_Ledger {
         $r.='</tr>';
         
         $r.='<tr>';
-        $r.='<td> ' . _('Client') . '</td><td> ' . hb($e_client . ':' . $client_name) . '</td>';
+        $r.='<td> ' . _('Client') . '</td><td> ' . HtmlInput::card_detail($e_client).":".hb( $client_name) . '</td>';
         $r.='</tr>';
         $r.='</table>';
-        $r.='<pre>'._('Note').' '.h($p_array['jrn_note_input']).'</pre>';
+        $r.='<div>'._('Note').'<div id="jrn_note_td">'.$p_array['jrn_note_input'].'</div></div>';
         $r.='</div>';
         $r.='<div style="float:none;clear:both">';
         $r.='</div>';
@@ -1004,7 +1073,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
             if ($g_parameter->MY_UPDLAB == 'Y')
                 $fiche_name = h(${"e_march" . $i . "_label"});
             else
-                $fiche_name = $fiche->strAttribut(ATTR_DEF_NAME);
+                $fiche_name = $fiche->get_attribute(ATTR_DEF_NAME);
             if ($g_parameter->MY_TVA_USE == 'Y') {
                 $idx_tva = ${"e_march" . $i . "_tva_id"};
                 $oTva =  Acc_Tva::build($this->db,$idx_tva);
@@ -1069,7 +1138,7 @@ class Acc_Ledger_Sale extends Acc_Ledger {
             }
             // encode the pa
             if ($g_parameter->MY_ANALYTIC != 'nu' 
-                    && $g_parameter->match_analytic($fiche->strAttribut(ATTR_DEF_ACCOUNT))==TRUE) { // use of AA
+                    && $g_parameter->match_analytic($fiche->get_attribute(ATTR_DEF_ACCOUNT))==TRUE) { // use of AA
                 // show form
                 $anc_op = new Anc_Operation($this->db);
                 $null = ($g_parameter->MY_ANALYTIC == 'op') ? 1 : 0;
@@ -1296,7 +1365,8 @@ EOF;
         return $r;
     }
 
-    /*!\brief the function extra info allows to
+    /*!
+     * \brief the function extra info allows to
      * - add a attachment
      * - generate an invoice
      * - insert extra info
@@ -1304,31 +1374,36 @@ EOF;
      */
 
     public function extra_info() {
-        $r = '<div id="facturation_div_id" style="height:185px;height:10rem">';
+        $r = '<div id="facturation_div_id" style="display:flex;height:185px;height:10rem">';
         // check for upload piece
         $file = new IFile();
         $file->table = 0;
         $file->setAlertOnSize(true);
         $r.='<p class="decale">';
+        
+        // add a receipt
         $r.=_("Ajoutez une pièce justificative ");
         $r.=$file->input("pj", "");
+        
+        //------------------------------------------------
+        // Propose to generate an invoice
+        //------------------------------------------------
+        $r.=_('ou générer une facture') . ' <input type="checkbox" name="gen_invoice" CHECKED>';
+        // We propose to generate  the invoice and some template
+        $doc_gen = new ISelect();
+        $doc_gen->name = "gen_doc";
+        $doc_gen->value = $this->db->make_array(
+                "select md_id,md_name " .
+                " from document_modele where md_affect='VEN' ".
+                " union select -2,'"._("Z - Facture PDF Standard")."' ".
+                " order by 2");
+        $r.=$doc_gen->input() . '<br>';
+        $r.=$this->input_supplemental_document();
 
-        if ($this->db->count_sql("select md_id,md_name from document_modele where md_affect='VEN' ") > 0) {
-
-
-            $r.=_('ou générer une facture') . ' <input type="checkbox" name="gen_invoice" CHECKED>';
-            // We propose to generate  the invoice and some template
-            $doc_gen = new ISelect();
-            $doc_gen->name = "gen_doc";
-            $doc_gen->value = $this->db->make_array(
-                    "select md_id,md_name " .
-                    " from document_modele where md_affect='VEN' order by 2");
-            $r.=$doc_gen->input() . '<br>';
-        }
         $r.='<br>';
         $obj = new IText();
-        $r.=_('Numero de bon de commande : ') . $obj->input('bon_comm') . '<br>';
-        $r.=_('Communication ou autre information  : ') . $obj->input('other_info') . '<br>';
+        $r.=_('Numero de bon de commande') . $obj->input('bon_comm') . '<br>';
+        $r.=_('Communication') . $obj->input('other_info') . '<br>';
         $r.='</p>';
         $r.='</div>';
         return $r;
@@ -1478,10 +1553,10 @@ EOF;
         if (noalyss_strlentrim($e_client) != 0) {
             $fClient = new Fiche($this->db);
             $fClient->get_by_qcode($e_client);
-            $e_client_label = $fClient->strAttribut(ATTR_DEF_NAME) . ' ' .
-                    ' Adresse : ' . $fClient->strAttribut(ATTR_DEF_ADRESS) . ' ' .
-                    $fClient->strAttribut(ATTR_DEF_CP) . ' ' .
-                    $fClient->strAttribut(ATTR_DEF_CITY) . ' ';
+            $e_client_label = $fClient->get_attribute(ATTR_DEF_NAME) . ' ' .
+                    ' Adresse : ' . $fClient->get_attribute(ATTR_DEF_ADRESS) . ' ' .
+                    $fClient->get_attribute(ATTR_DEF_POSTCODE) . ' ' .
+                    $fClient->get_attribute(ATTR_DEF_CITY) . ' ';
         }
 
         $W1 = new ICard();
@@ -1536,10 +1611,10 @@ EOF;
             if (noalyss_strlentrim($march) != 0 && noalyss_strlentrim($march_label) == 0) {
                 $fMarch = new Fiche($this->db);
                 $fMarch->get_by_qcode($march);
-                $march_label = $fMarch->strAttribut(ATTR_DEF_NAME);
+                $march_label = $fMarch->get_attribute(ATTR_DEF_NAME);
                 if ($flag_tva == 'Y') {
                     if (!(isset(${"e_march$i" . "_tva_id"})))
-                        $march_tva_id = $fMarch->strAttribut(ATTR_DEF_TVA);
+                        $march_tva_id = $fMarch->get_attribute(ATTR_DEF_TVA);
                 }
             }
             // Show input
@@ -1549,6 +1624,7 @@ EOF;
             $W1->name = "e_march" . $i;
             $W1->value = $march;
             $W1->table = 0;
+            $W1->setAfter_clean("compute_all_ledger()");
             $W1->set_attribute('typecard', 'cred');            
             $W1->set_dblclick("fill_ipopcard(this);");
             $W1->set_attribute('ipopup', 'ipopcard');
@@ -1615,6 +1691,7 @@ EOF;
                 // vat label
                 //--
                 $Tva = new ITva_Popup($this->db);
+                $Tva->id="e_march$i"."_tva_id";
                 $Tva->in_table = true;
                 $Tva->set_attribute('compute', $i);
                 $Tva->set_filter("sale");
@@ -1778,7 +1855,59 @@ EOF;
         return $array;
     }
     
-    
+    /**
+     * @brief convert an Acc_Sold to an array usable by 
+     * Acc_Document::create_document
+     * @parameters $sold (Acc_Sold) convert to convert
+     */
+    static function convert_to_array(Acc_Sold $sold)
+    {
+        //print $sold;
+        $item=count($sold->det->array);
+        if ( $item ==0)
+        {
+            throw new \Exception('No Data in Quant_sold');
+        }
+        $array=array();
+        
+        $array['e_ech']=format_date($sold->det->jr_ech);
+        $array['e_comm']=$sold->det->jr_comment;
+        $array['p_jrn']=$sold->det->jr_def_id;
+        $array['nb_item']=$item;
+        $array['ledger_type']=$sold->signature;
+        $array['e_date']=  format_date($sold->det->jr_date);
+        $array['e_pj']=  $sold->det->jr_pj_number;
+        $array['jr_date_paid']=$sold->det->jr_date_paid;
+        
+        //$this->pj=$array['e_pj'];
+        $array['internal']=$sold->det->jr_internal;
+                
+        $client=new \Fiche($sold->db,$sold->det->array[0]['qs_client']);
+        $array['e_client']=$client->get_quick_code();
+        bcscale(2);
+        for ($i=0;$i < $item ; $i++)
+        {
+            $idx='e_march';
+            $serv=new \Fiche($sold->db,$sold->det->array[$i]['qs_fiche']);
+            $array[$idx.$i]=$serv->get_quick_code();
+            $array[$idx.$i.'_label']=$sold->det->array[$i]['j_text'];
+            $array[$idx.$i.'_price']=bcdiv($sold->det->array[$i]['qs_price'],$sold->det->array[$i]['qs_quantite']);
+            $array[$idx.$i.'_tva_id']=$sold->det->array[$i]['qs_vat_code'];
+            $array[$idx.$i.'_tva_amount']=bcsub($sold->det->array[$i]['qs_vat'],$sold->det->array[$i]['qs_vat_sided']);
+            $array['e_quant'.$i]=$sold->det->array[$i]['qs_quantite'];
+        }
+        // Get OTHER_INFO and BON_COMM
+        $cn=\Dossier::connect();
+        $array['bon_comm']=$cn->get_value("select ji_value from jrn_info where jr_id=$1 and id_type = 'BON_COMMANDE' ",[$sold->det->jr_id]);
+        $array['other_info']=$cn->get_value("select ji_value from jrn_info where jr_id=$1 and id_type = 'OTHER' ",[$sold->det->jr_id]);
+        $array['jrn_note_input']=$cn->get_value("select n_text from 
+                  jrn_note where jr_id=$1 ",[$sold->det->jr_id]);
+        $array['p_currency_code']=$sold->det->currency_id;
+        $array['p_currency_rate']=$sold->det->currency_rate;
+        return $array;
+       
+        
+    }    
     
 }
 

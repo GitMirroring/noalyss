@@ -57,6 +57,8 @@ if ( $new|| $type=='FIN') :
     <?php
     $card=new ICard();
     $card->name='bank';
+    // clean only the INPUT no javascript
+    $card->setAfter_clean("");
     $card->extra=$cn->make_list('select fd_id from fiche_def where frd_id=4');
     $card->set_dblclick("fill_ipopcard(this);");
     $card->set_function('fill_data');

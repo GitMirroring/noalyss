@@ -26,6 +26,7 @@ use PHPUnit\Framework\TestCase;
  * @brief concerne print_LedgerTest
  * @coversDefaultClass Print_Ledger
  */
+#[\AllowDynamicProperties]
 class print_LedgerTest extends TestCase
 {
 
@@ -33,7 +34,7 @@ class print_LedgerTest extends TestCase
      * @var 
      */
     protected $object;
-
+    private $from,$to;
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.

@@ -32,9 +32,10 @@ try {
     $p_domid = $http->get("p_domid");
 } catch (\Exception $e) {
     echo $e->getMessage();
+    record_log($e);
     return;
 }
-$vatnr = strtoupper($vatnr);
+$vatnr = str_replace([" ",".","-"],"",strtoupper($vatnr??""));
 $country = substr($vatnr, 0, 2);
 $vatnr = preg_replace("/[[:^digit:]]/", '', $vatnr);
 $array = array(

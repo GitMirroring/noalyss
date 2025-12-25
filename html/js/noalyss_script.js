@@ -21,7 +21,8 @@
 
 /**
  *
- * javascript script, always added to every page
+ * javascript script, always added to every page, it is the first script and 
+ * should contain all the global variables
  *
  */
 var ask_reload = 0;
@@ -29,11 +30,32 @@ var ask_reload = 0;
 var tag_choose = '';
 var aDraggableElement = new Array();
 // Layer for z-index , see function get_next_layer , must be used in PHP and JS
-var layer=0;
+var global_layer=10;
 // document.viewport depends of prototype.js
 var viewport = document.viewport.getDimensions(); // Gets the viewport as an object literal
 var width = viewport.width; // Usable window width
 var height = viewport.height;
+var g_enable_tinymce=true;
+/**
+ * if browser < 2021, function window.crypto.randomUUID is not implemented
+ * so we tinyMCE cannot work
+*/
+if ( ! window.crypto.randomUUID) {
+    console.info("too old browser: implement function randomUUID")
+   window.crypto.randomUUID=function()
+   {
+       let myArray = new Uint32Array(4);
+       crypto.getRandomValues(myArray);
+       let result="";let and="";
+       for(a of myArray)
+       {
+           result+=and.a;
+           and="-";
+       }
+       return result;
+   }
+}
+
 
 /**
  * return undefined if nothing is found , otherwise return the DOM elemnt, try to find an DOM Element inside p_element
@@ -130,7 +152,7 @@ function id$(ID) {
     } else if (document.all) {
         return document.all[ID];
     } else {
-        document.debug_noalyss&&console.error(`id$ ${ID}`)
+        document.debug_noalyss&&console.error(`id$ ${ID} not found`)
         return undefined;
     }
 }
@@ -146,7 +168,7 @@ function g(ID) {
     return id$(ID);
 }
 function get_next_layer(){
-    return layer++;
+    return global_layer++;
 }
 /**
  * enable the type of periode
@@ -586,14 +608,19 @@ function popup_select_tva(obj, p_function_callback) {
         if (document.getElementById('tva_select')) {
             removeDiv('tva_select');
         }
-
-        var queryString = "gDossier=" + obj.gDossier + "&op=dsp_tva" + "&ctl=" + obj.ctl + '&popup=' + 'tva_select';
-        if (obj.jcode)
-            queryString += '&code=' + obj.jcode;
-        if (obj.compute)
-            queryString += '&compute=' + obj.compute;
-        if (obj.filter)
-            queryString += '&filter=' + obj.filter;
+        var gDossier=(obj.gDossier)?obj.gDossier:obj.getAttribute("gdossier");
+        var ctl=(obj.ctl)?obj.ctl:obj.getAttribute("ctl");
+     
+        var queryString = "gDossier=" + gDossier + "&op=dsp_tva" + "&ctl=" + ctl + '&popup=' + 'tva_select';
+        
+        var jcode=(obj.jcode)?obj.jcode:obj.getAttribute("jcode");
+        if (jcode)
+            queryString += '&code=' + jcode;
+        var compute=(obj.compute)?obj.compute:obj.getAttribute("compute");
+        if (compute)             queryString += '&compute=' + compute;
+        var filter=(obj.filter)?obj.filter:obj.getAttribute("filter");
+        
+        if (filter)            queryString += '&filter=' + filter;
 
         var action = new Ajax.Request(
             "ajax_misc.php",
@@ -618,7 +645,7 @@ function popup_select_tva(obj, p_function_callback) {
 
                         var nTop = posY - 200;
                         var nLeft = "15%";
-                        var str_style = "top:" + nTop + "px;left:" + nLeft + ";right:" + nLeft + ";width:55em;height:auto";
+                        var str_style = "top:" + nTop + "px;left:" + nLeft + ";right:" + nLeft + ";width:55em;height:auto;z-index:"+get_next_layer()+';';
 
                         var popup = {
                             'id': 'tva_select',
@@ -807,11 +834,11 @@ function waiting_box() {
     var obj = {
         id: 'wait_box', html: loading() + '<p>' + content[65] + '</p>'
     };
-    var y = fixed_position(10, 250)
-    obj.style = y + ";width:20%;margin-left:40%;";
     if (document.getElementById('wait_box')) {
         removeDiv('wait_box');
     }
+    var y = fixed_position(10, 250)
+    obj.style = y + ";width:281px;margin-left:40%;z-index:"+get_next_layer();
     waiting_node();
     add_div(obj);
 
@@ -916,7 +943,7 @@ function show_ledger_choice(json_obj) {
                         var obj = {
                             id: json_obj.div + 'jrn_search',
                             cssclass: 'inner_box',
-                            style: ';position:absolute;width:auto;z-index:20;margin-left:20%',
+                            style: ';position:absolute;width:auto;z-index:'+get_next_layer()+';margin-left:20%',
                             drag: 1
                         };
                         //var y=calcy(posY);
@@ -1112,6 +1139,8 @@ function show_calc() {
     if (document.getElementById('calc1')) {
         this.document.getElementById('inp').value = "";
         this.document.getElementById('inp').focus();
+        document.getElementById("calc1").setStyle({ 'z-index':get_next_layer()});
+    
         return;
     }
     var sid = 'calc1';
@@ -1124,8 +1153,10 @@ function show_calc() {
     shtml += '</form><span class="highligth" style="display:block" id="sub_total">  ' + content[67] + '  </span><span style="display:block"  id="listing"> </span>';
 
     var obj = {
-        id: sid, html: shtml,
-        drag: false, style: 'z-index:98'
+        id: sid,
+        html: shtml,
+        drag: false, 
+        style: 'z-index:'+get_next_layer()
     };
     add_div(obj);
     this.document.getElementById('inp').focus();
@@ -1332,7 +1363,7 @@ function search_reconcile(dossier, ctl_concern, amount_id, ledger, p_id_target, 
         removeDiv(target);
     }
     var str_style = fixed_position(77, 99);
-    str_style += ";width:92%;overflow:auto;";
+    str_style += ";width:92%;overflow:auto;z-index:"+get_next_layer();
     waiting_box();
     var hide_operation = id$(ctl_concern).getAttribute("hide_operation");
     var single_operation = id$(ctl_concern).getAttribute("single_operation");
@@ -1389,6 +1420,7 @@ function search_operation(obj) {
                 onSuccess: function (req) {
                     remove_waiting_box();
                     id$(target).innerHTML = req.responseText;
+                    id$(target).setStyle({ 'z-index':get_next_layer()});
                     req.responseText.evalScripts();
                 }
             }
@@ -1852,7 +1884,7 @@ function search_action(dossier, ctl_concern) {
 
         var target = "search_action_div";
         removeDiv(target);
-        var str_style = fixed_position(77, 99);
+        var str_style = fixed_position(77, 99)+";z-index:"+get_next_layer();
 
         var div = {id: target, cssclass: 'inner_box', style: str_style, html: loading(), drag: 1};
 
@@ -2118,7 +2150,7 @@ function check_date_id(p_id_date) {
  */
 function view_action(ag_id, dossier, modify) {
     waiting_box();
-    layer++;
+    var layer=get_next_layer();
     id = 'action' + layer;
 
     querystring = 'gDossier=' + dossier + '&op=vw_action&ag_id=' + ag_id + '&div=' + id + '&mod=' + modify;
@@ -2148,7 +2180,7 @@ function view_action(ag_id, dossier, modify) {
                     }
                     var code_html = getNodeText(html[0]);
                     code_html = unescape_xml(code_html);
-                    var pos = fixed_position(0, 50) + ";width:90%;left:5%;z-index:"+layer;
+                    var pos = fixed_position(0, 50) + ";width:90%;left:5%;z-index:"+layer+";";
                     add_div({
                         id: id,
                         cssclass: "inner_box",
@@ -2179,10 +2211,11 @@ function view_action(ag_id, dossier, modify) {
  * @param  _id : id of the table
  * @param  colnr : string containing the column number where you're searching separated by a comma
  * @param start_row : first row (1 if you have table header)
+ * @param class 2nd filter on the CSS CLASS of the row (TR), domid of the TAG containing the classname (TagName: SELECT, HIDDEN, TEXT )
  * @returns nothing
  * @see HtmlInput::filter_table
  */
-function filter_table(phrase, _id, colnr, start_row) {
+function filter_table(phrase, _id, colnr, start_row,classname) {
     id$('info_div').innerHTML = content[65];
     id$('info_div').style.display = "block";
     var words = id$(phrase).value.toLowerCase();
@@ -2197,8 +2230,14 @@ function filter_table(phrase, _id, colnr, start_row) {
     }
     var ele;
     var tot_found = 0;
-
-    for (var r = start_row; r < table.rows.length; r++) {
+    var row_class="";
+    if ( classname )     row_class=id$(classname).value;
+    
+    for (var r = start_row; r < table.rows.length; r++) 
+    {
+        if ( row_class != "" && ! table.rows[r].hasClassName(row_class)) {
+            continue;
+        }
         var found = 0;
         for (var col = 0; col < aCol.length; col++) {
             var idx = aCol[col];
@@ -2223,10 +2262,12 @@ function filter_table(phrase, _id, colnr, start_row) {
     if (tot_found == 0) {
         if (document.getElementById('info_' + _id)) {
             id$('info_' + _id).innerHTML = content[69];
+            id$('info_' + _id).style.display = 'inline-block';
         }
     } else {
         if (document.getElementById('info_' + _id)) {
             id$('info_' + _id).innerHTML = "  ";
+            id$('info_' + _id).style.display = 'none';
         }
     }
     id$('info_div').style.display = "none";
@@ -2263,7 +2304,7 @@ function filter_list(phrase, _id) {
             ele += la_content[e].innerText;
         }
 
-        console.debug(`ele = ${ele}`);
+        
         if (ele.toLowerCase().indexOf(words) >= 0) {
             tot_found++;
             l_list.childNodes[r].style.display = 'block';
@@ -2369,7 +2410,7 @@ function ask_navigator(p_dossier) {
                 onFailure: ajax_misc_failure,
                 onSuccess: function (req) {
                     remove_waiting_box();
-                    add_div({id: 'navi_div', style: 'top:2em;', cssclass: 'inner_box'});
+                    add_div({id: 'navi_div', style: 'top:2em;z-index:'+get_next_layer(), cssclass: 'inner_box'});
                     id$('navi_div').innerHTML = req.responseText;
                     try {
                         req.responseText.evalScripts();
@@ -2407,7 +2448,7 @@ function set_preference(p_dossier) {
                         reconnect();
                         return;
                     }
-                    add_div({id: 'preference_div', drag: 1});
+                    add_div({id: 'preference_div', style: 'z-index:'+get_next_layer(), drag: 1});
                     id$('preference_div').innerHTML = req.responseText;
                     try {
                         req.responseText.evalScripts();
@@ -2450,7 +2491,7 @@ var Bookmark = function() {
                 onFailure: ajax_misc_failure,
                 onSuccess: function (req) {
                     remove_waiting_box();
-                    add_div({id: 'bookmark_div', cssclass: 'inner_box', drag: 1});
+                    add_div({id: 'bookmark_div', cssclass: 'inner_box',style: 'z-index:'+get_next_layer(), drag: 1});
                     id$('bookmark_div').innerHTML = req.responseText;
                     try {
                         req.responseText.evalScripts();
@@ -3688,7 +3729,7 @@ function progress_bar_start(p_taskid, p_message) {
         add_div({
             id: "message" + progressIdx,
             cssclass: "inner_box",
-            style: "z-index:1000;position:fixed;top:30%;width:40%;left:30%"
+            style: "z-index:"+get_next_layer()+";position:fixed;top:30%;width:40%;left:30%"
         });
         id$("message" + progressIdx).update('<h3>' + content[65] + '</h3>' + message);
         // Create a div
@@ -4124,9 +4165,11 @@ function check_receipt_size(p_max_size, p_info) {
     if (f && f.files[0] && f.files[0].size > parseFloat(p_max_size)) {
         document.getElementById("receipt_info_id").innerHTML = content[78];
         document.getElementById(p_info).style.display = "none";
+        $('receipt_info_id').addClassName('error');
         return false;
     }
     document.getElementById("receipt_info_id").innerHTML = "";
+    $('receipt_info_id').removeClassName('error');
     document.getElementById("form_file").submit();
     return true;
 }
@@ -4247,8 +4290,8 @@ function event_display_detail(p_dossier, p_detail) {
                         return;
                     }
                     if (!document.getElementById(dgbox)) {
-                        var div_style = "position:fixed;" + ";top:30%";
-                        add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: true});
+                        var div_style = "position:fixed;" + ";top:30%;z-index:"+get_next_layer();
+                        add_div({id: dgbox, cssclass: 'inner_box2', html: loading(), style: div_style, drag: true});
 
                     }
 
@@ -4322,7 +4365,7 @@ function check_password_strength(p_pass_domid, p_result_domid, details) {
                         return;
                     }
                     var answer = req.responseJSON;
-                    console.debug(answer);
+                    
                     if (answer['password'] == 'nok') {
 
                         id$(p_pass_domid).setStyle("background-color:red");
@@ -4695,11 +4738,12 @@ Widget.prototype.toggle_full_size=function (widget_domid) {
     } else {
         id$(widget_domid).addClassName('widget-full_size');
 
-        layer++;
+        var layer=get_next_layer();
         id$(widget_domid).style.zIndex=layer;
     }
 
 };
+
 
 /**
  * EXPERIMENTAL
@@ -4708,4 +4752,365 @@ Widget.prototype.toggle_full_size=function (widget_domid) {
 (function(){window.addEventListener("onload", (event) => {remove_waiting_box()});})();
 */
 
+
+Noalyss = function () {
+    
+}
+/**
+ * Activate TinyMCE 
+ * @param {string} domid  id of the dom element
+ * @param {string} mode min for minimum   or full , gives an error if the mode doesn't exist
+ * @returns {undefined}
+ */
+
+Noalyss.prototype.activate_tinymce=function (domid,mode,p_height) {
+    if ( ! g_enable_tinymce ) return;
+        tinymce.remove('#'+domid);
+        if (! p_height) p_height=500;
+        if ( mode == 'minimal' || ! mode )
+        {
+        tinymce.init({
+          selector: 'textarea#'+domid,
+           plugins:'link quickbars ',
+          height: p_height,
+         menubar: false,
+          toolbar: 'undo redo |  ' +
+          'bold italic underline forecolor backcolor |fontsize   ' +
+          ' | bullist numlist | ' +
+          'removeformat | help',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+          quickbars_insert_toolbar:false,
+          promotion: false,
+        quickbars_selection_toolbar:' bold italic underline forecolor backcolor ',
+          license_key:'gpl',
+          statusbar: false,
+             branding: false
+        });
+    } else if ( mode == "full")
+    {
+      /**
+           toolbar: 'undo redo ' +
+                    'bold italic underline strikethrough | hr quickimage | forecolor backcolor|emoticons |fontsize styles  ' +
+                    '  table tabledelete |' +
+                    ' | link unlink bullist numlist  | ' +
+                    'removeformat | help',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+       */  
+        tinymce.init({
+          selector: 'textarea#'+domid,
+          height: p_height,
+         menubar: false,
+          plugins:'link lists emoticons quickbars pagebreak table',
+             toolbar: 'undo redo ' +
+                    'bold italic underline strikethrough | hr quickimage | forecolor backcolor|emoticons |fontsize styles fontfamily ' +
+                    '  table tabledelete |' +
+                    ' | link unlink bullist numlist  | ' +
+                    'removeformat | help',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+         quickbars_insert_toolbar:false,
+          promotion: false,
+          quickbars_selection_toolbar:' bold italic underline forecolor backcolor ',
+          license_key:'gpl',
+          statusbar: true,
+             branding: false
+        });
+      
+    }else if ( mode == 'no-toolbar'  )
+        {
+        tinymce.init({
+          selector: 'textarea#'+domid,
+          height: p_height,
+          plugins:' quickbars',
+          menubar:false,
+          toolbar: false,
+          quickbars_selection_toolbar:' bold italic underline forecolor backcolor hide',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+          promotion: false,
+          license_key:'gpl',
+          statusbar: false,
+          toolbar_mode: 'hide',
+           quickbars_insert_toolbar:false,
+          branding: false
+        });
+    } else {
+
+        console.error(`Noalyss.activate_tinymce unknow mode`);
+    }
+
+}
+/**
+ * @deprecated not used
+ * Input NOTE on operation from Detail Operation
+ * @param {int} dossier_id
+ * @param {int} jrn_id
+ * @param {string} div_prefix
+ * @returns {undefined}
+ */
+Noalyss.prototype.input_note=function (dossier_id,jrn_id,div_prefix)
+{
+    
+    try
+    {
+        var dgbox = "box_input_note"+div_prefix;
+        waiting_box();
+        removeDiv(dgbox);
+        var queryString = {
+            op:'ledger'
+            ,act:'note_input'
+            ,jr_id:jrn_id
+            ,div:div_prefix
+            ,gDossier:dossier_id
+            ,tinymce:g_enable_tinymce
+        };
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'get',
+                    parameters: queryString,
+                    onFailure: ajax_misc_failure,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        var y = calcy(15);
+                        var div_style = "position:absolute;" + ";top:" + y + "px";
+                        add_div({id: dgbox, cssclass: 'inner_box2', html: loading(), style: div_style, drag: true});
+                        let response=req.responseXML;
+                        let html=getNodeText(response.getElementsByTagName("code")[0])
+                        let ctl=getNodeText(response.getElementsByTagName("ctl")[0]);
+                        $(dgbox).update(html);
+                        
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
+
+}
+Noalyss.prototype.refresh_note=function(jrn_id,dossier_id)
+{
+    if ( document.getElementById("als_note"+jrn_id)) {
+        new Ajax.Updater('als_note'+jrn_id,'ajax_misc.php',{
+            method:'get',
+            parameters:{
+                op:'ledger'
+                ,'act':'note_refresh'
+                ,jr_id:jrn_id
+                ,gDossier:dossier_id
+                ,div:'not-set'
+            }
+    })
+    } else if ( document.getElementById("jrn_note_td")) {
+        new Ajax.Updater('jrn_note_td','ajax_misc.php',{
+            method:'get',
+            parameters:{
+                op:'ledger'
+                ,'act':'note_refresh'
+                ,jr_id:jrn_id
+                ,gDossier:dossier_id
+                ,div:'not-set'
+            }
+    })
+    }
+    
+}
+
+
+
+/**
+ * save parameter for SMPT , menu C0ML
+ * 
+ */
+Noalyss.prototype.save_config_smtp = function ()
+{
+    try
+    {
+        waiting_box();
+        var queryString = $("form_config_smtp").serialize(true);
+        queryString['op'] = "email_setting";
+        queryString['op2'] = "save_config_smtp";
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'POST',
+                    parameters: queryString,
+                    onFailure: ajax_misc_failure,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        let json = req.evalJSON();
+
+
+                    }
+                }
+        );
+
+    } catch (e) {
+        console.error(e.message);
+    }
+    return false;
+};
+Noalyss.prototype.parameter_display_smtp = function ()
+{
+    if ($F("smtp_type") == 'smtp') {
+        $("smtp_config_div").style.display = "grid";
+        $('btn_save1').hide();
+    } else {
+        $("smtp_config_div").hide();
+        $('btn_save1').show();
+
+    }
+};
+Noalyss.prototype.parameter_test_smtp = function ()
+{
+    try
+    {
+        var parameter = $('form_config_smtp').serialize(true);
+        parameter['op'] = "email_setting";
+        parameter['op2'] = "parameter_test_smtp";
+        var email = {email_test: $F('email_test_input')};
+        if ($F('email_test_input') == '') {
+            smoke.alert("Aucun email")
+            return false;
+        }
+        waiting_box();
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: Object.assign(parameter, email),
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        $('result_test_div').update(req.responseText);
+
+                    }
+                }
+        );
+
+    } catch (e)
+    {
+        remove_waiting_box();
+        console.error("parameter_test_smtp" + e.message);
+    }
+
+}
+
+VAT_Code = function (dossier_id) {
+    this.dossier_id=dossier_id;
+}
+
+VAT_Code.prototype.list_vatex=function () 
+{
+    try
+    {
+        var here=this;
+        var dgbox = "search_vatex_div";
+        waiting_box();
+        removeDiv(dgbox);
+        var queryString = {
+            op:'search_vatex',
+            gDossier:this.dossier_id,
+            dgbox:dgbox
+        }
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                           var y = calcy(15);
+                        var div_style = "position:absolute;" + ";top:" + y + "px"+";z-index:"+get_next_layer();
+                        add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: false});
+                        $(dgbox).update(req.responseText);
+                        here.filter_country();
+                     
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
+
+}
+
+VAT_Code.prototype.select_value=function(vx_code)
+{
+    try
+    {
+        var dgbox = "search_vatex_div";
+        waiting_box();
+        var queryString = {
+            op:'search_vatex',
+            gDossier:this.dossier_id,
+            select_code:vx_code,
+            dgbox:dgbox
+
+        }
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        removeDiv(dgbox);
+                        var answer=req.responseJSON
+                        $("vx_code").value=answer.vx_code;
+                        $("vx_value").update(answer.vx_value);
+                        $('vx_code_description').update(answer.vx_description)
+                     
+                        
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
+
+}
+VAT_Code.prototype.filter_country=function()
+{
+    try {
+        var to_show=id$("filter_country").value;
+        let a_row=id$("code_vatex_tb").rows;
+        // show all rows, then hide
+       for (let i=1;i< a_row.length;i++) {
+           
+           if (id$("filter_country").value == 0 || a_row[i].hasClassName(to_show)){
+            a_row[i].show()
+               
+           }else {
+            a_row[i].hide()
+            }
+       }
+       $('lk_code_vatex_tb').value="";
+    }catch (e)
+    {
+        console.error(e.message);
+        return false;
+    }
+}
+noalyss=new Noalyss();
 var bookmark=new Bookmark();

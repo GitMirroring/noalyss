@@ -1,1 +1,36 @@
-Toute la documentation se trouve sur https://gitlab.com/noalyss/noalyss-documentation
+    NOALYSS
+==================
+NOALYSS est un programme éthique, c'est-à-dire qu'il est libre (GNU/GPL2),
+vous pouvez l'utiliser, l'étudier et contribuer au développement, 
+il n'y a aucune publicité ou traquage.
+
+NOALYSS est la première plate-forme de comptabilité et ERP, elle est née en 2002
+, c'est-à-dire qu'une fois installée sur un serveur , un PC 
+ou dans une machine virtuelle, elle peut héberger
+la comptabilité de centaines de sociétés et d'utilisateurs.
+
+Chaque dossier est séparé et n'est accessible qu'à ceux à qui l'accès a été 
+explicitement donné.
+
+La partie comptabilité est particulièrement flexible et puissante.
+
+NOALYSS permet aussi par dossier de gérer tous les événements d'une société:
+de la gestion des fournisseurs aux déclarations fiscales, en passant par  
+la documentation et bien plus. 
+
+Elle permet aussi de faire des prévisions et de comparer
+avec la réalité, de gérer les stocks, de faire de la comptabilité analytique, 
+de sortir les FECS, ...
+
+Si vous avez besoin de support, vous pouvez en demander soit sur les forums de
+NOALYSS : https://forum.noalyss.eu soit par email dans les listes de diffusion:
+https://lists.nongnu.org/mailman/listinfo/noalyss-generale.
+
+La documentation est libre : 
+
+- Manuel ( https://manuel-fr.noalyss.eu/ )
+- wiki (https://wiki.noalyss.eu/doku.php?id=Noalyss)
+- Tutoriel vidéo  (https://www.youtube.com/@noalyss11)
+- Apprendre à développer avec NOALYSS ( https://manuel-fr.noalyss.eu/#_d%C3%A9veloppement_noalyss )
+
+Voyez aussi la démo : https://demo.noalyss.eu 

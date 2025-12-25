@@ -284,13 +284,22 @@ function display_file_config($p_array, $from_setup = 1, $p_os = 1)
     echo PHP_EOL;
     printf("define ('SESSION_KEY','%s');", generate_random_string(10));
     echo PHP_EOL;
-    printf("// When sending an email , the domain of this email must be in comma separated list ,");
+    printf("// When sending an email, check if you can send with that domain, "
+            . PHP_EOL
+            . "// the domain of this email must be in comma separated list ,");
     echo PHP_EOL;
     print ("// if the list is an empty string then all the domain are allowed");
     echo PHP_EOL;
     printf("// define ('ALLOWED_EMAIL_DOMAIN','');");
     echo PHP_EOL;
-
+    $a=PHP_EOL;
+    echo <<<EOF
+////////$a
+// change NOALYSS_URL with your URL , $a
+// with NGINX it is needed to set the NOALYSS_URL , it is the default URL of $a
+// your installation, example with https://demo.noalyss.eu $a
+// define ("NOALYSS_URL","https://demo.noalyss.eu"); $a
+EOF;
 }
 /*!
  * \brief create the config file

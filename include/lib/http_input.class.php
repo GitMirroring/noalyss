@@ -77,7 +77,7 @@ class HttpInput
         /**
      *  \brief  Check the type of the value
      * @param $p_name name of the variable
-     * @param $p_type type of the variable (number,string,text,date,array)
+     * @param $p_type (string) type of the variable (number,string,text,date,array,raw)
      * @throws Exception if the variable doesn't exist or type incorrect
      * @todo Add regex:pattern
      */
@@ -162,7 +162,14 @@ class HttpInput
                 if (array_key_exists($p_name,$this->array) )
                 {
                     $this->check_type($p_name, $p_type);
- 		    if ($p_type != 'raw' && is_string($this->array[$p_name]) ) return preg_replace("/</","< ", $this->array[$p_name]);
+ 		    if ($p_type != 'raw' && is_string($this->array[$p_name]) ) {
+                        return preg_replace("/</","<.", $this->array[$p_name]);
+                    }elseif ($p_type == 'raw') {
+                        $a=preg_replace("/<script/","<.", $this->array[$p_name]);
+                        $a=preg_replace("/<iframe/i","<.", $this->array[$p_name]);
+                        return $a;
+                        
+                    }
 		    return $this->array[$p_name];
                 }
                 else
@@ -176,7 +183,13 @@ class HttpInput
                 EXC_PARAM_VALUE);
             }
             $this->check_type($p_name, $p_type);
-	    if ( is_string($this->array[$p_name]) ) return  preg_replace("/</","< ", $this->array[$p_name]);
+	    if ( $p_type == 'string' && is_string($this->array[$p_name]) ) return  preg_replace("/</","<.", $this->array[$p_name]);
+	    if ( $p_type == 'raw'  ) {
+                $a=preg_replace("/<script/","<.", $this->array[$p_name]);
+                $a=preg_replace("/<iframe/i","<.", $this->array[$p_name]);
+                $a=preg_replace("/<frame/i","<.", $this->array[$p_name]);
+                return $a; 
+            }
 	    return $this->array[$p_name];
         }
         catch (Exception $e)
@@ -187,9 +200,9 @@ class HttpInput
 
     /**
      * @brief Retrieve from $_GET
-     * @param $p_name name of the variable
-     * @param $p_type type of the variable , opt. default string
-     * @param $p_default default value is variable is not set
+     * @param $p_name string of the variable
+     * @param $p_type string of the variable , opt. default string
+     * @param $p_default mixed default value is variable is not set
      * @throws Exception if invalid
      */
     function get($p_name, $p_type="string", $p_default="")

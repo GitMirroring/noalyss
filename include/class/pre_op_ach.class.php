@@ -228,10 +228,10 @@ class Pre_op_ach extends Pre_operation_detail
        {
            $fClient=new Fiche($ledger->db);
            $fClient->get_by_qcode($e_client);
-           $e_client_label=$fClient->strAttribut(ATTR_DEF_NAME).' '.
-               ' Adresse : '.$fClient->strAttribut(ATTR_DEF_ADRESS).' '.
-               $fClient->strAttribut(ATTR_DEF_CP).' '.
-               $fClient->strAttribut(ATTR_DEF_CITY).' ';
+           $e_client_label=$fClient->get_attribute(ATTR_DEF_NAME).' '.
+               ' Adresse : '.$fClient->get_attribute(ATTR_DEF_ADRESS).' '.
+               $fClient->get_attribute(ATTR_DEF_POSTCODE).' '.
+               $fClient->get_attribute(ATTR_DEF_CITY).' ';
 
 
        }
@@ -296,11 +296,11 @@ class Pre_op_ach extends Pre_operation_detail
            {
                $fMarch=new Fiche($ledger->db);
                $fMarch->get_by_qcode($march);
-               $march_label=$fMarch->strAttribut(ATTR_DEF_NAME);
+               $march_label=$fMarch->get_attribute(ATTR_DEF_NAME);
                if ( $flag_tva=='Y')
                {
                    if ( ! (isset($p_array["e_march$i"."_tva_id"])))
-                       $march_tva_id=$fMarch->strAttribut(ATTR_DEF_TVA);
+                       $march_tva_id=$fMarch->get_attribute(ATTR_DEF_TVA);
                }
            }
            // Show input
@@ -379,7 +379,7 @@ class Pre_op_ach extends Pre_operation_detail
                $Tva=new ITva_Popup($ledger->db);
                $Tva->in_table=true;
                $Tva->set_attribute('compute',$i);
-
+               $Tva->id="e_march$i"."_tva_id";
                $Tva->js='onblur="format_number(this);clean_tva('.$i.');compute_ledger('.$i.')"';
                $Tva->value=$march_tva_id;
                $array[$i]['tva']=$Tva->input("e_march$i"."_tva_id");

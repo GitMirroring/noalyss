@@ -35,20 +35,41 @@ require_once NOALYSS_INCLUDE.'/database/operation_currency_sql.class.php';
 class Acc_Ledger  extends jrn_def_sql
 {
 
-    var $id;     /**!< jrn_def.jrn_def_id */
-    var $db;     /**!< database connextion */
-    var $row;    /**!< row of the ledger */
-    var $ledger_type;   /**!< type of the ledger ACH ODS FIN VEN or GL */
-    var $nb;     /**!< default number of rows by  default 10 */
-    var $currency_id;
-    /**!< is_loaded true the ledger definition is loaded or false, it is not */
+    var $id;     /*!< jrn_def.jrn_def_id */
+    var $db;     /*!< database connextion */
+    var $row;    /*!< row of the ledger */
+    var $ledger_type;   /*!< type of the ledger ACH ODS FIN VEN or GL */
+    var $nb;     /*!< default number of rows by  default 10 */
+    var $currency_id;/*!<  $currency_id (int) SQL:CURRENCY.ID  default 0 */
+    /*!< is_loaded true the ledger definition is loaded or false, it is not */
     protected  $is_loaded ; 
-
-
+    var $ledger_name;
+    var $jr_internal ; /*!< $jr_internal (string) internal number for an operation */
+    var $jr_id; /*!< $jr_id (int) SQL : PK JRN.JR_ID */
+    var $jrn_def_max_line_deb ; /*!< $jr_id (int) PK.JRN */
+    var $jrn_def_id; /*!<  $jrn_def_id(INT) jrn_def.jrn_def_id */
+    var $jrn_def_name; /*!<  $jrn_def_name(string) ledger name  */
+    var $jrn_def_ech_lib; /*!< $jrn_def_ech_lib (string) text for limit date   */
+    var $jrn_def_type; /*!< $jrn_def_type(string)  type of the ledger ACH,VEN,ODS,FIN */
+    var $jrn_def_pj_pref; /*!< $jrn_def_pj_pref(string) prefix for receipt   */
+    var $jrn_deb_max_line;/*!< $jrn_deb_max_line(int) max rows to display*/
+    var $jrn_def_description; /*!< $jrn_def_description(string) ledger description   */
+    var $jrn_enable; /*!< $jrn_enable (0 or 1)0:ledger not available, 1:ledger available    */
+    var $jrn_def_negative_amount; /*!< $jrn_def_negative_amount (0-1) 0: ledger use positive or negative amount, 1: ledger should use negative amount  */
+    var $jrn_def_negative_warning; /*!<$jrn_def_negative_warning (string) string to display if the amount is not positive (see $jrn_def_negative_amount) */
+    var $jrn_def_quantity; /*!< $jrn_def_quantity  (0-1) 0 no quantity for operations
+                            * 1 has quantity  */
+    var $with_concerned; /*!< $with_concerned(bool) : true is operation comes with 
+                        another one,     */
+    var $jr_grpt_id ; /**! $jr_grpt_id (int) SQL JRN.JR_GRP_ID group rows
+                             of an operations     */
+    var $pj; /*!< $pj (string) nb receipt of the operation */
+        
+    var $doc; /*!< $doc (string) HTML with an anchor to the doc. of operation*/
     /**
      * @brief construct
      * @param $p_cn database connexion
-     * @param $p_id jrn.jrn_def_id
+     * @param $p_id (int) ledger idf jrn.jrn_def_id
      */
     function __construct($p_cn, $p_id)
     {
@@ -781,10 +802,10 @@ class Acc_Ledger  extends jrn_def_sql
             {
                 $oqc=new Fiche($this->db);
                 $oqc->get_by_qcode(${'qc_'.$i}, false);
-                $strPoste=$oqc->strAttribut(ATTR_DEF_ACCOUNT);
+                $strPoste=$oqc->get_attribute(ATTR_DEF_ACCOUNT);
                 $ret.="<td>".
                         ${'qc_'.$i}.' - '.
-                        $oqc->strAttribut(ATTR_DEF_NAME).HtmlInput::hidden('qc_'.$i,
+                        $oqc->get_attribute(ATTR_DEF_NAME).HtmlInput::hidden('qc_'.$i,
                                 ${'qc_'.$i}).
                         '</td>';
             }
@@ -1092,13 +1113,12 @@ class Acc_Ledger  extends jrn_def_sql
 
             $quick_code->value=(isset(${'qc_'.$i}))?${'qc_'.$i}:"";
             $quick_code->readonly=$p_readonly;
-
             $label='';
             if ($quick_code->value!='')
             {
                 $Fiche=new Fiche($this->db);
                 $Fiche->get_by_qcode($quick_code->value);
-                $label=$Fiche->strAttribut(ATTR_DEF_NAME);
+                $label=$Fiche->get_attribute(ATTR_DEF_NAME);
             }
 
 
@@ -1313,11 +1333,11 @@ class Acc_Ledger  extends jrn_def_sql
                     throw new Exception(sprintf(_("La fiche %s n'est plus utilisée"),${'qc_'.$i}), 50);
                 if ($f->belong_ledger($p_jrn) < 1 )
                     throw new Exception("La fiche quick_code = ".
-                    $f->quick_code." n'est pas dans ce journal", 4);
+                    $f->quick_code." n'est pas accessible depuis ce journal, à configurer dans C0JRN", 4);
                 if (noalyss_strlentrim(${'qc_'.$i})!=0&&isNumber(${'amount'.$i})==0)
                     throw new Exception(_('Montant invalide'), 3);
 
-                $strPoste=$f->strAttribut(ATTR_DEF_ACCOUNT);
+                $strPoste=$f->get_attribute(ATTR_DEF_ACCOUNT);
                 if ($strPoste=='')
                     throw new Exception(sprintf(_("La fiche %s n'a pas de poste comptable"),
                             ${"qc_".$i}));
@@ -1334,7 +1354,7 @@ class Acc_Ledger  extends jrn_def_sql
                 $p=new Acc_Account_Ledger($this->db, ${'poste'.$i});
                 if ($p->belong_ledger($p_jrn)<0) {
                     throw new Exception(sprintf ( 
-                            _("Le poste %s n'est pas dans ce journal",$p->id)),
+                            _("Le poste %s n'est pas accessible dans ce journal, à configurer dans C0JRN",$p->id)),
                     5);
                 }
                 if (noalyss_strlentrim(${'poste'.$i})!=0&&isNumber(${'amount'.$i})==0)
@@ -1351,8 +1371,8 @@ class Acc_Ledger  extends jrn_def_sql
                     for ($x=0; $x<$max; $x++)
                     {
                         $card=new Fiche($this->db, $card_id[$x]['f_id']);
-                        $str_msg.=HtmlInput::card_detail($card->strAttribut(ATTR_DEF_QUICKCODE),
-                                        $card->strAttribut(ATTR_DEF_NAME),
+                        $str_msg.=HtmlInput::card_detail($card->get_attribute(ATTR_DEF_QUICKCODE),
+                                        $card->get_attribute(ATTR_DEF_NAME),
                                         'style="color:red;display:inline;text-decoration:underline"');
                         $str_msg.=" ";
                     }
@@ -1441,7 +1461,7 @@ class Acc_Ledger  extends jrn_def_sql
             }
             else
             {
-                $oPeriode->id=$period;
+                $oPeriode->p_id=$period;
             }
 
             $count=0;
@@ -1463,7 +1483,7 @@ class Acc_Ledger  extends jrn_def_sql
                 {
                     $qc=new Fiche($this->db);
                     $qc->get_by_qcode(${'qc_'.$i}, false);
-                    $sposte=$qc->strAttribut(ATTR_DEF_ACCOUNT);
+                    $sposte=$qc->get_attribute(ATTR_DEF_ACCOUNT);
                     /*  if there are 2 accounts take following the deb or cred */
                     if (strpos($sposte, ',')!=0)
                     {
@@ -1589,6 +1609,7 @@ class Acc_Ledger  extends jrn_def_sql
             $acc_end->currency_rate=$currency_rate;
             $acc_end->currency_rate_ref=$currency_rate_ref->get_rate();
             
+            // @var $jr_id (int) JRN.JR_ID
             $jr_id=$acc_end->insert_jrn();
             
             $this->jr_id=$jr_id;
@@ -1607,7 +1628,7 @@ class Acc_Ledger  extends jrn_def_sql
             $this->db->exec_sql("update jrn set jr_internal=$1 
                         where jr_grpt_id = $2",array($internal,$seq));
 
-            $this->internal=$internal;
+            $this->jr_internal=$internal;
             // Save now the predef op
             //------------------------
             if (isset($opd_name)&&trim($opd_name)!="")
@@ -1630,7 +1651,8 @@ class Acc_Ledger  extends jrn_def_sql
              */
             if (isset($_FILES["pj"]))
             {
-                $this->db->save_receipt($seq);
+                $acc_document=new Acc_Document($this->db, $jr_id);
+                $acc_document->save_receipt();
             }
             /*----------------------------------------------
              * Save the note
@@ -1712,10 +1734,10 @@ class Acc_Ledger  extends jrn_def_sql
 
     function update_internal_code($p_internal)
     {
-        if (!isset($this->grpt_id))
-            throw new Exception(('ERREUR '.__FILE__.":".__LINE__));
+        if (!isset($this->jr_grpt_id))
+            throw new Exception(('ERREUR jr_grpt_id not set '.__FILE__.":".__LINE__));
         $Res=$this->db->exec_sql("update jrn set jr_internal=$1 where 
-                 jr_grpt_id = $2 ",array($p_internal,$this->grpt_id));
+                 jr_grpt_id = $2 ",array($p_internal,$this->jr_grpt_id));
     }
 
     /**
@@ -1952,31 +1974,22 @@ class Acc_Ledger  extends jrn_def_sql
     }
 
     /**
-     * @brief create the invoice and saved it as attachment to the
-     * operation,
+     * @brief alias for Acc_Document->create_document 
      * @param  $internal is the internal code
      * @param  $p_array is normally the $_POST
-     * \return a string
+       @see Acc_Document::create_document
+     * @return html string
      */
     function create_document($internal, $p_array)
     {
-        extract($p_array, EXTR_SKIP);
-        $doc=new Document($this->db);
-        $doc->f_id=$e_client;
-        $doc->md_id=$gen_doc;
-        $doc->ag_id=0;
-        $p_array['e_pj']=$this->pj;
-        $filename="";
-        $doc->Generate($p_array, $p_array['e_pj']);
-        // Move the document to the jrn
-        $doc->moveDocumentPj($internal);
-        // Update the comment with invoice number, if the comment is empty
-        if (!isset($e_comm)||noalyss_strlentrim($e_comm)==0)
-        {
-            $sql="update jrn set jr_comment=' document ".$doc->d_number."' where jr_internal='$internal'";
-            $this->db->exec_sql($sql);
+        $id=$this->db->get_value('select jr_id from jrn where jr_internal=$1',
+                [$internal]);
+        if ( $id == "") {
+            return;
         }
-        return h($doc->d_name.' ('.$doc->d_filename.')');
+        $acc_document=new Acc_Document($this->db,$id);
+        $acc_document->create_document($internal,$p_array);
+        return h($acc_document->d_name.' ('.$acc_document->d_filename.')');
     }
 
     /**
@@ -1998,7 +2011,7 @@ class Acc_Ledger  extends jrn_def_sql
                 20);
             }
             /* get the account and explode if necessary */
-            $sposte=$empl->strAttribut(ATTR_DEF_ACCOUNT);
+            $sposte=$empl->get_attribute(ATTR_DEF_ACCOUNT);
             // if 2 accounts, take only the debit one for customer
             if (strpos($sposte, ',')!=0)
             {
@@ -2917,7 +2930,10 @@ class Acc_Ledger  extends jrn_def_sql
     {
         $r='';
         $r.='<div id="payment"> ';
-        $r.='<h2 class="h-section"> '._('Paiement').' </h2>';
+        $r.='<h2 class="h-section"> '._('opération de paiement').' </h2>';
+        $r.='<p class="text-muted">';
+        $r.=_("Opération de paiement crée en plus de cette opération, ne concerne pas la facturation électronique");
+        $r.='</p>';
         $mp=new Acc_Payment($this->db);
         $mp->set_parameter('ledger_source', $this->id);
         $r.=$mp->select($p_selected,$p_amount,$p_date,$p_comm);
@@ -3249,7 +3265,16 @@ class Acc_Ledger  extends jrn_def_sql
         return $array;
     }
 
-    function convert_from_follow($p_ag_id)
+    /**
+     * @brief convert operations from FOLLOWUP into a SALE , FEENOTE
+     * or PURCHASE operation into a suitable array
+     * @param $p_ag_id int PK of ACTION_GESTION
+     * @param $copy_description int 0 the description of the followup  is not copied
+     * in the note , 1 is copied
+     * @return array|void|null
+     * @throws Exception
+     */
+    function convert_from_follow($p_ag_id,$copy_description=0)
     {
         global $g_user;
         if (isNumber($p_ag_id)==0)
@@ -3289,6 +3314,13 @@ class Acc_Ledger  extends jrn_def_sql
             $array['e_march'.$i.'_tva_id']=$a_item[$i]['ad_tva_id'];
             $array['e_march'.$i.'_tva_amount']=$a_item[$i]['ad_tva_amount'];
             $array['e_quant'.$i]=$a_item[$i]['ad_quant'];
+        }
+        if ( $copy_description == 1) {
+            $acomment=$this->db->get_array("SELECT agc_id, ag_id, to_char(agc_date,'DD.MM.YYYY HH24:MI') as str_agc_date, agc_comment, agc_comment_raw,tech_user
+				 FROM action_gestion_comment where ag_id=$1 order by agc_id", array($p_ag_id)
+            );
+            if (count ($acomment) > 0)
+                $array['jrn_note_input']=$acomment[0]['agc_comment'];
         }
         return $array;
     }
@@ -3635,6 +3667,63 @@ EOF;
         if ( $this->verify_autonumber($p_array) == false) {
             return span (_("Attention ! Numéro de Pièce non automatique mais forcée"),'class="warning"');
         }
+    }
+    /**
+     * @brief display INPUT type to ask the supplementary documents
+     * @return HTML string
+     * @throws \Exception 3674 If ledger JRN.JRN_DEF_ID == 0
+     */
+    protected function input_supplemental_document()
+    {
+        if ( $this->id==0) {
+            throw new \Exception ("ACL3674: invalid ledger",3674);
+        }
+         /**
+         * add suppl.documents
+         */
+        $supplemental_doc=new IFile('document_supplemental[]');
+        $supplemental_doc->setAlertOnSize(true);
+        $supplemental_doc->set_multiple(true);
+        $r="";
+        $r.='<p  class="decale">';
+        $r.= _("Ajoutez des documents additionnels");
+        $r.=$supplemental_doc->input();
+        $r.='</p>';
+        return $r;
+    }
+    /**
+     * @brief upload the supplementary documents and attach them to the JRN.JR_ID
+     * start a  new transaction if the connection to the database is not 
+     * already in a transaction
+     * @param $jr_id (int) JRN.JR_ID
+     */
+    public function upload_supplemental_document($jr_id)
+    {
+         if (! isset ($_FILES['document_supplemental']) || count($_FILES['document_supplemental']['name'])==0) {
+            return;
+        }
+        $nb=count($_FILES['document_supplemental']["name"]);
+        if ( $this->db->status() !== PGSQL_TRANSACTION_INTRANS ) {
+            $a=1;
+            $this->db->start();
+        }
+        for ($i=0;$i<$nb;$i++)
+        {
+            $file= tempnam($_ENV["TMP"], "sup_file");
+            if ( move_uploaded_file($_FILES['document_supplemental']['tmp_name'][$i],$file))
+            {
+                if ( ($oid=$this->db->lo_import($file)) != false )
+                {
+                    $jrn_sup=new Jrn_Sup_Document_SQL($this->db);
+                    $jrn_sup->jr_id=$jr_id;
+                    $jrn_sup->js_lob=$oid;
+                    $jrn_sup->js_mimetype=$_FILES['document_supplemental']['type'][$i];
+                    $jrn_sup->js_filename=$_FILES['document_supplemental']['name'][$i];
+                    $jrn_sup->insert();
+                }
+            }
+        }
+        if ( $a == 1) { $this->db->commit(); }
     }
 }
 

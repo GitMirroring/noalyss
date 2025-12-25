@@ -44,7 +44,7 @@ La classe s'appele toujours "nom-du-widget.php" , elle est dérivée de widget e
 
 * display  : affichage du widget
 * input : affichage de la description et permet son activation (visible dans la box )
-* input-parameter : si des paramètres doivent être sauvées, les paramètres sont par utilisateur et par widget activés,
+* input-parameter : si des paramètres doivent être sauvés, les paramètres sont par utilisateur et par widget activés,
 * display_parameter
 
 ### Paramètres
@@ -92,11 +92,19 @@ Ce DIV doit avoir comme classe **box** et **widget-box** , le **widget-box** per
 
 Exemple :
 
-      $this->open_div();
-      echo h2('Planifications','class="title"');
-        // Code pour le widget
+```php
+    // création de la boite 
       $this->open_div();
 
+    // création du titre avec les boutons "refresh et agrandissement"
+      $this->title(_("Planifications"));
+
+    // Code pour le widget
+    /// .....
+
+     // fermeture
+      $this->close_div();
+```
 Voir aussi "Paramètres"
 
 

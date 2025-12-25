@@ -778,7 +778,7 @@ function go_next_concerned() {
  * @returns {undefined}
  */
 function view_history_account(p_value, dossier, p_exercice) {
-    layer++;
+    var layer=get_next_layer();
     var idbox = 'det' + layer;
     var popup = {'id': idbox, 'cssclass': 'inner_box', 'html': loading(), 'drag': false};
 
@@ -806,6 +806,8 @@ function view_history_account(p_value, dossier, p_exercice) {
                 add_div(popup);
                 success_box(req, xml);
                 id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                id$(idbox).setStyle({top:calcy(140 + (layer * 3)) + "px"
+                ,"z-index":layer})
             }
         }
     );
@@ -819,7 +821,7 @@ function view_history_account(p_value, dossier, p_exercice) {
  * @returns {undefined}
  */
 function view_history_anc_account(p_value, dossier, p_exercice) {
-    layer++;
+    var layer=get_next_layer();
     var idbox = 'det' + layer;
     var popup = {'id': idbox, 'cssclass': 'inner_box', 'html': loading(), 'drag': false};
 
@@ -845,8 +847,12 @@ function view_history_anc_account(p_value, dossier, p_exercice) {
                 if (req.responseText === 'NOCONX') { reconnect();return;}
 
                 add_div(popup);
-                id$(idbox).innerHTML = req.responseText;
-                id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                  id$(idbox).setStyle(
+                            {
+                                top:calcy(140 + (layer * 3)) + "px"
+                                ,"z-index":layer
+                            }
+                    )
             }
         }
     );
@@ -881,7 +887,12 @@ function update_history_account(obj) {
                     if (req.responseText === 'NOCONX') { reconnect();return;}
 
                     success_box(req, xml);
-                    id$(obj.div).style.top = calcy(140 + (layer * 3)) + "px";
+                    id$(obj.div).setStyle(
+                            {
+                                top:calcy(140 + (layer * 3)) + "px"
+                                ,"z-index":get_next_layer()
+                            }
+                    )
                 }
             });
     } catch (e) {
@@ -895,7 +906,7 @@ function update_history_account(obj) {
  * \param p_value f_id of the card
  */
 function view_history_card(p_value, dossier, p_exercice) {
-    layer++;
+    var layer=get_next_layer();
     var idbox = 'det' + layer;
     var popup = {
         'id': idbox,
@@ -925,7 +936,12 @@ function view_history_card(p_value, dossier, p_exercice) {
 
                 add_div(popup);
                 success_box(req, xml);
-                id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                id$(idbox).setStyle(
+                            {
+                                top:calcy(140 + (layer * 3)) + "px"
+                                ,"z-index":get_next_layer()
+                            }
+                    )
             }
         }
     );
@@ -935,7 +951,7 @@ function view_history_card(p_value, dossier, p_exercice) {
  * \param p_value int fiche.f_id of the card
  */
 function view_followup_card(p_value, dossier) {
-    layer++;
+    var layer=get_next_layer();
     var idbox = 'detfu' + layer;
     var popup = {
         'id': idbox,
@@ -963,7 +979,12 @@ function view_followup_card(p_value, dossier) {
 
                 add_div(popup);
                 id$(idbox).update(req.responseText);
-                id$(idbox).style.top = calcy(140 + (layer * 3)) + "px";
+                  id$(idbox).setStyle(
+                            {
+                                top:calcy(140 + (layer * 3)) + "px"
+                                ,"z-index":get_next_layer()
+                            }
+                    )
             }
         }
     );
@@ -997,7 +1018,12 @@ function update_history_card(obj) {
 
                     remove_waiting_box();
                     success_box(req, xml);
-                    id$(obj.div).style.top = calcy(140 + (layer * 3)) + "px";
+                      id$(obj.div).setStyle(
+                            {
+                                top:calcy(140 + (layer * 3)) + "px"
+                                ,"z-index":get_next_layer()
+                            }
+                    )
                 }
             });
     } catch (e) {
@@ -1084,7 +1110,7 @@ function reverseOperation(obj) {
  * \param dossier dossier id
  */
 function modifyOperation(p_value, dossier) {
-    layer++;
+    var layer=get_next_layer();
     var id_div = 'det' + layer;
     waiting_box();
     var querystring = {
@@ -1112,9 +1138,12 @@ function modifyOperation(p_value, dossier) {
                 remove_waiting_box();
                 add_div(popup);
                 success_box(xml, txt);
-                id$(id_div).style.position = "absolute";
-                id$(id_div).style.top = calcy(100 + (layer * 3)) + "px";
-            }
+                id$(id_div).setStyle({
+                    top:calcy(100 + (layer * 3)) + "px"
+                    ,"z-index":layer
+                    ,position:"absolute"
+                });
+                }              
         }
     );
 }
@@ -1278,7 +1307,7 @@ function op_save(obj) {
         var divid = obj.whatdiv.value;
         queryString ["act"] = "save";
         queryString ["op"] = "ledger";
-
+        queryString ["jr_note"]=encodeURI(tinyMCE.get("jrn_note"+divid).getContent());
         waiting_box();
         /*
          * Operation detail is in a new window
@@ -1330,6 +1359,7 @@ function op_save(obj) {
                                     id$(divid).innerHTML = unescape(getNodeText(html[0]));
                                     id$(divid).innerHTML.evalScripts();
                                     remove_waiting_box();
+                                    noalyss.refresh_note(jr_id,obj.gDossier.value);
                                 } catch (e) {
                                     console.error("D1. op_save")
                                     alert_box("1038" + e.message)
@@ -1343,7 +1373,9 @@ function op_save(obj) {
         return false;
     } catch (e) {
         console.error("F1. op_save")
-        alert_box(e.message);
+        console.error(e.message)
+        alert_box("op_save "+e.message);
+        return false;
     }
 }
 
@@ -1720,7 +1752,7 @@ function duplicate_operation(p_dossier, p_jr_id) {
                 add_div(duplicate_div);
 
                 duplicate_div.setStyle({
-                    "position": "fixed", "top": "15%", "z-index": "999",
+                    "position": "fixed", "top": "15%", "z-index": get_next_layer(),
                     "min-width": "30rem",
                     "left": "30%",
                     "width": "40%"
@@ -1769,7 +1801,7 @@ function tax_detail_view (dossier_id,date_from,date_to,nLedger_id,nTva_id)
 	                            return;
 	                        }
 							var y=calcy(15);
-							var div_style="position:absolute;"+";top:"+y+"px";
+							var div_style="position:absolute;"+";top:"+y+"px"+";z-index:"+get_next_layer();
 							add_div({id:dgbox,cssclass:'inner_box',html:loading(),style:div_style,drag:true});
 							id$(dgbox).update(req.responseText);
 
@@ -1824,7 +1856,6 @@ var operation_exercice = {
             // For form , most of the parameters are in the FORM
             // method is then POST
             //var queryString=id$(p_form_id).serialize(true);
-            console.debug(row_operation_exercice);
             var queryString = {
                 op: 'operation_exercice+modify_row',
                 oe_id: oe_id,
@@ -1843,9 +1874,8 @@ var operation_exercice = {
                             reconnect();
                             return;
                         }
-                        console.debug(req.responseText)
                         var y = calcy(15);
-                        var div_style = "position:absolute;" + ";top:" + y + "px";
+                        var div_style = "position:absolute;" + ";top:" + y + "px"+";z-index:"+get_next_layer();
                         add_div({id: dgbox, cssclass: 'inner_box', html: loading(), style: div_style, drag: true});
                         id$(dgbox).update(req.responseText);
                     }
@@ -2019,4 +2049,210 @@ var operation_exercice = {
             alert_box(e.message);
         }
     }
+}
+
+
+var Supplement_Document={
+    
+};
+/**
+ * see  ledger_detail_sup_files.php
+ * $rowid=sprintf("row_js_%s_%s",$div,$item->js_id);
+ * @param {int} nDossier
+ * @param {string} sDiv
+ * @param {int} nJS_ID
+ * @returns {void}
+ */
+Supplement_Document.delete_document=function (nDossier,sDiv,nJS_ID,nJR_ID)
+{
+    confirm_box(null
+                ,content[47]
+                ,function (){
+                    try
+                    {
+                        var queryString = {
+                            gDossier:nDossier,
+                            div:sDiv,
+                            jr_id:nJR_ID,
+                            js_id:nJS_ID,
+                            op:"ledger",
+                            act:"rmsup"
+                        };
+                        var action = new Ajax.Request(
+                            "ajax_misc.php",
+                            {
+                                method: 'POST',
+                                parameters: queryString,
+                                onSuccess: function (req) {
+                                    remove_waiting_box();
+                                    if (req.responseText == 'NOCONX') {
+                                        reconnect();
+                                        return;
+                                    }
+                                    id$("row_js_"+sDiv+"_"+nJS_ID).remove();
+                                    Supplement_Document.refresh_list(nDossier,sDiv,nJR_ID);
+                                }
+                            }
+                        );
+                    } catch (e)
+                    {
+                        alert_box(e.message);
+                    }
+                }
+    );
+
+}
+Supplement_Document.input_file=function(nDossier,sDiv,nJR_ID)
+{
+    try
+    {
+        var dgbox = "sup_doc_input_file"+sDiv;
+        waiting_box();
+        removeDiv(dgbox);
+        var queryString = {
+            gDossier:nDossier,
+            div:sDiv,
+            jr_id:nJR_ID,
+            op:"ledger",
+            act:"input_file",
+            dgbox:dgbox
+        };
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onFailure: ajax_misc_failure,
+                    onSuccess: function (req) {
+                        remove_waiting_box();
+                        if (req.responseText == 'NOCONX') {
+                            reconnect();
+                            return;
+                        }
+                        var y = calcy(15);
+                        var div_style = "position:absolute;" + ";top:" + y + "px"+";z-index:"+get_next_layer();
+                        add_div({id: dgbox, cssclass: 'inner_box2', html: loading(), style: div_style, drag: true});
+                        $(dgbox).innerHTML = req.responseText;
+                        
+                    }
+                }
+        );
+    } catch (e)
+    {
+        alert_box(e.message);
+    }
+
+}
+/**
+ * 
+ * @param {string} FORM ID
+ * @returns {Boolean}
+ */
+Supplement_Document.save_file=function(form_dom_id)
+{
+    try 
+    {
+        waiting_box();
+        var form_data=$(form_dom_id).serialize();
+        
+        var xhr = new XMLHttpRequest();
+        var div=id$(form_dom_id).elements["div"].value;
+        // check size
+        var total_size=0;
+        var file_to_upload=id$("doc_sup");
+        var max_size=id$(form_dom_id).elements["MAX_FILE_SIZE"].value;
+        var post_max_size=id$(form_dom_id).elements["post_max_size"].value;
+        var feedback_div=id$('feedback'+div);
+        
+        for (var e=0;e<file_to_upload.files.length;e++) {
+
+            // check the size
+            if (file_to_upload.files[e].size > max_size) {
+                // if size > accepted size , push filename with error in an array feedback,
+                feedback_div.innerHTML += '<p class="notice">' + file_to_upload.files[e].name 
+                                        +content[78]+ "</p>";
+                remove_waiting_box();
+                return false;
+            } else if ( total_size+file_to_upload.files[e].size >= post_max_size )
+            {
+                 feedback_div.innerHTML += '<p > limite '+content[78]+" </p>";
+                 remove_waiting_box();
+                 return false;
+            }
+            else {
+                total_size+=file_to_upload.files[e].size;
+            }
+        }
+        feedback_div.innerHTML="loading....";
+        document.getElementById("progress_upload1b").setAttribute("value", 0);
+
+        xhr.upload.onprogress = function (e) {
+            document.getElementById("progress_upload1b").setAttribute("max", e.total) + "<br/>";
+            document.getElementById("progress_upload1b").setAttribute("value", e.loaded) + "<br/>";
+
+        }
+
+        xhr.onreadystatechange = function (event) {
+            if (this.readyState == XMLHttpRequest.DONE)
+            {
+                remove_waiting_box();
+
+                if (this.status === 200) {
+                        document.getElementById("supplement_div_list"+div).innerHTML += this.responseText ;
+                        let dgbox=id$(form_dom_id).elements["dgbox"].value;
+                        var json_form={} ;
+                        json_form['gDossier']=id$(form_dom_id).elements['gDossier'].value;
+                        json_form['div']=id$(form_dom_id).elements['div'].value;
+                        json_form['jr_id']=id$(form_dom_id).elements['jr_id'].value;
+                        Supplement_Document.refresh_list(json_form["gDossier"],json_form["div"],json_form["jr_id"]);
+                        removeDiv(dgbox);
+                    } else {
+                        document.getElementById("supplement_div_list"+div).innerHTML += "status" + this.statusText + "<br/>";
+                    }
+                }
+            }
+        
+        xhr.open("POST", "ajax_misc.php?"+form_data, true);
+     // works xhr.send(new FormData(input.parentElement));
+        var formData = new FormData(document.getElementById(form_dom_id));
+        xhr.send(formData);
+    }catch(e)
+    {
+        console.error("Supplement_Document.save_file "+e.message)
+    }
+    remove_waiting_box();
+    return false;
+}
+Supplement_Document.refresh_list=function (nDossier,sDiv,nJR_id)
+{
+    try
+    {
+     var queryString = {
+            gDossier:nDossier,
+            div:sDiv,
+            jr_id:nJR_id,
+            op:"ledger",
+            act:"refresh_file"
+        };
+        var action = new Ajax.Request(
+                "ajax_misc.php",
+                {
+                    method: 'GET',
+                    parameters: queryString,
+                    onSuccess: function (req) {
+                        var json=req.responseJSON;
+                       $("supplement_div_list"+sDiv).update(json.html);
+                       id$('doc_supp_'+sDiv).removeClassName("nb-round")
+                       if ( json.count > 0) {
+                            id$('doc_supp_'+sDiv).update(json.count);
+                            id$('doc_supp_'+sDiv).addClassName("nb-round")
+                       }
+                    }
+                }
+        );
+    } catch (e)
+    {
+        console.error(e.message);
+    }
+
 }

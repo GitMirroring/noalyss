@@ -69,37 +69,18 @@ class Database extends DatabaseCore
             $this->exec_sql('set search_path to public,comptaproc,pg_catalog;');
         }
         $this->exec_sql('set DateStyle to ISO, MDY;');
-
+        $this->ret=true;
+        $this->is_open=true;
     }
-
-    /***
-     * \brief Save a "piece justificative" , the name must be pj
-     *
-     * \param $seq jr_grpt_id
-     * \return $oid of the lob file if success
-     *         null if a error occurs
-     *
-     */
-    function save_receipt($seq)
-    {
-        $oid = $this->upload('pj');
-        if ($oid == false) {
-            return false;
-        }
-        // Remove old document
-        $ret = $this->exec_sql("select jr_pj from jrn where jr_grpt_id=$seq");
-        if (pg_num_rows($ret) != 0) {
-            $r = pg_fetch_array($ret, 0);
-            $old_oid = $r['jr_pj'];
-            if (strlen($old_oid??"") != 0)
-                $this->lo_unlink( $old_oid);
-        }
-        // Load new document
-        $this->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
-                                jr_pj_type=$3  where jr_grpt_id=$4",
-            array($oid, $_FILES['pj']['name'], $_FILES['pj']['type'], $seq));
-        return $oid;
-    }
+    function __toString(): string {
+        return "DatabaseCore[db=" . var_export($this->db,true)
+            . ", ret=" .var_export( $this->ret,true)
+            . ", is_open=" . $this->is_open
+            . ", sql=" . $this->sql
+            . ", array=" . var_export($this->array,true)
+            . ",dbname = ".$this->get_dbname()
+            . "]";
+}
 
     /**
      * \brief Get version of a database, the content of the

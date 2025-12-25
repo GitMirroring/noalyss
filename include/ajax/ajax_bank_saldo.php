@@ -20,7 +20,8 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
-/* !\file
+/*!
+ * \file
  * \brief respond ajax request, the get contains
  *  the value :
  * - l for ledger
@@ -29,7 +30,8 @@
 
  */
 
-/* !\file
+/*!
+ * \file
  * \brief get the saldo of a account
  * the get variable are :
  *  - l the jrn id

@@ -95,7 +95,7 @@ class PDF_Operation extends PDF {
         $this->pdf->write_cell(100, 6, $this->acc_detail->det->jr_pj_number);
         $this->pdf->line_new(4);
         $this->pdf->write_cell(50, 6, _("Commentaire"));
-        $this->pdf->LongLine(130, 3 , $this->acc_detail->det->jr_comment);
+        $this->pdf->write_multi(130, 3 , $this->acc_detail->det->jr_comment);
         $this->pdf->line_new(4);
         $this->pdf->write_cell(50, 6, _("Nom document"));
         $this->pdf->write_cell(100, 6, $this->acc_detail->det->jr_pj_name);
@@ -159,7 +159,7 @@ class PDF_Operation extends PDF {
      * @return type
      */
     private function str_vat($p_tva_id) {
-        $tva=new Acc_Tva($this->cn, $p_tva_id);
+        $tva= Acc_Tva::build($this->cn, $p_tva_id);
         $tva->load();
         $auto="";
         if ( $tva->tva_both_side==1) {
@@ -192,7 +192,7 @@ class PDF_Operation extends PDF {
             $fiche=new Fiche($this->cn,$fiche_id);
             $this->pdf->write_cell($width[0],6,$i+1);
             $this->pdf->write_cell($width[1],6,$fiche->get_quick_code());
-            $this->pdf->LongLine($width[2],6,$row['j_text']);
+            $this->pdf->write_multi($width[2],3,$row['j_text']);
             $this->pdf->write_cell($width[3],6,nbm($row["qs_price"],2),"",0,"R");
             $str=$this->str_vat($row["qs_vat_code"]);
             $this->pdf->write_cell($width[4],6,$str);
@@ -243,7 +243,7 @@ class PDF_Operation extends PDF {
             $fiche=new Fiche($this->cn,$fiche_id);
             $this->pdf->write_cell($width[0],6,$i+1);
             $this->pdf->write_cell($width[1],6,$fiche->get_quick_code());
-            $this->pdf->LongLine($width[2],6,$row['j_text']);
+            $this->pdf->write_multi($width[2],3,$row['j_text']);
             $this->pdf->write_cell($width[3],6,nbm($row["qp_price"],2),"",0,"R");
             $str=$this->str_vat($row["qp_vat_code"]);
             $this->pdf->write_cell($width[4],6,$str);
@@ -361,12 +361,12 @@ class PDF_Operation extends PDF {
         $nb=count($pa_plan);
         $this->pdf->SetFont('DejaVu', 'B', 8);
         $width=25;
-        $this->pdf->SetFillColor(220,221,255);
+        $this->pdf->fill_row(0);
         for ($i = 0; $i<$nb; $i++) {
              $this->pdf->write_cell($width,8,$pa_plan[$i]['pa_name']);
         }
         $this->pdf->write_cell($width,8,_('Montant'),0,0,'R');
-        $this->pdf->SetFillColor(0,0,0);
+        $this->pdf->fill_row(1);
         $this->pdf->line_new(8);
     }
     private function print_anc_detail($p_j_id, $pa_plan) {

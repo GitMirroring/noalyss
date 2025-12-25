@@ -45,7 +45,7 @@ function search_accounting(obj)
             sx=document.body.scrollTop+60;
 	}
 
-	var div_style="top:"+sx+"px";
+	var div_style="top:"+sx+"px"+';z-index:'+get_next_layer();
 	removeDiv('search_account');
 	add_div({id:'search_account',cssclass:'inner_box',html:loading(),style:div_style,drag:false});
 
@@ -234,7 +234,7 @@ function errorPoste()
 function display_all_card(p_dossier,p_accounting)
 {
     waiting_box();
-    var div_dest=add_div({id:'info_card_accounting',cssclass:"inner_box",style:fixed_position(100,250)+";width:auto"});
+    var div_dest=add_div({id:'info_card_accounting',cssclass:"inner_box",style:fixed_position(100,250)+";width:auto;z-index:"+get_next_layer()});
     var action=new Ajax.Request ( 'ajax_misc.php',
                                       {
                                         method:'get',

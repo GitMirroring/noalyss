@@ -21,7 +21,12 @@ global $g_user;
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
-if  ( $g_user->check_module("OTAX") == 0) die("");
+if  ( $g_user->check_module("OTAX") == 0) {
+    header('Content-type: text/xml; charset=UTF-8');
+    echo Manage_Table_SQL::ajax_error(_('Accès non autorisé'))->saveXML();
+    record_log("security OTAX");
+    return;
+}
 
 try {
     $table=$http->request('table');

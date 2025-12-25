@@ -94,14 +94,18 @@ function displaySelectBox(p_name) {
         }
         newDiv.innerHTML=id$("select_box"+p_name).innerHTML;
         var viewport = document.viewport.getDimensions();
+        let div_height=newDiv.getHeight();
+        if ( div_height > window.innerHeight) {
+            div_height =  window.innerHeight / 2;
+        }
         var locPosY=posY;
-        if ( posY+offsetY+ newDiv.getHeight() > window.innerHeight -3) {
-        locPosY-=newDiv.getHeight()+20
+        if ( posY+offsetY+ div_height > window.innerHeight -3) {
+            locPosY-=div_height+20
         }
         newDiv.style.top=locPosY+"px";
 
         newDiv.style.left=document.getElementById(p_name+"_bt").offsetLeft+"px";
-        card_layer++;
+        var card_layer=get_next_layer();
         newDiv.setStyle({display:"block",position:"absolute","z-index":card_layer});
 
         if ( id$("search_"+p_name+"_list") ) {
@@ -112,7 +116,7 @@ function displaySelectBox(p_name) {
             id$("search_"+p_name+"_t_list").focus();
         }
     } catch(e) {
-        alert(e.message);
+        console.error(e.message);
     }
 
 }

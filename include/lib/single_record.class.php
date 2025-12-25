@@ -27,22 +27,37 @@ define ('CODE_EXCP_DUPLICATE',901);
 /**
  * @brief Objec to check a double insert into the database, this duplicate occurs after
  * a refresh of the web page
- * in
  */
 
 class Single_Record
 {
     public $name;
     public $id;
+    private $dbconx; //!< database connexion
     /**
-     * Constructor $p_name will be set to $this->name, it is also the name
+     *  @brief  Constructor $p_name will be set to $this->name, it is also the name
      * of the tag hidden in a form
      * @remark $cn Db connexion
-     * @param $p_name
+     * @param $p_name (string) name of the HIDDEN INPUT 
+     * @param $dbconx Database connx , if not given; use global $cn;
      */
-    function __construct($p_name)
+    function __construct($p_name,$dbconx=-1)
     {
         $this->name=$p_name;
+        $this->id=0;
+        if ( is_numeric($dbconx )  ) {
+            global $cn;
+            $this->dbconx=$cn;
+        }else {
+            $this->dbconx=$dbconx;
+        }
+        
+    }
+    function __toString(): string {
+        return "Single_Record[name=" . $this->name
+                . ", id=" . $this->id
+                . ", dbconx=" . $this->dbconx
+                . "]";
     }
     /**
      * @brief return a string with a tag hidden and a uniq value
@@ -51,8 +66,7 @@ class Single_Record
      */
     function hidden()
     {
-		global $cn;
-        $this->id=$cn->get_next_seq('uos_pk_seq');
+        $this->id=$this->dbconx->get_next_seq('uos_pk_seq');
         return HtmlInput::hidden($this->name,$this->id);
     }
     /**
@@ -62,19 +76,18 @@ class Single_Record
      */
     function save($p_array=null)
     {
-        global $cn;
-		if ( $p_array == null ) $p_array=$_POST;
-		$this->id=$p_array[$this->name];
+        if ( $p_array == null ) $p_array=$_POST;
+        $this->id=$p_array[$this->name];
         $sql="insert into tool_uos(uos_value) values ($1)";
         try {
-            $cn->exec_sql($sql,array($this->id));
+            $this->dbconx->exec_sql($sql,array($this->id));
         } catch (Exception $e)
         {
             throw new Exception('Duplicate value');
         }
     }
     /**
-     * Count how many time we have this->id into the table tool_uos
+     * @brief Count how many time we have this->id into the table tool_uos
      * @remark global $cn Database connexion
      * @param $p_array is the array where to find the key name, usually it is
      * $_POST. The default value is $_POST
@@ -85,7 +98,7 @@ class Single_Record
         global $cn;
         if ( $p_array == null ) $p_array=$_POST;
         $this->id=$p_array[$this->name];
-        $count=$cn->get_value('select count(*) from tool_uos where uos_value=$1',
+        $count=$this->dbconx->get_value('select count(*) from tool_uos where uos_value=$1',
                 array($this->id));
         return $count;
     }
@@ -96,7 +109,7 @@ class Single_Record
         $this->id=$p_array[$this->name];
         try
         {
-            $count=$cn->get_value('select count(*) from tool_uos where uos_value=$1',
+            $count=$this->dbconx->get_value('select count(*) from tool_uos where uos_value=$1',
                     array($this->id));
             if ($count != 0 ) throw new Exception ('DUPLICATE',CODE_EXCP_DUPLICATE);
         }catch (Exception $e)

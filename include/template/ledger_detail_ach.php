@@ -5,11 +5,19 @@
 /**
  * @var $str_anc String HTML contains the detail of analytic
  * @var $g_user Noalyss_User inherited , it is the connected user
+ * @var $div (string) current DIV ID  prefix (det<x> where <x> is a number
  */
 $str_anc="";
 global $div,$g_parameter,$cn,$access,$jr_id,$obj;
+
+//@var $dossier_id (int) folder id 
+$dossier_id=Dossier::id();
+
+//@var $jr_id (int) jrn.jr_id
+//@var $obj (Acc_Operation) current operation detail 
+
 ?><?php require_once NOALYSS_TEMPLATE.'/ledger_detail_top.php'; ?>
-<div class="content" style="padding:0;">
+<div class="content">
     <?php
     $owner = new Noalyss_Parameter_Folder($cn);
     ?>
@@ -26,7 +34,7 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                         <?php
                         $date = new IDate('p_date');
                         $date->value = format_date($obj->det->jr_date);
-                        if (  $g_parameter->MY_STRICT=='Y' && $g_user->check_action(UPDDATE)==0) {
+                        if (  $g_parameter->MY_STRICT=='Y' || $g_user->check_action(UPDDATE)==0) {
                             $date->setReadOnly(true);
                         }
                         echo td(_('Date')) . td($date->input());
@@ -101,17 +109,16 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                     <table style="width:99%;height:8rem;vertical-align:top;">
                         <tr style="height: 5%">
                             <td style="text-align:center;vertical-align: top">
-                                Note
-                            </td></tr>
-                        <tr>
-                            <td style="text-align:center;vertical-align: top">
-                                <?php
+                               <?php
                                 $inote = new ITextarea('jrn_note');
+                                $inote->set_enrichText("minimal");
+                                $inote->id="jrn_note{$div}";
                                 $inote->style=' class="itextarea" style="width:90%;height:100%;"';
-                                $inote->value = strip_tags($obj->det->note);
+                                $inote->value = $obj->det->note_html;
+                                $inote->heigh=200;
                                 echo $inote->input();
+                               
                                 ?>
-
                             </td>
                         </tr>
                         <tr>
@@ -201,7 +208,7 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                     $row = '';
                     $q = $obj->det->array[$e];
                     $fiche = new Fiche($cn, $q['qp_fiche']);
-                    $qcode=$fiche->strAttribut(ATTR_DEF_QUICKCODE);
+                    $qcode=$fiche->get_attribute(ATTR_DEF_QUICKCODE);
                     $view_card_detail = HtmlInput::card_detail($qcode, "", ' class="line" ');
                     $row = td($view_card_detail);
                     $sym_tva = '';
@@ -209,7 +216,7 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                     if ($owner->MY_TVA_USE == 'Y' && $q['qp_vat_code'] != '')
                     {
                         /* retrieve TVA symbol */
-                        $tva = new Acc_Tva($cn, $q['qp_vat_code']);
+                        $tva = Acc_Tva::build($cn, $q['qp_vat_code']);
                         $tva->load();
                         $sym_tva = h($tva->get_parameter('label'));
                         $x=($g_user->get_vat_code_preference()==1)?$tva->get_parameter('tva_code'):$tva->get_parameter('id');
@@ -217,7 +224,7 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                     }
                     if ($owner->MY_UPDLAB == 'Y')
                     {
-                        $l_lib = ($q['j_text'] == '') ? $fiche->strAttribut(ATTR_DEF_NAME) : $q['j_text'];
+                        $l_lib = ($q['j_text'] == '') ? $fiche->get_attribute(ATTR_DEF_NAME) : $q['j_text'];
                         $hidden = HtmlInput::hidden("j_id[]", $q['j_id']);
                         $input = new IText("e_march" . $q['j_id'] . "_label", $l_lib);
                         $input->css_size = "100%";
@@ -225,7 +232,7 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                     {
                         $input = new ISpan("e_march" . $q['j_id'] . "_label");
                         $hidden = HtmlInput::hidden("j_id[]", $q['j_id']);
-                        $input->value = $fiche->strAttribut(ATTR_DEF_NAME);
+                        $input->value = $fiche->get_attribute(ATTR_DEF_NAME);
                     }
                     $row.=td($input->input() . $hidden);
                     $pu = $q['qp_unit'];
@@ -261,7 +268,7 @@ global $div,$g_parameter,$cn,$access,$jr_id,$obj;
                     /* Analytic accountancy */
                     if ($owner->MY_ANALYTIC != "nu" /*&& $div == 'popup'*/ )
                     {
-                        $poste = $fiche->strAttribut(ATTR_DEF_ACCOUNT);
+                        $poste = $fiche->get_attribute(ATTR_DEF_ACCOUNT);
                         if ( $g_parameter->match_analytic($poste))
                         {
                             $anc_op = new Anc_Operation($cn);

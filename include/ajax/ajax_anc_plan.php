@@ -27,7 +27,7 @@ if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
 
-if ( $g_user->check_module("PLANANC ") ) die("forbidden");
+
 
 $input = $http->request("input");
 $action = $http->request("ieaction", "string", "display");
@@ -39,6 +39,10 @@ $answer->set_callback("ajax_misc.php");
 $answer->add_json_param("action","anc_updatedescription");
 $answer->add_json_param("op","anc_updatedescription");
 $answer->add_json_param("id",$pa_id);
+if ( $g_user->check_module("PLANANC") == 0) {
+    record_log("PLANANC security ");
+    return;
+}
     
 $input=$answer->get_input();
 if ($action=="display") {

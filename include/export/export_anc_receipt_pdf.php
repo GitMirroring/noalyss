@@ -20,6 +20,10 @@
 
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
+/**
+ * @file 
+ * @brief export ANC Receipt with detail of operation and documents in PDF
+ */
 if (!defined('ALLOWED'))
     die('Appel direct ne sont pas permis');
 
@@ -27,7 +31,7 @@ if (!defined('ALLOWED'))
 session_write_close();
 
 /**
- * export all the selected documents for Ana Accountancy in PDF
+ * export all the selected documents for Anc Accountancy in PDF
  */
 $http=new HttpInput();
 $ck = $http->get('ck',"string", 0);
@@ -42,5 +46,10 @@ $reconcilied_document=$http->get("reconcilied_document","number",1);
 
 $task_id=$http->request("task_id");
 $progress=new Progress_Bar($task_id);
-$anc->export_all($ck,$progress,$type_pdf,$reconcilied_document);
+try {
+    $anc->export_all($ck,$progress,$type_pdf,$reconcilied_document);
+    
+} catch (Exception $ex) {
+    record_log($ex);
+}
 

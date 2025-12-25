@@ -33,7 +33,8 @@ $http=new HttpInput();
 $strac=$http->request('ac');
 $ac="ac=".$strac;
 $p_msg="";
-$post_jrn=$http->post("p_jrn", "string","");
+//@var $post_jrn (int) Ledger id JRN_DEF.JRN_DEF_ID
+$post_jrn=$http->post("p_jrn", "number","");
 //----------------------------------------------------------------------
 // Encode a new invoice
 // empty form for encoding
@@ -49,8 +50,9 @@ if ( isset($_REQUEST['p_jrn']) &&
     NoAccess();
     exit -1;
 }
-
+//------------------------------------------------
 /* if a new invoice is encoded, we display a form for confirmation */
+//------------------------------------------------
 if ( isset ($_POST['view_invoice'] ) )
 {
     $p_jrn=$http->post("p_jrn","number");
@@ -65,6 +67,9 @@ if ( isset ($_POST['view_invoice'] ) )
         $p_msg=$e->getMessage();
         $correct=1;
     }
+    //------------------------------------------------
+    // Confirm before saving
+    //------------------------------------------------
     // if correct is not set it means it is correct
     if ( ! isset($correct))
     {
@@ -79,6 +84,28 @@ if ( isset ($_POST['view_invoice'] ) )
         echo '<form class="print" enctype="multipart/form-data" method="post">';
         echo dossier::hidden();
         echo $Ledger->confirm($_POST );
+        //----------------------------------------------------
+        //  Check that INVOICE can be generated 
+        //  for e-invoice only 
+        //----------------------------------------------------
+        if ($g_parameter->MY_INVOICE_FORMAT != 'BASIC')
+        {
+            $xmldocument= \Noalyss\XMLDocument\XMLInvoice::build_xmlinvoice($cn);
+            $array=[];
+            $array['supplier']=$xmldocument->fill_supplier();
+            $customer=Fiche::from_qcode($cn,trim($http->post("e_client")));
+            
+            $array['customer']=$xmldocument->fill_customer($customer->id);
+            $array['operation']=$xmldocument->fill_operation_from_array($_POST);
+            $array['due_date']=$http->post("e_ech");
+            if (  $array['due_date'] == '') 
+            {
+                $array['due_date']=$http->post("e_date");
+            }
+            $xmldocument->set_data($array);
+            $xmldocument->display_error();
+        }
+        
         echo HtmlInput::hidden('ac',$strac);
         $Ledger->input_extra_info();
         echo HtmlInput::submit("record", _("Enregistrement"), 'onClick="return verify_ca(\'\');"');
@@ -89,10 +116,10 @@ if ( isset ($_POST['view_invoice'] ) )
         return;
     }
 }
+
 //------------------------------
 /* Record the invoice */
 //------------------------------
-
 if ( isset($_POST['record']) )
 {
 // Check privilege
@@ -121,10 +148,109 @@ if ( isset($_POST['record']) )
          else
             echo '<div class="content">';
 
-        $Ledger=new Acc_Ledger_Sale($cn,$_POST['p_jrn']);
+        $Ledger=new Acc_Ledger_Sale($cn,$post_jrn);
         try {
             $internal=$Ledger->insert($_POST);
+            $Ledger->upload_supplemental_document($Ledger->jr_id);
+            // var $receipt (string) contains the name of the file name of 
+            //              the invoice (document created), if empty there
+            //              is no invoice
+            
+            $receipt='';
+            //-------------------------------------------------------
+            // Generate a XLM invoice
+            // if a document has been created create the XML file 
+            //-------------------------------------------------------
+            ///@var $flag_invoice (int) error for invoice generating. 
+            ///                     0 = nothing no invoice created
+            ///                     1 = cannot create e-invoice
+            ///                     2 = create e-invoice requested
 
+            $flag_invoice=0;
+             /* Save the attachment or generate doc */
+            if (isset($_FILES['pj']) && noalyss_strlentrim($_FILES['pj']['name']) != 0)
+            { 
+                $acc_document=new Acc_Document($cn,$Ledger->jr_id);
+                $acc_document->save_receipt();
+                $receipt= HtmlInput::show_receipt_document($Ledger->jr_id
+                        ,h($_FILES['pj']['name']));
+            }
+            else
+                /* Generate an invoice and save it into the database */
+           if (isset($_POST['gen_invoice'])) 
+            {
+                // generate an invoice
+                $file = $Ledger->create_document($internal, $_POST);
+                $receipt= HtmlInput::show_receipt_document($Ledger->jr_id
+                        ,h($file));
+                $acc_document=new Acc_Document($cn,$Ledger->jr_id);
+
+                if ($g_parameter->MY_INVOICE_FORMAT != 'BASIC' && ! empty($acc_document->d_filename ))
+                {
+                    $flag_invoice=2;
+                    $xmldocument= \Noalyss\XMLDocument\XMLInvoice::build_xmlinvoice($cn);
+                    $xmldocument->build_data($Ledger->jr_id);
+                    $code_error = $xmldocument->verify() ;
+                    // check that all the sub arrays are empty
+                    if ( ! empty( array_filter($code_error,function($a){ if (!empty($a)) return true; })))  
+                    {
+                        $xmldocument->display_error();
+                        $flag_invoice=1;
+                    }
+                }
+                //------------------------------------------------
+                // flag_invoice == 2 , generate an e-invoice
+                //------------------------------------------------
+                if ( $flag_invoice == 2 ) 
+                {    
+                    $pdf_filename=$acc_document->d_filename;
+                    if ( $acc_document->d_mimetype != 'application/pdf')
+                    {
+                        $pdf_filename=$acc_document->transform2pdf();
+                   
+                        // save PDF In db
+                        $acc_document->update($pdf_filename);
+                    }else{
+                        $pdf_filename=$_ENV['TMP']."/".$pdf_filename;
+                        $acc_document->export_file($pdf_filename);
+                    }
+                    // make the PDF 
+                    $xmldocument->set_pdf_filename($pdf_filename);
+                        
+                    // make the XML  + PDF 
+                    //@var $xml(XML String)
+                    $xml=$xmldocument->create_invoice($Ledger->jr_id);
+                    if (DEBUGNOALYSS > 1) {
+                        $mt=date ('ymd-Hi').'+'.$Ledger->jr_id;
+                        $uniq= $_ENV['TMP']. DIRECTORY_SEPARATOR."$mt-e-invoice.xml";
+                        file_put_contents($uniq, $xml);
+                        chmod ($uniq,"0774");
+                        echo \Noalyss\Dbg::echo_file("file save $uniq");
+
+                    }
+                    // FOR BELGIUM : XML and PDF will be stored separately
+                    // save XML string into the DB
+                    $oid=$cn->lo_write($xml);
+                    echo \Noalyss\Dbg::echo_var(1, "oid is $oid");
+                    if ($oid == false) {
+                        throw new Exception ('CV177 : cannot import e-invoice');
+                    }
+                    if ( $g_parameter->MY_INVOICE_FORMAT == 'UBL21BEL')
+                    {
+                        $acc_document->update_document_xml($oid);
+                        $receipt= HtmlInput::show_receipt_document($Ledger->jr_id,$acc_document->d_filename)
+                            . $acc_document->link_download_xml();
+                    }elseif ($g_parameter->MY_INVOICE_FORMAT=='FACTURXFR')
+                    {
+                        $acc_document->replace_receipt($oid);
+                        $receipt= HtmlInput::show_receipt_document($Ledger->jr_id,$acc_document->d_filename);
+                    }
+
+                }
+
+            }
+            
+                
         }
         catch (\Exception $e) {
                 if ( $e->getCode()==EXC_BALANCE)
@@ -144,14 +270,17 @@ if ( isset($_POST['record']) )
         }
 
         /* Show button  */
-        echo '<h1> Enregistrement </h1>';
-
+        echo '<h1>'._("Enregistré").'</h1>';
+        if ($flag_invoice == 1) {
+            echo_warning(_("Impossible de générer facture électronique") );
+            $xmldocument->display_error();
+        }
         echo $Ledger->confirm($_POST,true);
         /* Show link for Invoice */
-        if (isset ($Ledger->doc) )
+        if ($receipt != "")
         {
             echo '<h2 class="h-section">'._('Document').' </h2>';
-            echo $Ledger->doc;
+            echo $receipt;
         }
 
 
@@ -267,7 +396,8 @@ try
     else if (isset($_GET['create_invoice']))
     {
         $action_id=$http->get('ag_id',"number");
-        $array=$Ledger->convert_from_follow($action_id);
+        $cp=$http->get('cp','number',0);
+        $array=$Ledger->convert_from_follow($action_id,$cp);
         echo HtmlInput::hidden("ledger_type", "VEN");
         echo HtmlInput::hidden("ac", $http->get('ac'));
         echo HtmlInput::hidden("sa", "p");

@@ -79,7 +79,7 @@ switch ($action)
         catch (Exception $exc)
         {
             echo $exc->getMessage();
-            error_log($exc->getTraceAsString());
+            record_log($exc);
             $answer['message']=$exc->getMessage();
         }
 
@@ -107,7 +107,7 @@ switch ($action)
         catch (Exception $exc)
         {
             echo $exc->getMessage();
-            error_log($exc->getTraceAsString());
+            record_log($exc);
             $answer['message']=$exc->getMessage();
         }
         break;

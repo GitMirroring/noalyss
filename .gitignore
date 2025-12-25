@@ -48,3 +48,4 @@ local/*
 include/tfpdf/font/unifont/*
 html/ads.html
 doc/code/*
+nbproject/private/

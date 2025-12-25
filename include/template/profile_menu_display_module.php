@@ -69,7 +69,7 @@ $http=new HttpInput();
                             ?>
                         </span>
                         <p>
-                        <?php echo _($row['me_description']??"")?>
+                        <?php echo _($row['me_description']??" ")?>
                         </p>
                         <p>
                         <?php echo $url?>

@@ -345,7 +345,7 @@ class Acc_Account_Ledger
 
     /*!
      * \brief  give the balance of an account
-     *
+     * \param $p_cond (text) a SQL Condition, 
      * \return
      *      balance of the account
      *
@@ -472,7 +472,8 @@ class Acc_Account_Ledger
 
             $label.=_("Solde débiteur au lieu de créditeur")." ".'<span class="icon">&#xe80e;</span>';
         }
-        echo '<span class="notice">'.$label.'</span>';
+        if ( $label !="" ) 
+                echo '<span class="notice" >'.$label.'</span>';
         
         if ( $from_div == 1)
 			echo "<TABLE id=\"tbpopup\" class=\"resultfooter\" style=\"border-collapse:separate;margin:1%;width:98%;\">";
@@ -484,15 +485,15 @@ class Acc_Account_Ledger
         "<TH style=\"text-align:left\">"._('Pièce')." </TH>".
         "<TH style=\"text-align:left\">"._('Code')."</TH>".
         "<TH style=\"text-align:left\">"._('Interne')." </TH>".
-        "<TH style=\"text-align:left\">"._('Tiers')." </TH>".
-        "<TH style=\"text-align:left\">"._('Description')."</TH>".
-        "<TH style=\"text-align:left\">"._('Type')."</TH>".
-        "<TH style=\"text-align:left\">"._('ISO')."</TH>".
-        "<TH style=\"text-align:right\">"._('Dev.')."</TH>".
+        "<TH class=\"visible_gt800\"  style=\"text-align:left\">"._('Tiers')." </TH>".
+        "<TH class=\"visible_gt800\"  style=\"text-align:left\">"._('Description')."</TH>".
+        "<TH class=\"visible_gt800\"  style=\"text-align:left\">"._('Type')."</TH>".
+        "<TH class=\"visible_gt800\"  style=\"text-align:left\">"._('ISO')."</TH>".
+        "<TH class=\"visible_gt800\"  style=\"text-align:right\">"._('Dev.')."</TH>".
         "<TH style=\"text-align:right\">"._('Débit')."</TH>".
         "<TH style=\"text-align:right\">"._("Crédit")."</TH>".
         th('Prog.','style="text-align:right"').
-        th('Let.','style="text-align:right"');
+        th('Let.',' class="visible_gt800" '.'style="text-align:right"');
         "</TR>"
         ;
         $progress=0;$sum_deb=0;$sum_cred=0;
@@ -520,28 +521,32 @@ class Acc_Account_Ledger
 	    /*
 	     * reset prog. balance to zero if we change of exercice
 	     */
-	    if ( $old_exercice != $op['p_exercice'])
-	      {
-		if ( $old_exercice != '')
-		  {
-		    $progress=bcsub($sum_deb,$sum_cred);
-			$side="&nbsp;".$this->get_amount_side($progress);
-		    echo "<TR class=\"highlight\">".
-		      "<TD>$old_exercice</TD>".
-		      "<TD></TD>".td().td().td().td().td().
-		      "<TD>"._("Totaux")."</TD>".td("").
-		      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($sum_deb)."</TD>".
-		      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($sum_cred)."</TD>".
-		      td(nbm(abs($progress)).$side,'style="text-align:right;padding-left:10px;"').
-		      td('').
-		      "</TR>";
-		    $sum_cred=0;
-		    $sum_deb=0;
-		    $progress=0;
-
-		  }
-	      }
-	    $progress=bcadd($progress,$tmp_diff);
+	    if ($old_exercice != $op['p_exercice']) {
+                if ($old_exercice != '') {
+                    $progress = bcsub($sum_deb, $sum_cred);
+                    $side = "&nbsp;" . $this->get_amount_side($progress);
+                    echo "<TR class=\"highlight\">" .
+                    td($op['p_exercice']) .
+                    td("", ' class="visible_gt800" ') .
+                    td("", ' class="visible_gt800" ') .
+                    td("", ' class="visible_gt800" ') .
+                    td("", ' class="visible_gt800" ') .
+                    td("", ' class="visible_gt800" ') .
+                    td() .
+                    "<TD >Totaux</TD>" . td("") .
+                    "<TD  style=\"text-align:right\">" . nbm($sum_deb) . "</TD>" .
+                    "<TD  style=\"text-align:right\">" . nbm($sum_cred) . "</TD>" .
+                    td(nbm(abs($progress)).$side,'style="text-align:right;padding-left:10px;"').
+                    td("", ' class="visible_gt800" ') .
+                    "</TR>";
+		 
+                   
+                    $sum_cred = 0;
+                    $sum_deb = 0;
+                    $progress = 0;
+                }
+            }
+            $progress=bcadd($progress,$tmp_diff);
 		$side="&nbsp;".$this->get_amount_side($progress);
 	    $sum_cred=bcadd($sum_cred,$op['cred_montant']);
 	    $sum_deb=bcadd($sum_deb,$op['deb_montant']);
@@ -553,9 +558,9 @@ class Acc_Account_Ledger
 	      td(h($op['jr_pj_number'])).
 	      "<TD>".\HtmlInput::card_detail($op['j_qcode'])."</TD>".
 	      "<TD>".$vw_operation."</TD>".
-                "<TD>".$tiers."</TD>".
-	      "<TD>".h($op['description']).$op_analytic."</TD>".
-                    td($op['jr_optype']);
+                "<TD class=\"visible_gt800\" >".$tiers."</TD>".
+	      "<TD class=\"visible_gt800\" >".h($op['description']).$op_analytic."</TD>".
+                    td($op['jr_optype'],' class="visible_gt800" ');
                      /// If the currency is not the default one , then show the amount
             if ( $op['currency_id'] > 0  )
             {
@@ -565,7 +570,7 @@ class Acc_Account_Ledger
                echo   td($op['cr_code_iso']).
                     td(nbm($currency_val,2),'style="text-align:right;padding-left:10px;"');
             } else {
-                echo td().td();
+                echo td('', 'class="visible_gt800" ').td('',' class="visible_gt800"' );
             }
             
             echo 
@@ -573,7 +578,7 @@ class Acc_Account_Ledger
 	      "<TD style=\"text-align:right;padding-left:10px;\">".nbm($op['cred_montant'])."</TD>".
 	      td(nbm(abs($progress)).$side,'style="text-align:right"').
 
-	      td($html_let, ' style="color:red;text-align:right"') .
+	      td($html_let, ' class="visible_gt800" '.' style="color:red;text-align:right"') .
 			"</TR>";
 	    $old_exercice=$op['p_exercice'];
         }
@@ -581,16 +586,21 @@ class Acc_Account_Ledger
         $solde_type=($sum_deb>$sum_cred)?_("solde débiteur"):_("solde créditeur");
         $diff=bcsub($sum_deb,$sum_cred);
 		$side="&nbsp;".$this->get_amount_side($diff);
-        echo "<TR class=\"highlight\">".
+       echo "<TR class=\"highlight\">".
                 td($op['p_exercice']).
-                td().td().td().td().td().td().
+                 td("",' class="visible_gt800" ').
+                td("",' class="visible_gt800" ').
+                td("",' class="visible_gt800" ').
+                td("",' class="visible_gt800" ').
+                td("",' class="visible_gt800" ').
+                td().
         "<TD >Totaux</TD>".td("").
 	  "<TD  style=\"text-align:right\">".nbm($sum_deb)."</TD>".
 	  "<TD  style=\"text-align:right\">".nbm($sum_cred)."</TD>".
 	  "<TD style=\"text-align:right\">".nbm(abs($diff)).$side."</TD>".
-                td().
+                td("",' class="visible_gt800" ').
         "</TR>";
-	echo   "<tr><TD>$solde_type</TD><td></td>".
+	echo   "<tr style=\"font-weight:bold\"><TD>$solde_type</TD><td></td>".
 	  "<TD style=\"text-align:right\">".nbm(abs($diff))."</TD>".
         "</TR>";
         // take saldo from 1st day until last

@@ -38,14 +38,14 @@ $exercice =$http->get("exercice","string",$user_exercice);
 if ($g_user->Admin() == 0 && $g_user->is_local_admin() == 0  && $g_user->get_status_security_ledger()==1)
 {
 	$sql = "select jrn_def_id,jrn_def_name
-         from jrn_def join jrn_type on jrn_def_type=jrn_type_id
+         from jrn_def a join jrn_type on jrn_def_type=jrn_type_id
          join user_sec_jrn on uj_jrn_id=jrn_def_id
          where
          uj_login=$1
          and uj_priv in ('R','W')
          and ( jrn_enable=1 
                 or 
-                exists (select 1 from jrn where jr_tech_per in (select p_id from parm_periode where p_exercice=$2)))
+                exists (select 1 from jrn where jr_tech_per in (select p_id from parm_periode where p_exercice=$2 ) and jr_def_id=a.jrn_def_id))
 		 order by jrn_def_name
          ";
 	$ret = $cn->make_array($sql,0,array($g_user->login,$exercice));
@@ -53,9 +53,14 @@ if ($g_user->Admin() == 0 && $g_user->is_local_admin() == 0  && $g_user->get_sta
 else
 {
 	$ret = $cn->make_array("select jrn_def_id,jrn_def_name
-                         from jrn_def join jrn_type on jrn_def_type=jrn_type_id
+                         from jrn_def a 
+                             join jrn_type on jrn_def_type=jrn_type_id
                          where
-                         jrn_enable=1 or exists(select 1 from jrn where jr_tech_per in (select p_id from parm_periode where p_exercice=$1))
+                         jrn_enable=1 or exists(select 1 
+                                                    from jrn 
+                                                    where 
+                                                        jr_tech_per in (select p_id from parm_periode where p_exercice=$1)  
+                                                      and jr_def_id=a.jrn_def_id)
 						 order by jrn_def_name
 						 ",0,[$exercice]);
 }

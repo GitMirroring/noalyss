@@ -19,7 +19,7 @@
 
 // Copyright Author Dany De Bontridder danydb@noalyss.eu
 
-/*!\file
+/*!\file pdf.class.php
  * \brief API for creating PDF, unicode, based on tfpdf
  *@see TFPDF
  */
@@ -153,6 +153,38 @@ class PDF extends  PDF_Core
             return $this;
         }
         throw new Exception(_("Filter invalide ".$filter_operation), 5);
+    }
+
+    /**
+     * @brief test the class
+     * @return void
+     */
+    static function test_me()
+    {
+        $cn=Dossier::connect();
+        $pdf=new PDF($cn);
+        $pdf->AddPage();
+        $pdf->SetFont('DejaVu', '', 8);
+        for ($i=0;$i <10;$i++){
+            $ln = $i*2+8;
+            $pdf->write_cell("50",$ln," heigh  $ln ln $i",'1',$i);
+            $pdf->line_new();
+
+        }
+
+        $pdf->AddPage();
+        for ($i=0;$i <10;$i++){
+            $ln = $i*2+8;
+            $pdf->LongLine("100",3,"
+            Contrairement à une opinion répandue le Lorem Ipsum n'est pas simplement du texte aléatoire. Il trouve ses racines dans une oeuvre de la littérature latine classique datant de 45 av. J.-C., le rendant vieux de 2000 ans. Un professeur du Hampden-Sydney College, en Virginie, s'est intéressé à un des mots latins les plus obscurs, consectetur, extrait d'un passage du Lorem Ipsum, et en étudiant tous les usages de ce mot dans la littérature classique, découvrit la source incontestable du Lorem Ipsum. Il provient en fait des sections 1.10.32 et 1.10.33 du De Finibus Bonorum et Malorum (Des Suprêmes Biens et des Suprêmes Maux) de Cicéron. Cet ouvrage, très populaire pendant la Renaissance, est un traité sur la théorie de l'éthique. Les premières lignes du Lorem Ipsum, Lorem ipsum dolor sit amet.., proviennent de la section 1.10.32 heigh  $ln ln $i",'1',$i);
+
+            $pdf->write_cell("50",$ln," heigh  $ln ln $i",'1',$i,align:'C');
+            $pdf->line_new();
+
+        }
+
+
+        $pdf->Output('F','/tmp/a.pdf');
     }
 
 }

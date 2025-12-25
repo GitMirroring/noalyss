@@ -1384,6 +1384,7 @@ function check()
             ob_start();
 
             echo HtmlInput::title_box($this->getTitle(), $this->dialog_box,"close","","y","y");
+            print '<div class="content">';
             printf('<form id="frm%s_%s"  method="POST" onsubmit="%s.save(\'frm%s_%s\');return false;">',
                     $this->object_name, $this->table->get_pk_value(),
                     $this->object_name, $this->object_name,
@@ -1409,7 +1410,7 @@ function check()
             '</li>',
             '</ul>';
             echo "</form>";
-            
+            print "</div>";
 
             $html=ob_get_contents();
             ob_end_clean();
@@ -1585,5 +1586,50 @@ function check()
         echo '<td>'.'<a href="#">';
         print_r($p_row);
         echo '</a></td>';
+    }
+    /**
+     * @brief returns an XML object for  error message as unauthorized access.
+     * Called by ManageTable->input.
+     * @code
+// Example if the user cannot access , displays an
+// an error message and returns 
+if ( $g_user->check_action(PARCATDOC)==0)
+{
+    header('Content-type: text/xml; charset=UTF-8');
+    echo $action_document_type->ajax_error(_('Accès non autorisé'))->saveXML();
+    record_log("cfgaction01 security ");
+    return;
+}
+     * @endcode
+     * @param $p_message (string) message to display
+     * @return DOMDocument
+     */
+    static function ajax_error($p_message): DOMDocument {
+        $xml = new DOMDocument("1.0", "UTF-8");
+        $s1=$xml->createElement("status", 'NOK');
+        $dialog_box="dtr";
+        
+        $str = HtmlInput::title_box(_("ERROR"), $dialog_box, "close", "", "y", "y");
+        $str .= '<h2 class="error">' . h(_($p_message)) . '</h2>';
+        $str .= '<ul class="aligned-block">';
+        $str .= '<li>';
+        $str .= HtmlInput::button_close($dialog_box);
+        $str .= '</li>';
+        
+        $s2 = $xml->createElement("ctl_row", "error_0");
+        $s4 = $xml->createElement("ctl", "error_0");
+        $s3 = $xml->createElement("html");
+        $s5 = $xml->createElement("ctl_pk_id", "0");
+        $t1 = $xml->createTextNode($str);
+        $s3->appendChild($t1);
+
+        $root = $xml->createElement("data");
+        $root->appendChild($s1);
+        $root->appendChild($s2);
+        $root->appendChild($s3);
+        $root->appendChild($s4);
+        $root->appendChild($s5);
+         $xml->appendChild($root);
+        return $xml;
     }
 }

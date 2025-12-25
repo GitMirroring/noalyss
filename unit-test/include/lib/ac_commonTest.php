@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class Ac_CommonTest extends TestCase
 {
@@ -207,7 +208,7 @@ class Ac_CommonTest extends TestCase
     /**
      * provides data to testIsDate
      */
-     function dataIsDate()
+     static function dataIsDate():array
      {
         return array(
             ['01.01.1992',1],
@@ -221,12 +222,13 @@ class Ac_CommonTest extends TestCase
      * @testdox isDate
      * @dataProvider dataIsDate
      */
-    function testIsDate($p_date,$expected)
+    #[DataProvider('dataIsDate')]
+    function testIsDate(string $p_date,int $expected)
     {
         $return=($expected==1)?$p_date:null;
         $this->assertEquals(isDate($p_date),$return,"Test $p_date");
     }
-    function dataCompareDate ()
+    static function dataCompareDate ():array
     {
         return array(
             ['01.01.1992','05.02.2001',-1],
@@ -238,6 +240,7 @@ class Ac_CommonTest extends TestCase
      * @testDox test cmpDate
      * @dataProvider dataCompareDate
      */
+     #[DataProvider('dataCompareDate')]
     function testCompareDate($p_date,$p_date_2,$p_result)
     {
         $cmp=cmpDate($p_date,$p_date_2);
@@ -266,7 +269,7 @@ class Ac_CommonTest extends TestCase
         $this->assertEquals("&lt;&amp;",h("<&"));
         $this->assertEquals(0,h("0"));
     }
-    function dataFormat_Date()
+    static function dataFormat_Date()
     {
         return array(
                 ["01.05.2000","DD.MM.YYYY","DD.MM.YY",'01.05.00'],
@@ -287,6 +290,7 @@ class Ac_CommonTest extends TestCase
      * @throws Exception
      * @dataProvider dataFormat_date
      */
+      #[DataProvider('dataFormat_date')]
     function testFormatDate($p_date,$p_from,$p_to,$p_result)
     {
         $this->assertEquals($p_result,format_date($p_date,$p_from,$p_to));
@@ -305,7 +309,7 @@ class Ac_CommonTest extends TestCase
         $this->assertEquals("l''éléphant",Database::escape_string("l'éléphant"));
         $this->assertEquals("l\''éléphant",Database::escape_string("l\'éléphant"));
     }
-    function dataNoalyss_trim()
+    static function dataNoalyss_trim()
     {
         return array(["0","0"],
             [" 0 1 1 1 ","0 1 1 1"],
@@ -320,11 +324,12 @@ class Ac_CommonTest extends TestCase
      * @return void
      * @dataProvider dataNoalyss_trim
      */
+     #[DataProvider('dataNoalyss_trim')]
     function testNoalyss_trim($param,$result)
     {
         $this->assertEquals($result,noalyss_trim($param));
     }
-    function dataNoalyss_replace() {
+    static function dataNoalyss_replace() {
         return array(["0","/","0A0A","/A/A"],
             ["A","*","0A0A","0*0*"],
             ["0","/",null,""],
@@ -336,11 +341,12 @@ class Ac_CommonTest extends TestCase
      * @brief Comptability PHP 8.1 , null is not consider as an empty string
      * @dataProvider dataNoalyss_replace
      */
+     #[DataProvider('dataNoalyss_replace')]
     function testNoalyss_replace($search,$replace,$string,$expected)
     {
         $this->assertEquals($expected,noalyss_str_replace($search,$replace,$string));
     }
-    function dataNoalyss_bcsub() {
+    static function dataNoalyss_bcsub() {
         return array(
                 [1,2,-1],
                 [0,2,-2],
@@ -353,11 +359,12 @@ class Ac_CommonTest extends TestCase
      * @brief Comptability PHP 8.1 , null is not consider as an empty string
      * @dataProvider dataNoalyss_bcsub
      */
+    #[DataProvider('dataNoalyss_bcsub')]
     function testNoalyss_bcsub($numbera,$numberb,$expected)
     {
         $this->assertEquals($expected,noalyss_bcsub($numbera,$numberb));
     }
-    function dataNoalyss_strip_tags() {
+    static function dataNoalyss_strip_tags() {
         return array(
            [null,""],
            ["",""],
@@ -370,6 +377,7 @@ class Ac_CommonTest extends TestCase
      * @brief Comptability PHP 8.1 , null is not consider as an empty string
      * @dataProvider dataNoalyss_strip_tags
      */
+     #[DataProvider('dataNoalyss_strip_tags')]
     function testNoalyss_strip_tags($string,$expected)
     {
         $this->assertEquals($expected,noalyss_strip_tags($string));
@@ -429,7 +437,7 @@ EOF;
      * supply data for user password
      * @return array[$password, $weakness] 0 means strong password
      */
-    public function dataCheck_password_strength()
+    public static  function dataCheck_password_strength()
     {
         return array(
              ["AAAAAAA",5]
@@ -446,6 +454,7 @@ EOF;
      * @testDoc test the check_password_strength function
      * @dataProvider dataCheck_password_strength()
      */
+     #[DataProvider('dataCheck_password_strength')]
     public function testCheck_password_strength($p_password,$p_cnt)
     {
 
@@ -465,5 +474,37 @@ EOF;
                 ,"error cannot generate strong password get $pass");
         }
     }
-
+       public static  function dataCheck_Iban()
+       {
+                return array(
+                        ['FR2617569000405121911339Y14', true]
+                      , ['FR8917569000504392936779O14', true]
+                      , ['FR7214508000702383844671J92', true]
+                      , ['FR26169000405121911339Y14', false]
+                      , ['FR89569000504392936779O14', false]
+                      , ['FR72508000702383844671J92', false]
+                      , ['NL13ABNA2859176594', true]
+                      , ['NL51RABO8584700412', true]
+                      , ['NL03ABNA4880983179', true]
+                      , ['NL13ABNA285917694', false]
+                      , ['NL51RABO858470012', false]
+                      , ['N03ABNA488098379L', false]
+                      , ['BE59561771574126', true]
+                      , ['BE02631697478740', true]
+                      , ['BE92519646539923', true]
+                      , ['BE92519646539923', true]
+                      , ['111459561771574126', false]
+                      , ['1114026316974787401114', false]
+                      , ['1114925196465399231114', false]
+             );
+     }
+  /**
+     * @testDoc test the iban_check function
+     * @dataProvider dataCheck_Iban()
+     */
+     #[DataProvider('dataCheck_Iban')]
+     function testCheck_Iban($iban,$result)
+     {
+        $this->assertTrue(check_iban($iban) == $result," fails for {$iban} receives {$result}");
+     }
 }

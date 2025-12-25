@@ -61,6 +61,7 @@ class ITva_Popup extends HtmlInput
         $this->button = true;
         $this->in_table = false;
         $this->value = $p_value;
+        if ($p_id =="") $p_id= uniqid ("vat");
         $this->id = $p_id;
         $this->filter = 'none';
     }
@@ -140,7 +141,7 @@ class ITva_Popup extends HtmlInput
             $code = $this->code->input();
 
         }
-        $strAttribut = $this->get_node_attribute();
+        $get_attribute = $this->get_node_attribute();
         // show tva code
         if ( self::$vat_code == 1) {
             if ( isNumber($this->value ) == 1) {
@@ -151,7 +152,7 @@ class ITva_Popup extends HtmlInput
 
         $str = '<input type="TEXT"  class="input_text" name="%s" value="%s" id="%s" placeholder="%s" size="6" %s %s 
 list="dl_tva_%s" autocomplete="off">';
-        $r = sprintf($str, $this->name, $this->value, $this->id, _("C.TVA"),$this->js, $strAttribut,$this->id);
+        $r = sprintf($str, $this->name, $this->value, $this->id, _("C.TVA"),$this->js, $get_attribute,$this->id);
         $r.=$code;
 
         if ($this->in_table)
@@ -216,7 +217,7 @@ list="dl_tva_%s" autocomplete="off">';
     public function display()
     {
         $cn = Dossier::connect();
-        $tva = new Acc_Tva($cn, $this->value);
+        $tva = Acc_Tva::build($cn, $this->value);
 
         $comment = ($tva->load() != "-1") ? $tva->tva_label : "";
         $res = sprintf('<input type="text" name="%s" size="6" class="input_text_ro" value="%s" id="%s" readonly="">%s', $this->name, $this->value, $this->name, $comment);

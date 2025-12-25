@@ -30,9 +30,11 @@ if (!defined('ALLOWED'))
  * 
  */
  global $g_user;
-if ( $g_user->check_module("C0SEC") == 0)        
-        throw new Exception(_("Non autorisé"));
-    
+ if ($g_user->check_module("C0SEC") == 0) {
+     record_log("UNAUTHORIZED ACCESS");
+    return;
+}
+
 $n_dossier_id=Dossier::id();
 //-----------------------------------------------------------------------------
 // Manage the user's access to ledgers

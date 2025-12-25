@@ -33,7 +33,8 @@ define ("DEBUGNOALYSS",0);
 // Uncomment if you want to activate the possibility to reinitialize
 // password by email
 // defined("RECOVER","1");
-// Uncomment and define if you want to Name of the sender of the email 
+
+// // Uncomment and define if you want to Name of the sender of the email 
 // if you activate the possibility to reinitialize password by email
 // define('ADMIN_WEB', 'www-data@localhost');
 
@@ -92,3 +93,8 @@ define ("DEBUGNOALYSS",0);
 // When sending an email , the domain of this email must be in comma separated list ,
 // if the list is an empty string then all the domain are allowed
 // define ('ALLOWED_EMAIL_DOMAIN','');
+// ////////
+// change NOALYSS_URL with your URL , 
+// with NGINX it is needed to set the NOALYSS_URL , it is the default URL of 
+// your installation, example with https://demo.noalyss.eu
+// define ("NOALYSS_URL","https://demo.noalyss.eu");

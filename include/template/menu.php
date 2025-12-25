@@ -3,8 +3,9 @@
 //see licence.txt
  \Noalyss\Dbg::echo_var(1,"LEVEL MENU IS {$level}    access_code {$access_code}");
 
-
-?><div class="">
+//@var $style_menu (string) possible values are topmenu, menu2 or menu3
+?>
+<div class="<?=$style_menu?>">
     <?php 
   if ($level == 0) {
       echo '<ul  class="nav nav-pills nav-fill  flex-row noprint nav-level0" >';
@@ -35,7 +36,7 @@
                     $js="";
                     $class_list_element="nav-item nav-item-underline";
                     $class_link="nav-link";
-
+                    $url="";
                     if ( $amenu[$i]['me_url']!='')
                     {
                             $url=$amenu[$i]['me_url'];
@@ -85,6 +86,7 @@
 	?>
 	<?php 
 	    endfor;
+
     	?>
 
 

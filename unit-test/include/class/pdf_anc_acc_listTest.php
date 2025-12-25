@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  * @backupGlobals enabled
  */
 require DIRTEST.'/global.php';
-
+#[\AllowDynamicProperties]
 class PDF_Anc_Acc_ListTest extends TestCase
 {
 
@@ -126,7 +126,7 @@ EOF;
         $filesize=filesize(__DIR__."/file/pdf_anc_acc_list-card-activity.pdf");
         $this->assertTrue($filesize >= 77102 && $filesize <= 77289,
                 __DIR__."/file/pdf_anc_acc_list-card-activity.pdf $filesize incorrect");
-        
+   print __DIR__."/file/pdf_anc_acc_list-card-activity.pdf".PHP_EOL;
         // By Account / Activity
         $anc_acc_list=new Anc_Acc_List($g_connection);
         $anc_acc_list->to='31.12.2019';
@@ -137,6 +137,7 @@ EOF;
         $pdf_anc_acc->export_pdf()->Output(__DIR__."/file/pdf_anc_acc_list-account-activity.pdf","F");
         $this->assertGreaterThan(77149,filesize(__DIR__."/file/pdf_anc_acc_list-account-activity.pdf"),
                __DIR__."/file/pdf_anc_acc_list-account-activity.pdf incorrect ");
+   print __DIR__."/file/pdf_anc_acc_list-account-activity.pdf".PHP_EOL;
         
         // By Activity / Card
         $anc_acc_list=new Anc_Acc_List($g_connection);
@@ -148,6 +149,7 @@ EOF;
         $pdf_anc_acc->export_pdf()->Output(__DIR__."/file/pdf_anc_acc_list-activity-card.pdf","F");
         $this->assertGreaterThan(77600,filesize(__DIR__."/file/pdf_anc_acc_list-activity-card.pdf"),
                 __DIR__."/file/pdf_anc_acc_list-activity-card.pdf incorrect");
+   print __DIR__."/file/pdf_anc_acc_list-activity-card.pdf".PHP_EOL;
         
           // By Activity / Account
          $anc_acc_list=new Anc_Acc_List($g_connection);
@@ -159,6 +161,7 @@ EOF;
         $pdf_anc_acc->export_pdf()->Output(__DIR__."/file/pdf_anc_acc_list-activity-account.pdf","F");
         $this->assertGreaterThan(76000,filesize(__DIR__."/file/pdf_anc_acc_list-activity-account.pdf"),
                 __DIR__."/file/pdf_anc_acc_list-activity-account.pdf incorrect");
+   print __DIR__."/file/pdf_anc_acc_list-activity-account.pdf".PHP_EOL;
     }
 
 }

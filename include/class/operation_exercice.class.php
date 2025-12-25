@@ -18,10 +18,14 @@
 */
 // Copyright Author Dany De Bontridder danydb@aevalys.eu 6/01/24
 /*!
- * \file
- * \brief
+ * \file 
+ * \brief Special operations end or start of exercice
  */
 
+/**
+ * @class Operation_Exercice
+ * @brief Special operations end or start of exercice
+ */
 class Operation_Exercice
 {
     protected $operation_exercice_sql;
@@ -223,10 +227,10 @@ select sum(signed_amount) delta,sum(debit) debit,sum(credit) credit from saldo_d
             $ledger->save($oe_data);
             $oe_result=_("Détail opération");
             $oe_result.=sprintf('<a class="detail" style="display:inline" href="javascript:modifyOperation(%d,%d)">%s</a><hr>',
-                $ledger->jr_id, dossier::id(), $ledger->internal);
+                $ledger->jr_id, dossier::id(), $ledger->jr_internal);
 
             $cn->exec_sql("update operation_exercice set oe_transfer_date=to_timestamp($1,'DD.MM.YY HH24:MI') ,  jr_internal=$2 where oe_id=$3",
-            [date('d.m.Y H:i'),$ledger->internal,$this->operation_exercice_sql->oe_id]);
+            [date('d.m.Y H:i'),$ledger->jr_internal,$this->operation_exercice_sql->oe_id]);
 
             $cn->commit();
             return true;

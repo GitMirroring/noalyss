@@ -38,7 +38,13 @@ class Acc_Ledger_Search
     private $all; //!< Flag to indicate if all ledgers must be searched (1 for yes)
     private $div; //!< prefix for id of DOM id
     var $id ;    //!< id of the ledger
-
+    public $inject_col; //!< inject_code (callback function ) into list_operation 
+                        //  to add an extra column  
+                        //  (see Acc_Ledger_Search::list_operation). 
+                        //  All the HTML code must be in inject_code, including the TD tag
+                        // example $this->inject_col = function() {echo "} 
+    
+    
     /**
      * @brief return a HTML string with the form for the search
      * @param  $p_type if the type of ledger possible values=ALL,VEN,ACH,ODS,FIN: uppercase !
@@ -60,8 +66,9 @@ class Acc_Ledger_Search
         $this->set_type($p_type);
         $this->all=$p_all;
         $this->div=$p_div;
+        $this->inject_col=null;
     }
-
+    
     public function get_type()
     {
         return $this->type;
@@ -103,7 +110,6 @@ class Acc_Ledger_Search
      * @see build_search_sql
      * @see display_search_form
      * @see list_operation
-     * @example search_acc_operation.php
      */
     function search_form()
     {
@@ -196,7 +202,7 @@ class Acc_Ledger_Search
         $f_qcode->javascript=sprintf(' onchange="fill_data_onchange(%s);" ',
                 $f_qcode->name);
         $f_qcode->value=$http->request($this->div.'qcode',"string","");
-
+        $f_qcode->setAfter_clean("");
         /*        $f_txt_qcode=new IText('qcode');
           $f_txt_qcode->value=(isset($_REQUEST['qcode']))?$_REQUEST['qcode']:'';
          */
@@ -343,6 +349,7 @@ class Acc_Ledger_Search
              p_closed,
              jr_pj_number,
              n_text,
+             n_html,
              (select string_agg(a,' ')
                 from (select '<span style=\"font-size:80%\" class=\"tagcell tagcell-color'||t.t_color::text||'\">'||t_tag||'</span>' a 
                         from operation_tag ot join tags t on(ot.tag_id=t.t_id)
@@ -658,7 +665,7 @@ class Acc_Ledger_Search
                     $fil_paid="";
                     break;
                 case "paid":
-                    $fil_paid=$and."(jr_rapt is not null or jr_rapt = 'paid') and jr_valid = true ";
+                    $fil_paid=$and."(coalesce(jr_rapt,'') != '' or jr_rapt = 'paid') and jr_valid = true ";
                     $and=" and ";
                     break;
                 default:
@@ -790,8 +797,35 @@ class Acc_Ledger_Search
      * \see build_search_sql
      * \see display_search_form
      * \see search_form
+     @note  $this->inject_code (string) code into Acc_Ledger_Search::list_operation 
+     *  Example of using inject_col to inject a new column
+     * @code
+ <?php
+     
+function inject_col($param)
+{
+    \Noalyss\Dbg::echo_var(0, $param);
+    if (is_array($param))
+    {
+        return sprintf("<td> %s // %s</td>", $param['jr_id'], $param['jr_montant']);
+    } elseif ($param == 'header')
+    {
+        
+        return '<th> Operation & montant</th>';
+    }
+}
 
-     * \return HTML string
+$acc_ledger_search = new Acc_Ledger_Search('VEN', 1, 1);
+$acc_ledger_search->inject_col = "inject_col";
+        
+list($sql, $where) = $acc_ledger_search->build_search_sql($_GET);
+list($nb_count, $html) = $acc_ledger_search->list_operation($sql . " and " . $where, 0);
+
+printf("There are %s rows", $nb_count);
+print $html;
+     
+     * @endcode 
+     * \return    array($count, $html_code);
      */
     public function list_operation($sql, $offset, $p_paid=0)
     {
@@ -879,6 +913,10 @@ class Acc_Ledger_Search
         }
         $r.="<th>"._('Concerne')."</th>";
         $r.="<th>"._('Document')."</th>";
+        if ( $this->inject_col != null)
+        {
+            $r.=call_user_func($this->inject_col,"header");
+        }
         $r.="</tr>";
         // Total Amount
         $tot=0.0;
@@ -943,7 +981,14 @@ class Acc_Ledger_Search
             if ( $row['analytic_op'] != "")
                 $r.=sprintf('<span style="float:right;background:black;color:white;">&ni;</span>');
             $r.="</TD>";
-            $r.=td(h($row['n_text']), ' style="font-size:0.87em%"');
+            // Note
+            $r.='<td>';
+            $r.='<span id="als_note'.$row['jr_id'].'" class="font-small">';
+            $r.= substr($row['n_text']??"",0,120);
+            $r.='<span>';
+            $r.='</span>';
+            $r.='</td>';
+            
             // Amount
             // If the ledger is financial :
             // the credit must be negative and written in red
@@ -985,6 +1030,7 @@ class Acc_Ledger_Search
                 $w->selected=($row['jr_rapt']=='paid')?true:false;
                 // if p_paid == 2 then readonly
                 $w->readonly=( $p_paid==2)?true:false;
+                $w->javascript='onclick="operation_payment.check_item(this)"';
                 $h=new IHidden();
                 $h->name="set_jr_id".$row['jr_id'];
                 $r.='<TD>'.$w->input().$h->input().'</TD>';
@@ -1032,7 +1078,14 @@ class Acc_Ledger_Search
             }
             else
                 $r.="<TD></TD>";
-
+            //< inject_code (string) code into list_operation 
+            //  to add an extra column  
+            //  (see Acc_Ledger_Search::list_operation). 
+            //  All the HTML code must be in inject_code, including the TD tag
+            if ( $this->inject_col != null)
+            {
+                $r.=call_user_func($this->inject_col,$row);
+            }
             // end row
             $r.="</tr>";
         }
@@ -1240,22 +1293,21 @@ class Acc_Ledger_Search
         return array($count, $r);
     }
      /**
-     * return the html code to create an hidden div and a button
+     * @brief return the html code to create an hidden div and a button
      * to show this DIV. This contains all the available ledgers
      * for the user in READ or RW
      *@param $p_selected is an array of checkbox
-     *@param $p_div div suffix for the list of ledgers
+     *@param $p_div div suffix for the list of ledgers,  base for building the DOMID of elements from the DIV
      *@note the choosen ledger are stored in the array r_jrn (_GET)
      */
     function select_ledger($p_selected,$p_div)
     {
         global $g_user;
-	$r = '';
-	/* security : filter ledger on user */
-	$p_array = $g_user->get_ledger($this->type, 3,FALSE);
-        
+        $r = '';
+        /* security : filter ledger on user */
+        $p_array = $g_user->get_ledger($this->type, 3,false);
         ob_start();
-        
+
 
         /* create a hidden div for the ledger */
         echo '<div id="div_jrn'.$p_div.'" >';
@@ -1290,7 +1342,7 @@ class Acc_Ledger_Search
         for ($e=0;$e<$nb_array;$e++)
         {
             $row=$p_array[$e];
-//            if ( $row['jrn_enable']==0) continue;
+
             $r=new ICheckBox($p_div.'r_jrn'.$e,$row['jrn_def_id']);
             $r->set_attribute("ledger_type", $row['jrn_def_type']);
             $idx=$row['jrn_def_id'];

@@ -73,7 +73,7 @@ $bookmark_sql="select distinct b_id,b_action,b_order,me_code,me_description, jav
         . "where "
         . "login=$1 order by me_code";
 $a_bookmark=$cn->get_array($bookmark_sql,array($g_user->login));
-$url="do.php?gDossier=".Dossier::id()."&ac=";
+$url="do.php?gDossier=".Dossier::id();
 //-------------------------------------------------------------------------------------------
 // Display content
 //-------------------------------------------------------------------------------------------

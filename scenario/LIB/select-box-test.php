@@ -3,69 +3,7 @@
     <script src="prototype.js"></script>
 
     <style>
-        /* The container <div> - needed to position the dropdown content */
-        .select_box{
-            position: relative;
-            display: inline-block;
-        }
-
-        /* Dropdown Content (Hidden by Default) */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        /* Links inside the dropdown */
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        /* Change color of dropdown links on hover */
-        .dropdown-content a:hover {background-color: #f1f1f1}
-
-        /* Show the dropdown menu on hover */
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-      .select_box {
-          border:solid 0.5px darkblue;
-          background:white;
-          width:455px;
-          max-width:250px;
-          padding:3px;
-          margin:0px;
-          display:none;
-          position:absolute;
-          z-index:10;
-      }
-     div.select_box ul {
-       list-style:none;
-       padding:2px;
-       margin:1px;
-       width:100%;
-       top:10px;
-
-     }
-div.select_box ul li {
-    padding-top:2px;
-    padding-bottom:2px;
-    margin:2px;
-}
-div.select_box a {
-    text-decoration:none;
-  color : darkblue;
-}
-div.select_box a:hover,div.select_box ul li:hover {
-    background-color : blue;
-  color:lightgrey;
-}
+   
     </style>
 
 </head>

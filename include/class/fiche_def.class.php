@@ -39,10 +39,10 @@ class Fiche_Def
     var $attribut;		//!< get from attr_xxx tables
     var $fd_description; //!< Description  of the Card Category
 
-    function __construct($p_cn,$p_id = 0)
+    function __construct($cn,$id = 0)
     {
-        $this->cn=$p_cn;
-        $this->id=$p_id;
+        $this->cn=$cn;
+        $this->id=$id;
         
         
     }
@@ -59,13 +59,20 @@ class Fiche_Def
 
         return;
     }
-
+    /**
+     * @brief replace by load_attribute
+     * @deprecated since version 9.3.12
+     * @return type
+     */
+    function getAttribut() {
+        return $this->load_attribute();
+    }
     /*!
-     *  \brief  Get attribut of a fiche_def
+     *  \brief  Get attribute of a fiche_def
      *
      * \return array of Card_Property 
      */
-    function getAttribut()
+    function load_attribute()
     {
         $sql="select * from jnt_fic_attr ".
              " natural join attr_def where fd_id= $1".
@@ -389,7 +396,7 @@ $order
         {
             $row=Database::fetch_array($Ret,$i);
             $t=new Fiche($this->cn,$row['f_id']);
-            $t->getAttribut();
+            $t->load_attribute();
             $all[$i]=$t;
 
         }
@@ -621,7 +628,7 @@ $order
     {
         if ( $this->id == 0 ) return;
         /* ORDER */
-        $this->GetAttribut();
+        $this->load_attribute();
         $order=$p_order;
         if ( $p_order == -1 ) {
             $order = $this->cn->get_value("select ad_default_order from attr_def where ad_id=$1",[$p_ad_id]);
@@ -667,7 +674,7 @@ $order
     function save_order($p_array)
     {
         extract($p_array, EXTR_SKIP);
-        $this->GetAttribut();
+        $this->load_attribute();
         foreach ($this->attribut as $row)
         {
             if ( $row->ad_id == 1 ) continue;
@@ -778,7 +785,7 @@ $order
 		// Save the label
 
 		$this->get();
-		$this->GetAttribut();
+		$this->load_attribute();
 		$r.= '<H2 class="info">' . $this->id . " " . h($this->label) . '</H2>';
 		$r.='<fieldset><legend>'._('Données générales').'</legend>';
 

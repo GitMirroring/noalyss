@@ -65,6 +65,7 @@ class Card_Attribut_MTable extends Manage_Table_SQL
         $this->dossier_id=Dossier::id();
         $this->set_order(['ad_id','ad_text',"ad_type","ad_default_order","ad_size","ad_extra","ad_search_followup"]);
         $this->set_col_sort(1);
+         $this->setCssClass("inner_box2");
     }
 
     /**

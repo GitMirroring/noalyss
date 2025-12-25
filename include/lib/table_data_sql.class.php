@@ -35,7 +35,7 @@
  *   - type = array , match between column and type of data
  *   - default = array of column with a default value
  *   - date_format = format of the date
- * 
+ *   - virtual_col
  * After you call the parent constructor
  * @note the view or the table must include an unique key, otherwise the load 
  * doesn't work.
@@ -83,20 +83,39 @@
 
   }
  * @endcode
- *
+ *  it is also possible to use set_virtual_col to format data directly in the
+ *  SQL
+ * @see Data_SQL
+ @code
+ $jrn->set_virtual_col("str_date", " to_char(jr_tech_date,'DD/MM/YY HH24:MI')");
+ @endcode
  */
 #[AllowDynamicProperties]
 abstract class Table_Data_SQL extends Data_SQL
 {
-
+    
     
     function __construct($p_cn, $p_id=-1)
     {
         parent::__construct($p_cn, $p_id);
-        
+       
+    }
+      public function __toString(): string
+    {
+        $ret=" members : ";
+        foreach ($this->name as $name) {
+            $ret.="[ $name => {$this->$name} ]";
+        }
+
+        $ret.="| type ".var_export($this->type,true);
+        $ret.="| default ".var_export($this->default,true);
+        $ret.="| primary key ".$this->primary_key;
+        $ret.="| date_format ".$this->date_format;
+        $ret.="| a_virtual_col".var_export($this->a_virtual_col,true);
+        return $ret;
     }
 
-
+    
     public function insert()
     {
         $this->verify();
@@ -156,6 +175,9 @@ abstract class Table_Data_SQL extends Data_SQL
         return $this;
 
     }
+    /**
+     * @brief update the row but not the column with a default value
+     */
     public function update()
     {
         $this->verify();
@@ -191,22 +213,23 @@ abstract class Table_Data_SQL extends Data_SQL
     */
     public function load():bool
     {
-        $sql=$this->build_query();
+        
         $pk=$this->primary_key;
         // primary cannot be null or empty
         if (trim($this->$pk??"")==="" || $this->$pk===null)  {
-            $this->pk=-1;
+            $this->$pk=-1;
             return false;
         }
-       
-        $result=$this->cn->get_array($sql,array ($this->$pk));
+        $sql=$this->build_query();
+        $sql.=" where ".$this->primary_key." = $1";
+        $result=$this->cn->get_row($sql,array ($this->$pk));
         if ($this->cn->count()==0)
         {
             $this->$pk=-1;
             return false;
         }
 
-        foreach ($result[0] as $key=> $value)
+        foreach ($result  as $key=> $value)
         {
             $this->$key=$value;
         }
@@ -224,7 +247,8 @@ abstract class Table_Data_SQL extends Data_SQL
      */
     function seek($cond='', $p_array=null)
     {
-        $sql="select * from ".$this->table."  $cond";
+        $sql=$this->build_query();
+        $sql.="  $cond ";
         $ret=$this->cn->exec_sql($sql, $p_array);
         return $ret;
     }
@@ -270,12 +294,22 @@ abstract class Table_Data_SQL extends Data_SQL
             $sep=",";
         }
         $pk=$this->primary_key;
+        /**
+         * add virtual column
+         */
+        if ( ! empty( $this->a_virtual_col)){
+            $nb_virtual_col=count($this->a_virtual_col);
+            $a_col= array_keys($this->a_virtual_col);
+            for ($x=0;$x<$nb_virtual_col ;$x++) {
+                $col=$a_col[$x];
+                $expr=sprintf("$sep %s as %s ",$this->a_virtual_col[$col], $col);
+                $sql.=" $expr ";
+            }
+        }
         $sql.=" from ".$this->table;
-        
-        $sql.=" where ".$this->primary_key." = $1";
-        
         return $sql;
     }
+
     /**
      * @brief Get all the row and use the p_key_code are the key value of array. 
      * The key column is usually the primary key or any unique key. 
@@ -316,9 +350,7 @@ abstract class Table_Data_SQL extends Data_SQL
         }
         catch (Exception $exc)
         {
-            echo $exc->getMessage();
-            record_log($exc->getMessage());
-            record_log($exc->getTraceAsString());
+            record_log($exc);
             throw $exc;
         }
         return $a_result;

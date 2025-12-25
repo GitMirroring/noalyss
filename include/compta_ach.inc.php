@@ -108,11 +108,17 @@ if (isset($_POST['record']))
 
         try {
 		    $internal = $Ledger->insert($_POST);
+                    $Ledger->upload_supplemental_document($Ledger->jr_id);
         } catch (\Exception $e) {
             if ( $e->getCode()==EXC_BALANCE)
+            {
+                \record_log($e);
                 echo_warning(_("enregistrement annulé: balance , voyer le fichier log"));
+            }
             else
+            {
                 echo_warning($e->getMessage());
+            }
             return;
         }
 
@@ -252,7 +258,8 @@ try
     else if (isset($_GET['create_feenote']))
     {
         $action_id=$http->get('ag_id',"number");
-        $array=$Ledger->convert_from_follow($action_id);
+        $cp=$http->get('cp','number',0);
+        $array=$Ledger->convert_from_follow($action_id,$cp);
         echo HtmlInput::hidden("ledger_type", "VEN");
         echo HtmlInput::hidden("ac",$http->get('ac'));
         echo HtmlInput::hidden("sa", "p");

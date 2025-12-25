@@ -24,9 +24,9 @@ if ( $cn->get_value("select count(*) from profile join profile_user using (p_id)
     $search_card=new IText('card_search');
     $search_card->css_size='97%';
     $search_card_js=sprintf('onclick="boxsearch_card(\'%d\')"',dossier::id());
-    echo Icon_Action::card( "$('box_search_card').show()");
+    echo Icon_Action::card( "$('box_search_card').show();$('box_search_card').setStyle({'z-index':get_next_layer()})");
     echo '<div id="box_search_card" style="display:none;width:20rem;padding:0" class="inner_box">';
-    echo HtmlInput::title_box(_('Recherche de fiche'), "box_search_card","hide");
+    echo HtmlInput::title_box(_('Recherche de fiches'), "box_search_card","hide");
     echo '<p class="info p-1" >';
    echo _("Donnez une partie du nom, prénom, de la description, du poste comptable, du n° de TVA,quick code ... "
            . " de la fiche" )    ;
@@ -124,7 +124,7 @@ endif;?>
 		    }
 		    ?>
 		<li class="<?php echo $style?>">
-                    <a class="nav-link" href="<?php echo $url?>" title="<?php echo _($row['me_description']??''); ?>" <?php echo $js?> ><?php echo gettext($row['me_menu'])?></a>
+                    <a class="nav-link" href="<?php echo $url?>" title="<?php echo _($row['me_description']??' '); ?>" <?php echo $js?> ><?php echo gettext($row['me_menu'])?></a>
                 </li>
 		<?php 
 		    endforeach;
@@ -168,7 +168,7 @@ endif;?>
                         }
                         ?>
                     <li class="<?php echo $style?>">
-                        <a class="nav-link" href="<?php echo $url?>" title="<?php echo _($row['me_description']??"")?>" <?php echo $js?> ><?php echo gettext($row['me_menu'])?></a>
+                        <a class="nav-link" href="<?php echo $url?>" title="<?php echo _($row['me_description']??"-")?>" <?php echo $js?> ><?php echo gettext($row['me_menu'])?></a>
                     </li>
                     <?php 
                         endforeach;

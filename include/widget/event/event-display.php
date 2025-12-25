@@ -39,13 +39,16 @@ if ($item['remind_date'] < $date) {
     $style="background-color:orange;color:white;";
 }
 ?>
-<div class="row <?=$class?> border" style="<?=$style?>">
-    <div class="col-2">
+<div class="row <?=$class?> border m-0" style="<?=$style?>">
+    <div class="col-2 " style="text-overflow:hidden;text-wrap:nowrap;text-overflow:ellipsis ">
         <?=$item['ag_timestamp_fmt']?>
     </div>
-    <div class="col" style="text-overflow:hidden;text-wrap:nowrap;text-overflow:ellipsis ">
+    <div class="col-2 " style="text-overflow:hidden;text-wrap:nowrap;text-overflow:ellipsis ">
+        <?=HtmlInput::card_detail($item['quick_code'])?>
+    </div>
+    <div class="col" style="text-overflow:hidden;text-wrap:wrap;text-overflow:ellipsis ">
         <?=HtmlInput::detail_action($item['ag_id'],
-        $item['ag_ref']." ".$item['ag_title'])?>
+        "[{$item['ag_ref']}]  {$item['ag_title']}")?>
     </div>
 </div>
 <?php

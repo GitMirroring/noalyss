@@ -117,18 +117,18 @@ echo '</div>';
 //-----------------------------------------------------
 if ( isset( $_REQUEST['bt_html'] ) )
 {
-    if ( isDate($_REQUEST['from_periode'])==null || isDate($_REQUEST['to_periode'])==null)
+    if ( isDate($http->request('from_periode'))==null || isDate($http->request('to_periode'))==null)
     {
         echo alert(_('Date malformée, désolée'));
         return;
     }
     $go=0;
 // we ask a poste_id
-    if ( isset($_GET['poste_id']) && noalyss_strlentrim($_GET['poste_id']) != 0 )
+    if ( isset($_GET['poste_id']) && noalyss_strlentrim($http->get('poste_id')) != 0 )
     {
         if ( isset ($_GET['poste_fille']) )
         {
-            $parent=sql_string($_GET['poste_id']);
+            $parent=sql_string($http->get('poste_id'));
             $a_poste=$cn->get_array("select pcm_val from tmp_pcmn where pcm_val::text like '$parent%' order by pcm_val::text");
             $go=3;
         }
@@ -144,7 +144,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
         // thanks the qcode we found the poste account
         $fiche=new Fiche($cn);
         $qcode=$fiche->get_by_qcode($http->get('f_id'));
-        $p=$fiche->strAttribut(ATTR_DEF_ACCOUNT);
+        $p=$fiche->get_attribute(ATTR_DEF_ACCOUNT);
         if ( $p != NOTFOUND)
         {
             $go=2;
@@ -168,7 +168,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
             echo $table;
             }
 	    echo '</div>';
-            echo Acc_Account_Ledger::HtmlTableHeader();
+             Acc_Account_Ledger::HtmlTableHeader();
         }
         else
         {
@@ -198,7 +198,7 @@ if ( isset( $_REQUEST['bt_html'] ) )
             }
             echo '</table>';
 
-            echo Acc_Account_Ledger::HtmlTableHeader();
+             Acc_Account_Ledger::HtmlTableHeader();
         }
         echo "</div>";
         exit;
