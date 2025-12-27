@@ -4279,3 +4279,7 @@ span.nb-round {
          font-size:120%;
      }
  }
+ 
+#module_setting .selectedcell {
+    background-color:beige;
+}
