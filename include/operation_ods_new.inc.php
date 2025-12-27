@@ -128,8 +128,23 @@ printf (_("Opération rapprochée : %s"),$iconcerned->input());
 
 echo '<p>';
 echo Html_Input_Noalyss::ledger_add_item("M");
-echo HtmlInput::submit('summary', _('Sauvez'));
+
 echo '</p>';
+
+echo '<div class="bt-center">';
+echo '<ul class="aligned-block">';
+echo '<li>';
+echo HtmlInput::button('act', _('Actualiser'), 'onClick="checkTotalDirect()();"', p_class: "button");
+echo '</li>';
+echo '<li>';
+echo HtmlInput::submit("summary", _("Enregistrer"), p_class: "button");
+echo '</li>';
+echo '<li>';
+echo HtmlInput::reset(_('Effacer '), p_class: "button");
+echo '</li>';
+echo '</ul>';
+echo '</div>';
+
 
 echo '</form>';
 

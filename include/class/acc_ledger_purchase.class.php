@@ -2119,7 +2119,7 @@ EOF;
     public function extra_info()
     {
         $r="";
-        $r = '<div id="facturation_div_id" style="height:185px;height:10rem">';
+        $r = '<div id="facturation_div_id" class="conf_op_extra_info">';
         $r.='<p class="decale">';
         // check for upload piece
         $file=new IFile();
@@ -2140,8 +2140,9 @@ EOF;
                                 " from document_modele where md_affect='ACH' order by 2");
             $r.=$doc_gen->input().'<br>';
         }
+        $r.='</p>';
         $r.=$this->input_supplemental_document();
-        $r.='<br>';
+        $r.='<p>';
         $obj=new IText();
         $r.=_('Numero de bon de commande : ').$obj->input('bon_comm').'<br>';
         $r.=_('Autre information : ').$obj->input('other_info').'<br>';

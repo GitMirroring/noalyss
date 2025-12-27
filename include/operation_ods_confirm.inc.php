@@ -41,8 +41,14 @@ echo '<FORM METHOD="POST" enctype="multipart/form-data" class="print">';
 echo HtmlInput::request_to_hidden(array('ac','p_currency_code','p_currency_rate'));
 echo $ledger->confirm($_POST,false);
 echo $ledger->input_extra_info();
-echo HtmlInput::submit("save",_("Confirmer"));
-echo HtmlInput::submit("correct",_("Corriger"));
-
+echo '<div class="bt-center">';
+echo '<ul class="aligned-block">';
+echo '<li>';
+echo HtmlInput::submit("save", _("Confirmer"), 'onClick="return verify_ca(\'\');"', p_class: "button");
+echo '</li>';
+echo '<li>';
+echo HtmlInput::submit('correct', _("Corriger"), p_class: "button");
+echo '</li>';
+echo '</div>';
 ?>
 </FORM>

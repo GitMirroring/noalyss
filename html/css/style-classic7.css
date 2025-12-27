@@ -1500,7 +1500,6 @@ div#jrn_name_div
     div#jrn_name_div
    {
        float: right;
-       margin-right:2%;
        display:block;
    }
 }
@@ -4239,3 +4238,44 @@ span.nb-round {
     margin-left: 2px;
     color:navy;
 }
+/*
+ * Tab : when show the operation to confirm
+ */
+ #document_div_id {
+      height:185px;
+      height:10rem;
+      
+ }
+ 
+ /**
+  * Button to confirm operation
+  */
+
+ .bt-center {
+     margin-bottom: 2rem;
+ }
+
+
+ .bt-center .aligned-block {
+     margin-left: 10px;
+ }
+ .bt-center .aligned-block .button {
+     font-size:115%;
+     margin-left: 10px;
+ }
+ @media (min-width: 576px) {
+     .bt-center .aligned-block {
+         margin-left: min(40%,70rem);
+         font-size:120%;
+     }
+
+ }
+
+ /* LarGe */
+ @media (min-width: 992px) {
+     .bt-center .aligned-block {
+         font-size:120%;
+         margin-left: min(40%,70rem);
+         font-size:120%;
+     }
+ }

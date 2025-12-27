@@ -85,9 +85,16 @@ if ( isset($_POST['save']))
 		echo '<form name="form_detail" class="print" enctype="multipart/form-data" class="print" METHOD="POST">';
 		echo HtmlInput::hidden('ac',$_REQUEST['ac']);
 		echo $Ledger->confirm($_POST);
-		echo HtmlInput::submit('confirm',_('Confirmer'));
-		echo HtmlInput::submit('correct',_('Corriger'));
-
+                echo '<div class="bt-center">';
+                echo '<ul class="aligned-block">';
+                echo '<li>';
+                echo HtmlInput::submit("confirm", _("Confirmer"), 'onClick="return verify_ca(\'\');"', p_class: "button");
+                echo '</li>';
+                echo '<li>';
+                echo HtmlInput::submit('correct', _("Corriger"), p_class: "button");
+                echo '</li>';
+                echo '</ul>';
+                echo '</div>';
 		echo '</form>';
 		echo '</div>';
 		return;
@@ -132,7 +139,13 @@ if ( isset($_POST['confirm']))
 		echo '</div>';
 
 		echo '</div>';
+                echo '<div class="bt-center">';
+                echo '<ul class="aligned-block">';
+                echo '<li>';
                 echo $Ledger->button_new_operation();
+                echo '</li>';
+                echo '</ul>';
+                echo '</div>';
 		return;
 	}
 }
@@ -159,8 +172,19 @@ try
     echo $Ledger->input($array);
 
     echo  Html_Input_Noalyss::ledger_add_item("F");
-    echo HtmlInput::submit('save',_('Sauve'));
-    echo HtmlInput::reset(_('Effacer'));
+    echo '<div class="bt-center">';
+    echo '<ul class="aligned-block">';
+/*    echo '<li>';
+    echo HtmlInput::button('act', _('Actualiser'), 'onClick="checkTotalDirect()();"', p_class: "button");
+    echo '</li>';*/
+    echo '<li>';
+    echo HtmlInput::submit("save", _("Enregistrer"), p_class: "button");
+    echo '</li>';
+    echo '<li>';
+    echo HtmlInput::reset(_('Effacer '), p_class: "button");
+    echo '</li>';
+    echo '</ul>';
+    echo '</div>';
 
     $script="update_name();";
     $e_date=$http->request("e_date","string","");

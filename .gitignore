@@ -47,10 +47,6 @@ local/*
 .idea/*
 include/tfpdf/font/unifont/*
 html/ads.html
-<<<<<<< HEAD
-/nbproject/private/
-=======
 doc/code/*
 nbproject/private/
 
->>>>>>> unstable

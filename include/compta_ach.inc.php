@@ -74,9 +74,17 @@ if (isset($_POST['view_invoice']))
 		echo $Ledger->confirm($_POST);
 		echo HtmlInput::hidden('ac', $ac);
                 $Ledger->input_extra_info();
-                echo HtmlInput::submit("record", _("Enregistrement"), 'onClick="return verify_ca(\'\');"');
-		echo HtmlInput::submit('correct', _("Corriger"));
-		echo '</form>';
+                echo '<div class="bt-center">';
+                echo '<ul class="aligned-block">';
+                echo '<li>';
+                echo HtmlInput::submit("record", _("Confirmer"), 'onClick="return verify_ca(\'\');"', p_class: "button");
+                echo '</li>';
+                echo '<li>';
+                echo HtmlInput::submit('correct', _("Corriger"), p_class: "button");
+                echo '</li>';
+                echo '</ul>';
+                echo '</div>';
+                echo '</form>';
                 echo '</div>';
                 if (DEBUGNOALYSS>1) { echo "<!-- confirm_div_id -->";}
             return;
@@ -179,6 +187,7 @@ if (isset($_POST['record']))
                         echo '<span class="warning">'._('Date invalide, opération non extournée').'</span>';
                     }
                 }
+                echo '<div class="bt-center">';
                 echo '<ul class="aligned-block">';
                 echo "<li>";
                 echo $Ledger->button_new_operation();
@@ -187,6 +196,7 @@ if (isset($_POST['record']))
                 echo $Ledger->button_copy_operation();
                 echo "</li>";
                 echo "</ul>";
+                echo '</div>';
                 echo '</div>';
 		return;
 	}
@@ -285,10 +295,20 @@ try
         echo '</script>';
     }
     echo '<div class="content">';
-    echo HtmlInput::button('act', _('Actualiser'),
-            'onClick="compute_all_ledger();"');
-    echo HtmlInput::submit("view_invoice", _("Enregistrer"));
-    echo HtmlInput::reset(_('Effacer '));
+    echo '<div class="bt-center">';
+    echo '<ul class="aligned-block">';
+    echo '<li>';
+    echo HtmlInput::button('act', _('Actualiser'), 'onClick="compute_all_ledger();"', p_class: "button");
+    echo '</li>';
+    echo '<li>';
+    echo HtmlInput::submit("view_invoice", _("Enregistrer"), p_class: "button");
+    echo '</li>';
+    echo '<li>';
+    echo HtmlInput::reset(_('Effacer '), p_class: "button");
+    echo '</li>';
+    echo '</ul>';
+    echo '</div>';
+
     echo '</div>';
     echo "</FORM>";
 }

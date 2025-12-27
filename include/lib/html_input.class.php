@@ -240,9 +240,9 @@ class HtmlInput
         return '<INPUT TYPE="button" class="'.$p_class.'" NAME="'.$p_name.'" ID="'.$p_name.'" VALUE="'.$p_value.'" '.$p_javascript.'>';
     }
 
-    static function reset($p_value)
+    static function reset($p_value,$p_class="smallbutton")
     {
-        return '<INPUT TYPE="RESET" class="smallbutton" VALUE="'.$p_value.'">';
+        return '<INPUT TYPE="RESET" class="'.$p_class.'" VALUE="'.$p_value.'">';
     }
 
     static function hidden($p_name, $p_value, $p_id="")
