@@ -100,7 +100,8 @@ if ( in_array("document",$a_show)) {
         throw new Exception("ACC_LEDGER_INPUT100 : document and invoice available in same time");
     }
 ?>
-<div id="document_div_id" style="display:none;height:185px;height:10rem">
+<div id="document_div_id"  >
+    <div>
   <?php
   /** 
    * receipt
@@ -108,16 +109,16 @@ if ( in_array("document",$a_show)) {
      $file = new IFile();
     $file->setAlertOnSize(true);
     $file->table = 0;
-    echo '<p class="decale">';
     echo _("Ajoutez une pièce justificative ");
     echo $file->input("pj", "");
-    echo '</p>';
     ?>
-    <p  class="decale">
+    </div>
+    <div>
+        
         <?php
         echo $this->input_supplemental_document();
         ?>
-    </p>
+    </div>
 </div>
 <?php 
 

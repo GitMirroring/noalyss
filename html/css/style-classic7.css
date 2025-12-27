@@ -4239,3 +4239,11 @@ span.nb-round {
     margin-left: 2px;
     color:navy;
 }
+/*
+ * Tab : when show the operation to confirm
+ */
+ #document_div_id {
+      height:185px;
+      height:10rem;
+      
+ }

@@ -3685,10 +3685,8 @@ EOF;
         $supplemental_doc->setAlertOnSize(true);
         $supplemental_doc->set_multiple(true);
         $r="";
-        $r.='<p  class="decale">';
         $r.= _("Ajoutez des documents additionnels");
         $r.=$supplemental_doc->input();
-        $r.='</p>';
         return $r;
     }
     /**
