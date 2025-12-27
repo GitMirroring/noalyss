@@ -124,6 +124,7 @@ if (!isset($_POST['summary']) && !isset($_POST['save'])) {
                 echo '<span class="warning">' . _('Date invalide, opération non extournée') . '</span>';
             }
         }
+        echo '<div class="bt-center">';
         echo '<ul class="aligned-block">';
         echo "<li>";
         echo $ledger->button_new_operation();
@@ -132,6 +133,7 @@ if (!isset($_POST['summary']) && !isset($_POST['save'])) {
         echo $ledger->button_copy_operation();
         echo "</li>";
         echo "</ul>";
+        echo '</div>';
     } catch (Exception $e) {
         require NOALYSS_INCLUDE . '/operation_ods_new.inc.php';
         alert($e->getMessage());

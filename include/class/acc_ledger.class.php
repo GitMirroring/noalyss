@@ -3377,7 +3377,7 @@ class Acc_Ledger  extends jrn_def_sql
         $url=http_build_query(array('ac'=>$_REQUEST['ac'], 'gDossier'=>$_REQUEST['gDossier'],
             'p_jrn'=>$_REQUEST['p_jrn']));
         $button=HtmlInput::button_anchor(_("Nouvelle opération"),
-                        'do.php?'.$url, "", "", "smallbutton");
+                        'do.php?'.$url, "", "", "button");
         return '<p>'.$button.'</p>';
     }
 
@@ -3415,7 +3415,7 @@ class Acc_Ledger  extends jrn_def_sql
                         "ck".$i
             ));
         }
-        echo HtmlInput::submit("copy_operation", _("Opération identique"));
+        echo HtmlInput::submit("copy_operation", _("Opération identique"),p_class:"button");
 
         echo '</FORM>';
     }
@@ -3701,6 +3701,7 @@ EOF;
             return;
         }
         $nb=count($_FILES['document_supplemental']["name"]);
+        $a=0;
         if ( $this->db->status() !== PGSQL_TRANSACTION_INTRANS ) {
             $a=1;
             $this->db->start();
