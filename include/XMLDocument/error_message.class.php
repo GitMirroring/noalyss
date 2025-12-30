@@ -85,7 +85,7 @@ class Error_Message
             , 'MY_NAME' => _("Nom de la société")
             , 'MY_STREET' => _("Adresse de la société")
             , 'MY_CITY' => _("Ville")
-            , 'MY_TVA' => _("Numéro de TVA")
+            , 'MY_TVA' => _("Numéro de TVA, vide ou invalide, il doit commencer par les 2 lettres du code pays")
             , 'SIREN'=> 'SIREN'
        //     , 'SIRET'=> 'SIRET'
         );
@@ -95,7 +95,7 @@ class Error_Message
             , 'postalzone' => _("Code postal")
             , 'city' => _("Ville")
             , 'country'=>_("Code pays")
-            , 'customer_vat_id' => _("Numéro de TVA")
+            , 'customer_vat_id' => _("Numéro de TVA, vide ou invalide, il doit commencer par les 2 lettres du code pays")
             , 'endpoint_id' => _('Identifiant PEPPOL') // here 9925:BE....
             
         );
