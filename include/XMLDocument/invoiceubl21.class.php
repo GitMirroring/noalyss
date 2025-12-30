@@ -201,11 +201,11 @@ class InvoiceUBL21 extends XMLInvoice {
                 ->setAttribute('schemeID', $scheme_id);
         
         $party_name=$this->createElement('cac:PartyName');
-        $party_name->appendChild($this->createElement("cbc:Name", $this->data['customer']['name']));
+        $party_name->appendChild($this->createElement("cbc:Name", htmlspecialchars($this->data['customer']['name'],ENT_XML1,'UTF-8')));
         $customer_party->appendChild($party_name);
         $postal_address=$customer_party->appendChild($this->createElement('cac:PostalAddress'));
-        $postal_address->appendChild($this->createElement("cbc:StreetName", $this->data['customer']['street']));
-        $postal_address->appendChild($this->createElement("cbc:CityName", $this->data['customer']['city']));
+        $postal_address->appendChild($this->createElement("cbc:StreetName", htmlspecialchars($this->data['customer']['street'],ENT_XML1,'UTF-8')));
+        $postal_address->appendChild($this->createElement("cbc:CityName", htmlspecialchars($this->data['customer']['city'],ENT_XML1,'UTF-8')));
         $postal_address->appendChild($this->createElement("cbc:PostalZone", $this->data['customer']['postalzone']));
         ///@todo customer = countryCode doit être dans les paramètres (voir upgrade.sql)
         $country_code =$this->data['customer']['country'];
@@ -257,7 +257,7 @@ class InvoiceUBL21 extends XMLInvoice {
       $payment=$this->createElement("cac:PaymentMeans");
       $payment->appendChild($this->createElement('cbc:PaymentMeansCode',30));
       ///@note cbc:PaymentID est la communication lors du paiement
-      $payment->appendChild($this->createElement('cbc:PaymentID',$this->data["info"]['communication']));
+      $payment->appendChild($this->createElement('cbc:PaymentID', htmlspecialchars($this->data["info"]['communication'],ENT_XML1,'UTF-8')));
       $f=$this->createElement ('cac:PayeeFinancialAccount');
         ///@todo customer = IBAN doit être dans les paramètres (voir upgrade.sql)
       $f->appendChild($this->createElement("cbc:ID",$company['COMPANY_BANK_IBAN']));
@@ -283,11 +283,11 @@ class InvoiceUBL21 extends XMLInvoice {
         
         //$supplier_party->appendChild($this->createElement('cbc:EndpointID',$this->data["supplier"]['supplier_vat_id']))->setAttribute('schemeID', 9925);
         $party_name=$this->createElement('cac:PartyName');
-        $party_name->appendChild($this->createElement('cbc:Name', $this->data['supplier']['name']));
+        $party_name->appendChild($this->createElement('cbc:Name', htmlspecialchars($this->data['supplier']['name'],ENT_XML1,'UTF-8')));
         $supplier_party->appendChild($party_name);
         $postal_address=$supplier_party->appendChild($this->createElement('cac:PostalAddress'));
-        $postal_address->appendChild($this->createElement("cbc:StreetName", $this->data['supplier']['street']));
-        $postal_address->appendChild($this->createElement("cbc:CityName", $this->data['supplier']['city']));
+        $postal_address->appendChild($this->createElement("cbc:StreetName", htmlspecialchars($this->data['supplier']['street'],ENT_XML1,'UTF-8')));
+        $postal_address->appendChild($this->createElement("cbc:CityName", htmlspecialchars ($this->data['supplier']['city'],ENT_XML1,'UTF-8')));
         $postal_address->appendChild($this->createElement("cbc:PostalZone", $this->data['supplier']['postalzone']));
         $country_code = $company['MY_COUNTRY_CODE'];
         $country=$postal_address->appendChild($this->createElement("cac:Country"));
@@ -302,7 +302,7 @@ class InvoiceUBL21 extends XMLInvoice {
         $tax->appendChild($tax_scheme);
         // LegalEntity
         $ple=$this->createElement('cac:PartyLegalEntity');
-        $ple->appendChild($this->createElement("cbc:RegistrationName", $company['COMPANY_LEGAL_REGISTRATION']??"ERROR"));
+        $ple->appendChild($this->createElement("cbc:RegistrationName", htmlspecialchars($company['COMPANY_LEGAL_REGISTRATION']??"ERROR",ENT_XML1,'UTF-8')));
         $ple->appendChild($this->createElement("cbc:CompanyID", $this->data['supplier']['supplier_vat_id']??"ERROR"));
         $ple->appendChild($this->createElement("cbc:CompanyLegalForm", $company['COMPANY_LEGAL_ENTITY']??"ERROR"));
         $contact=$this->createElement('cac:Contact');
@@ -449,7 +449,7 @@ class InvoiceUBL21 extends XMLInvoice {
         
         // ITEM
         $item=$this->createElement("cac:Item");
-        $item->appendChild($this->createElement("cbc:Description",$row['description']));
+        $item->appendChild($this->createElement("cbc:Description",htmlspecialchars($row['description'],ENT_XML1,'UTF-8')));
         $item->appendChild($this->createElement("cbc:Name", $row['qcode']));
         $classifiedTaxCat=$this->createElement("cac:ClassifiedTaxCategory");
         
@@ -517,7 +517,7 @@ class InvoiceUBL21 extends XMLInvoice {
         $result=$this->createElement("cac:AdditionalDocumentReference");
         $id=$this->createElement("cbc:ID",$i);
         $document_description=$this->createElement("cbc:DocumentDescription"
-                , $this->data['description']);
+                , htmlspecialchars($this->data['description'],ENT_XML1,'UTF-8'));
         
         // PDF in base64
         $base64Pdf = base64_encode($pdfContent);
@@ -574,7 +574,7 @@ class InvoiceUBL21 extends XMLInvoice {
         $id=$this->createElement("cbc:ID",sprintf("SD%d",$i));
         $d=( $this->data['document'][$i]['description'] == "")?"NONE":$this->data['document'][$i]['description'];
         $document_description=$this->createElement("cbc:DocumentDescription"
-                ,$d );
+                ,htmlspecialchars($d ,ENT_XML1,'UTF-8'));
         
         // PDF in base64
         $base64Pdf = base64_encode($pdfContent);
@@ -624,10 +624,10 @@ class InvoiceUBL21 extends XMLInvoice {
          */
          if ( $this->data['note'] != "")
          {
-                $root->appendChild($this->createElement("cbc:Note",$this->data['note']));
+                $root->appendChild($this->createElement("cbc:Note", htmlspecialchars($this->data['note'],ENT_XML1,'UTF-8')));
          }
         $root->appendChild($this->createElement('cbc:DocumentCurrencyCode',$this->data['currency']));
-        $root->appendChild($this->createElement('cbc:BuyerReference',$this->data['info']['order']));
+        $root->appendChild($this->createElement('cbc:BuyerReference', htmlspecialchars($this->data['info']['order'],ENT_XML1,'UTF-8')));
         /**
          * insert PDF in the XML
          */
