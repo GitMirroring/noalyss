@@ -137,6 +137,10 @@ class InvoiceUBL21 extends XMLInvoice {
             }
             
         }
+        if ( isset ($company['MY_TVA']) && preg_match('/([a-z][A-Z]){2}/',$company['MY_TVA']) == false )
+        {
+             $a_error[]="MY_TVA";
+        }
         return $a_error;
     }
      /**
@@ -164,13 +168,18 @@ class InvoiceUBL21 extends XMLInvoice {
             list($scheme_id,$peppol)=explode(":", $this->data['customer'][$value]);
             if (preg_replace('/[0-9]/', '', $scheme_id) != "") 
             {
-                $a_error[]=ATTR_DEF_PEPPOLID;
+                $a_error[]='endpoint_id';
             }elseif(\noalyss_trim($peppol) =="") 
             {
-                $a_error[]=ATTR_DEF_PEPPOLID;
+                $a_error[]='endpoint_id';
                 
             }
         }
+       if ( $this->data['customer']["customer_vat_id"] != "" && preg_match('/([a-z][A-Z]){2}/',$this->data['customer']["customer_vat_id"] ) == false)
+       {
+                $a_error[]='customer_vat_id';
+           
+       }
         return $a_error;
     }
 
