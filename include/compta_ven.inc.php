@@ -201,7 +201,6 @@ if ( isset($_POST['record']) )
                     // check that all the sub arrays are empty
                     if ( ! empty( array_filter($code_error,function($a){ if (!empty($a)) return true; })))  
                     {
-                        $xmldocument->display_error();
                         $flag_invoice=1;
                     }
                 }

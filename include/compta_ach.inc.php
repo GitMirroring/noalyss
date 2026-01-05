@@ -206,7 +206,6 @@ if (isset($_POST['record']))
 /* or a form for correcting */
 //  -------------------------------------------------------------
 
-echo '<div class="content">';
 //
 
 
@@ -231,7 +230,6 @@ else if (isset ($_REQUEST['p_jrn_predef'])){
 // pre defined operation
 //
 
-echo '</div>';
 
 echo '<div class="content">';
 
