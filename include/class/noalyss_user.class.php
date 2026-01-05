@@ -1216,7 +1216,7 @@ class Noalyss_User
             $repo_cnx=$db_repository;
         }
         $array=$repo_cnx->get_array($sql, array($p_dossier));
-        if ($repo->size()==0)
+        if ($repo_cnx->size()==0)
         {
             throw new \Exception('noalyss_user.get_list error inaccessible folders',1186);
         }
