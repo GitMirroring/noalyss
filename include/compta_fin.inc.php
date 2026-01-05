@@ -159,8 +159,8 @@ if ( isset($_POST['correct']))
 //----------------------------------------
 // Blank form
 //----------------------------------------
+echo '<div class="content">';
 if ( $p_msg !="" ) echo '<span class="warning">'.$p_msg.'</span>'; 
-
 echo '<form class="print" name="form_detail" enctype="multipart/form-data" class="print" METHOD="POST">';
 echo HtmlInput::hidden('ledger_type','fin');
 echo HtmlInput::hidden('ac',$http->request("ac"));
@@ -201,4 +201,5 @@ try
 } catch (Exception $ex) {
     echo $ex->getMessage();
 }
+echo '</div>';
 return;

@@ -151,7 +151,7 @@ EOF;
                     throw new \Exception ('Format facture invalide');
                 }
             default :
-                $ret_value=htmlspecialchars($p_value);
+                $ret_value= strip_tags($p_value);
         }
         return $ret_value;
     }
