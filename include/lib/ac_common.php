@@ -1398,7 +1398,8 @@ function record_log($p_message)
 
     if ($handle_log == false )
     {
-
+        if ( isset ($_SERVER['REMOTE_ADDR']) ) error_log(sprintf("origin %s\n",$_SERVER['REMOTE_ADDR']));
+        if ( isset ($_SERVER['HTTP_USER_AGENT']) ) error_log(sprintf("agent  %s\n",$_SERVER['HTTP_USER_AGENT']));
         if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
             $exc=$p_message;
             do {
@@ -1417,6 +1418,9 @@ function record_log($p_message)
         error_log("noalyss GET [".json_encode($_GET,0,10)."]");
         error_log("_POST [".json_encode($_POST,0,10)."]",0);
     } else {
+         if ( isset ($_SERVER['REMOTE_ADDR']) )    fwrite($handle_log,sprintf("origin %s\n",$_SERVER['REMOTE_ADDR']));
+        if  ( isset ($_SERVER['HTTP_USER_AGENT']) ) fwrite($handle_log,sprintf("agent  %s\n",$_SERVER['HTTP_USER_AGENT']));
+            
         if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
 
             error_log("noalyss exception ".$p_message->getMessage(),0);
