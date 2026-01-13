@@ -97,6 +97,7 @@ class Tva_Rate_MTable extends Manage_Table_SQL
             'tva_peppol_code'=>_("Code TVA est utilisé pour les factures électroniques, plus d'information dans le manuel"),
             'vx_code'=>_("Code exemption pour facture PEPPOL (ubl)")
         );
+        $this->setTitle(_("Détail TVA"));
     }
 
     /**
