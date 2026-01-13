@@ -229,6 +229,9 @@ abstract class XML_Reader
         $result = [];
         $result['ID'] = $this->get_node_value("//cac:AccountingCustomerParty[1]/cac:Party[1]/cbc:EndpointID[1]");
         $result['name'] = $this->get_node_value('//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PartyName[1]/cbc:Name[1]');
+        if ($result['name'] == '') {
+            $result['name'] = $this->get_node_value("//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PartyLegalEntity[1]/cbc:RegistrationName[1]");
+        }
         $result['street'] = $this->get_node_value('//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:StreetName[1]');
         $result['city'] = $this->get_node_value('//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:CityName[1]');
         $result['postcode'] = $this->get_node_value('//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:PostalZone[1]');
@@ -247,6 +250,9 @@ abstract class XML_Reader
         $result = [];
         $result['ID'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cbc:EndpointID[1]");
         $result['name'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PartyName[1]/cbc:Name[1]");
+        if ($result['name'] == '') {
+            $result['name'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PartyLegalEntity[1]/cbc:RegistrationName[1]");
+        }
         $result['street'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:StreetName[1]");
         $result['city'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:CityName[1]");
         $result['postcode'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:PostalZone[1]");
