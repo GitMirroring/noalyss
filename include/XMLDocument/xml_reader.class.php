@@ -633,9 +633,9 @@ abstract class XML_Reader
             for ($i=0;$i< $nb_result;$i++)
             {
                 $binary=$result[$i]->getBinary_object();
-                $pdf->write_cell(50,4,$result[$i]->getId());
-                $pdf->write_cell(50,4,$binary->filename);
-                $pdf->write_cell(50,4,$result[$i]->getDescription());
+                $pdf->write_multi(50,4,$result[$i]->getId());
+                $pdf->write_multi(50,4,$binary->filename);
+                $pdf->write_multi(50,4,$result[$i]->getDescription());
                 $pdf->line_new();
                 
             }
