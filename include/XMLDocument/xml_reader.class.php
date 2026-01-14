@@ -503,8 +503,8 @@ abstract class XML_Reader
         $nb_inline = count($result);
         for ($i = 0; $i < $nb_inline; $i++)
         {
-            $pdf->write_cell(50, 4, $result[$i]['name']);
-            $pdf->write_cell(50, 4, $result[$i]['description']);
+            $pdf->write_multi(50, 4, $result[$i]['name']);
+            $pdf->write_multi(50, 4, $result[$i]['description']);
             $pdf->write_cell(25, 4, $result[$i]['tva_percent'], align: 'R');
             $pdf->write_cell(5, 4, $result[$i]['tva_id']);
             $pdf->write_cell(25, 4, $result[$i]['quantity'], align: 'R');
