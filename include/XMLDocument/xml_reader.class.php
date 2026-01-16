@@ -409,6 +409,7 @@ abstract class XML_Reader
         $result['InvoiceTypeCode'] =$this->get_document_type_code();
         $result['DocumentCurrencyCode'] = $this->get_node_value('cbc:DocumentCurrencyCode');
         $result['BuyerReference'] = $this->get_node_value('cbc:BuyerReference');
+        $result['OrderReference'] = $this->get_node_value('//cac:OrderReference[1]/cbc:ID[1]');
         $result['ActualDeliveryDate'] = $this->get_node_value('//cac:Delivery[1]/cbc:ActualDeliveryDate[1]');
         $result['info']=array();
         
@@ -440,61 +441,73 @@ abstract class XML_Reader
         // 180 mm large
         $pdf->setFont("DejaVu", "B", 16);
         $pdf->line_new(2);
+        $pdf->SetTextColor(0,0,127);
         $pdf->write_cell(10, 10, "");
         $pdf->write_cell(170, 10, _("Résumé document"),1,0,'C');
         $pdf->line_new(20);
-        $pdf->Image(NOALYSS_URL.'/image/logo10000.png', 10, 10, 20, 0, 'PNG');
+        $pdf->Image(NOALYSS_HOME.'/image/logo10000.png', 10, 10, 20, 0, 'PNG');
 
         $pdf->setFont("DejaVu", "", 7);
+        $pdf->SetTextColor(0,0,0);
         $pdf->write(4, sprintf(_("Document ID %s"), $result['id']));
         $pdf->ln();
-        $pdf->write(4, sprintf(_("Date facture %s"), $result['IssueDate']));
-        $pdf->ln();
-        $pdf->write(4, sprintf(_("Date échéance %s"), $result['DueDate']));
-        $pdf->ln();
+        $pdf->setFont("DejaVu", "B", 8);
+        $pdf->write_cell(20,4,_('Date'));
+        $pdf->print_row();
+        $pdf->setFont("DejaVuCond", "", 7);
+        $pdf->write_multi(38,4, sprintf(_(" Facture %s"), $result['IssueDate']));
+        $pdf->write_multi(38,4, sprintf(_("Echéance %s"), $result['DueDate']));
+        $pdf->write_multi(38,4, sprintf(_("Livraison %s"), $result['ActualDeliveryDate']));
+        $pdf->line_new();
         $pdf->write(4, sprintf(_("Type et code document %s"), $result['InvoiceTypeCode']));
         $pdf->ln();
         $pdf->write(4, sprintf(_("Devise document %s"), $result['DocumentCurrencyCode']));
         $pdf->ln();
         $pdf->write(4, sprintf(_("Référence client %s"), $result['BuyerReference']));
         $pdf->ln();
-        $pdf->write(4, sprintf(_("Date Livraison %s"), $result['ActualDeliveryDate']));
+        $pdf->write(4, sprintf(_("Référence commande %s"), $result['OrderReference']));
         $pdf->ln(10);
 
         $pdf->setFont("DejaVu", "B", 12);
         $pdf->SetTextColor(0,0,127);
         $pdf->write_cell(60, 4, _("Fournisseur"));
         $pdf->line_new(6);
-        $pdf->SetTextColor(0,0,0);
         $supplier = $this->get_supplier();
-        $pdf->setFont("DejaVu", "", 7);
-        $pdf->write_multi(50, 4, $supplier['name']);
-        $pdf->write_multi(50, 4, $supplier['street']);
+        $pdf->setFont("DejaVu", "B", 8);
+        $pdf->write_multi(10, 4, "");
+        $pdf->write_multi(150, 4, $supplier['name']);
+        $pdf->line_new();
+        $pdf->SetTextColor(0,0,0);
+        $pdf->setFont("DejaVuCond", "", 7);
+        $pdf->write_multi(70, 4, $supplier['street']);
         $pdf->write_multi(30, 4, $supplier['postcode']);
         $pdf->write_multi(50, 4, $supplier['city']);
-        $pdf->write_cell(20, 4, $supplier['country_code']);
+        $pdf->write_cell(10, 4, $supplier['country_code']);
         $pdf->line_new();
-        if ( $supplier['contact_name'] != '') {
-            $pdf->write_multi(60, 4, "contact name:".$supplier['contact_name']);
-            $pdf->write_multi(50, 4, $supplier['contact_mail']);
-            $pdf->line_new();
-        }
         $pdf->write_cell(50, 4, $supplier['company_id']);
         $pdf->write_cell(50, 4,'PEPPOL ID:'.$supplier['scheme'].":". $supplier['ID']);
-        $pdf->line_new(6);
+        $pdf->line_new();
+        if ( $supplier['contact_name'] != '' ||  $supplier['contact_mail'] != '') {
+            $pdf->write_multi(100, 4, "contact: ".$supplier['contact_name']." ". $supplier['contact_mail']);
+            $pdf->line_new();
+        }
+        $pdf->line_new(4);
 
         $customer = $this->get_customer();
         $pdf->setFont("DejaVu", "B", 12);
         $pdf->SetTextColor(0,0,127);
         $pdf->write_cell(60, 4, _("Client"));
         $pdf->line_new(6);
+        $pdf->setFont("DejaVu", "B", 8);
+        $pdf->write_multi(10, 4, "");
+        $pdf->write_multi(150, 4, $customer['name']);
+        $pdf->line_new();
         $pdf->SetTextColor(0,0,0);
         $pdf->setFont("DejaVu", "", 7);
-        $pdf->write_multi(50, 4, $customer['name']);
-        $pdf->write_multi(50, 4, $customer['street']);
+        $pdf->write_multi(70, 4, $customer['street']);
         $pdf->write_multi(30, 4, $customer['postcode']);
         $pdf->write_multi(50, 4, $customer['city']);
-        $pdf->write_multi(20, 4, $customer['country_code']);
+        $pdf->write_multi(10, 4, $customer['country_code']);
         $pdf->line_new();
         $pdf->write_cell(50, 4, $customer['company_id']);
         $pdf->write_cell(50, 4, 'PEPPOL ID:'.$customer['scheme'].":".$customer['ID']);
