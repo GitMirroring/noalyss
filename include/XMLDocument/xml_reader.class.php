@@ -439,9 +439,12 @@ abstract class XML_Reader
         $pdf->AddPage();
         // 180 mm large
         $pdf->setFont("DejaVu", "B", 16);
-        $pdf->write_cell(20, 10, "");
+        $pdf->line_new(2);
+        $pdf->write_cell(10, 10, "");
         $pdf->write_cell(170, 10, _("Résumé document"),1,0,'C');
-        $pdf->line_new(10);
+        $pdf->line_new(20);
+        $pdf->Image(NOALYSS_URL.'/image/logo10000.png', 10, 10, 20, 0, 'PNG');
+
         $pdf->setFont("DejaVu", "", 7);
         $pdf->write(4, sprintf(_("Document ID %s"), $result['id']));
         $pdf->ln();
