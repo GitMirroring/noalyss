@@ -397,8 +397,6 @@ abstract class XML_Reader
     /**
      * 
      * @return array
-     * @TODODNY
-     * Implémenter les allowances
      */
     function get_info(): array
     {

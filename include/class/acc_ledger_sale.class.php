@@ -1282,14 +1282,16 @@ EOF;
                 $r.='<tr>'.td($other_tax_label).td(hb($other_tax_amount),'class="num"');
             }
             if ( $other_tax_amount!="") {$tot=bcadd($tot,$other_tax_amount,2);}
-            $r.='<tr>'.td(_('Total TVAC')).td(hb($tot),'class="num"');
+            $r.='<tr>'.td(_('Total TVAC')).td(hb($tot),'class="num"').'</tr>';
             $r.='</table>';
         } else {
+             $r.='<table>';
             if ( ! empty($other_tax_label) ) {
                 $r.='<tr>'.td($other_tax_label).td(hb($other_tax_amount),'class="num"');
             }
             if ( $other_tax_amount!="") {$tot=bcadd($tot,$other_tax_amount,2);}
-            $r.='<br>Total '.hb($tot);
+            $r.='<tr>'.td(_('Total ')).td(hb($tot),'class="num"');
+            $r.='</table>';
         }
         $r.='</div>';
   
@@ -1374,13 +1376,13 @@ EOF;
      */
 
     public function extra_info() {
-        $r = '<div id="facturation_div_id" style="display:flex;height:185px;height:10rem">';
+        $r = '<div id="facturation_div_id" style="">';
         // check for upload piece
         $file = new IFile();
         $file->table = 0;
         $file->setAlertOnSize(true);
-        $r.='<p class="decale">';
         
+        $r.='<h3 class="title">'._("Facture").'</h3>';
         // add a receipt
         $r.=_("Ajoutez une pièce justificative ");
         $r.=$file->input("pj", "");
@@ -1398,11 +1400,15 @@ EOF;
                 " union select -2,'"._("Z - Facture PDF Standard")."' ".
                 " order by 2");
         $r.=$doc_gen->input() . '<br>';
+        $r.='<h3 class="title">'._("Documents supplémentaires").'</h3>';
+        // add a receipt
         $r.=$this->input_supplemental_document();
 
-        $r.='<br>';
         $obj = new IText();
+        $obj->size=50;
+        $r.='<p>';
         $r.=_('Numero de bon de commande') . $obj->input('bon_comm') . '<br>';
+        
         $r.=_('Communication') . $obj->input('other_info') . '<br>';
         $r.='</p>';
         $r.='</div>';

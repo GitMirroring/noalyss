@@ -2501,6 +2501,8 @@ ul.aligned-block li {
     padding: 2rem;
     border:1px solid navy;
     margin-right:1rem;
+    width: 20rem;
+    
 }
 /***************************************************************************
  * column in the dashboard
@@ -4259,6 +4261,8 @@ span.nb-round {
 
  .bt-center {
      margin-bottom: 2rem;
+     float:inherit;
+     clear:both;
  }
 
 
@@ -4288,4 +4292,10 @@ span.nb-round {
  
 #module_setting .selectedcell {
     background-color:beige;
+}
+
+#facturation_div_id{
+    height:auto;
+    float:left
+    
 }
