@@ -257,7 +257,7 @@ abstract class XMLInvoice extends \DOMDocument
                         
             }
         }
-        $result['info']['communication']=($result['info']['communication']=="")?$result['id']:"";
+        $result['info']['communication']=($result['info']['communication']=="")?$result['id']:$result['info']['communication'];
         $result['document']=$this->fill_document($jr_id);
         
          /**
