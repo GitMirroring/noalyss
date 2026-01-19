@@ -321,17 +321,47 @@ class Invoice_PDF extends \PDF
         $this->line_new();
         $iban = $this->cn->get_value("select pe_value from parameter_extra where pe_code=$1",
                 ['COMPANY_BANK_IBAN']);
-        if ($this->data['e_ech'] != "" && $iban != "")
+        if ($this->data['e_ech'] != "" ){
+                $this->write_multi(150, 4,
+                    sprintf(_("Paiement avant le %s "),
+                            $this->data['e_ech']
+                    )
+                );
+            $this->line_new();
+        }
+        
+        $this->SetFont("DejaVu", "B", 9);
+        $this->write_multi(80, 4, _("Paiement"));
+        $this->line_new();
+        $this->SetFont("DejaVu", "", 7);
+        if ( $iban != "")
         {
             $info = ($this->data["other_info"] == "") ? $this->data["e_pj"] : $this->data["other_info"];
             $bic = $this->cn->get_value("select pe_value from parameter_extra where pe_code=$1",
-                    ['COMPANY_BANK_IBAN']);
+                    ['COMPANY_BANK_BIC']);
             $this->write_multi(150, 4,
-                    sprintf(_("Paiement avant le %s sur le compte %s (BIC %s) avec comme message %s"),
-                            $this->data['e_ech']
+                    sprintf(_(" compte %s (BIC %s) ")
                             , $iban
                             , $bic
+                            
+                    )
+            );
+            $this->line_new();
+        }
+        $this->write_multi(150, 4,_("Montant ").nbm(bcadd($tot_amount, $tot_vat, 2),2));
+        $this->line_new();
+        if (  $this->data["other_info"] != ""){
+            $this->write_multi(150, 4,
+                    sprintf(_(" Communication: %s")
                             , $this->data["other_info"]
+                    )
+            );
+            $this->line_new();
+        }
+        if ($this->data["bon_comm"] != "") {
+            $this->write_multi(150, 4,
+                    sprintf(_(" Bon de commande: %s")
+                            , $this->data["bon_comm"]
                     )
             );
             $this->line_new();
