@@ -143,15 +143,14 @@ class XMLCreditNote_Reader extends XML_Reader
         for ($e = 0; $e < $node->length; $e++)
         {
             $row = [];
-            $xml = simplexml_import_dom($node->item($e));
-            $row ['quantity'] = $this->get_node_value("//cbc:CreditedQuantity", $e);
-            $row ['amount'] = $this->get_node_value("//cbc:LineExtensionAmount", $e);
-            $row ['description'] = $this->get_node_value("//cac:Item/cbc:Description", $e);
-            $row ['name'] = $this->get_node_value("//cac:CreditNoteLine/cac:Item/cbc:Name", $e);
-            $row ['unit_price'] = $this->get_node_value("//cac:CreditNoteLine/cac:Price/cbc:PriceAmount", $e);
-            $row ['tva_id'] = $this->get_node_value("//cac:CreditNoteLine/cac:Item/cac:ClassifiedTaxCategory/cbc:ID", $e);
-            $row ['tva_percent'] = $this->get_node_value("//cac:CreditNoteLine/cac:Item/cac:ClassifiedTaxCategory/cbc:Percent", $e);
-
+            $row ['quantity'] = $node->item($e)->getElementsByTagName("CreditedQuantity")->item(0)->textContent;
+            $row ['code_quantity'] = $node->item($e)->getElementsByTagName("CreditedQuantity")->item(0)->getAttribute('unitCode');
+            $row ['amount'] = $node->item($e)->getElementsByTagName("LineExtensionAmount")->item(0)->textContent; 
+            $row ['description'] = $node->item($e)->getElementsByTagName("Description")->item(0)?->textContent; 
+            $row ['name'] = $node->item($e)->getElementsByTagName("Name")->item(0)->textContent; 
+            $row ['unit_price'] = $node->item($e)->getElementsByTagName("PriceAmount")->item(0)->textContent; 
+            $row ['tva_id'] = $node->item($e)->getElementsByTagName("ID")->item(0)->textContent; 
+            $row ['tva_percent'] = $node->item($e)->getElementsByTagName("Percent")->item(0)->textContent; 
             $result[] = $row;
         }
         return $result;

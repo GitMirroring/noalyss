@@ -49,7 +49,7 @@ foreach ($array as $item):
         <?=h($item['jr_comment'])?>
         <?=h($item['jr_date'])?>
     </div>
-    <div class="col-2">
+    <div class="col-2" style="text-align: right">
         <?=nbm($item['jr_montant'],2)?>
     </div>
 </div>

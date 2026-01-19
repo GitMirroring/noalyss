@@ -72,6 +72,7 @@ BODY {
     --bg-inner-box:#DCE1EF;
     --underline-menu:#d7e8ee;
     --bg-slide:#c5d5e8;
+    --end-level1:#eb7c7e;
 }
 input{
     font-family: 'OpenSansRegular';
@@ -2089,7 +2090,7 @@ div.box  {
     div.box  {
         width: 35rem;
         max-height: 30%;
-        height: 45vh;
+        height: 40rem;
 
     }
 }
@@ -2500,6 +2501,8 @@ ul.aligned-block li {
     padding: 2rem;
     border:1px solid navy;
     margin-right:1rem;
+    width: 20rem;
+    
 }
 /***************************************************************************
  * column in the dashboard
@@ -2513,6 +2516,7 @@ td.cut {
 }
 td.box {
     border-left: #9999ff solid 1px;
+    border-radius: 10px 0px;
 }
 
 /****************************************************************************
@@ -3973,8 +3977,7 @@ h2.h-section {
  .nav-item.li-active.nav-item-underline::before {
     transform: scale(1);
     background-color: #d03100;
-    background-image: linear-gradient(to right,#cc0000 0%,red 20%) ;
-    background-image: linear-gradient(to right,darkred 0%,red 10%,red 90%,darkred);
+    background-image: linear-gradient(to right,var(--end-level1) 0%,red 10%,red 90%,var(--end-level1));
  }
 
  /**
@@ -4171,7 +4174,7 @@ h2.h-section {
 }
 .topmenu .nav-item.nav-item-underline:hover::before,.topmenu .nav-item.nav-item-underline:focus::before {
   transform: scaleX(1) scaleY(1);
-   background-image: linear-gradient(to right,darkred,red);
+   background-image: linear-gradient(to right,var(--end-level1),red);
 }
 
 
@@ -4182,7 +4185,7 @@ h2.h-section {
 
 .topmenu .nav-item.nav-item-underline:hover::before,.topmenu .nav-item.nav-item-underline:focus::before {
   transform: scaleX(1) scaleY(1);
-   background-image: linear-gradient(to right,darkred 0%,red 30%);
+   background-image: linear-gradient(to right,var(--end-level1) 0%,red 30%);
 }
 
 /*.topmenu .nav-item.nav-item-underline::before {
@@ -4258,6 +4261,8 @@ span.nb-round {
 
  .bt-center {
      margin-bottom: 2rem;
+     float:inherit;
+     clear:both;
  }
 
 
@@ -4287,4 +4292,10 @@ span.nb-round {
  
 #module_setting .selectedcell {
     background-color:beige;
+}
+
+#facturation_div_id{
+    height:auto;
+    float:left
+    
 }

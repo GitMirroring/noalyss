@@ -263,22 +263,25 @@ class Invoice_PDF extends \PDF
             }
             $this->write_multi($col['quantity'], 4, nbm($this->data['e_quant' . $i]), '', 'R',fill:$fill);
             $this->write_multi($col['price'], 4, nbm($this->data['e_march' . $i . '_price']), '', 'R',fill:$fill);
-            $this->write_multi($col['vat_code'], 4, $this->data['e_march' . $i . '_tva_id'], '', 'C',fill:$fill);
-            $x = $this->data['e_march' . $i . '_tva_id'];
-            if (!isset($a_tva_amount[$x]))
+            if (isset ($this->data['e_march' . $i . '_tva_id']))
             {
-                $a_tva_amount[$x] = 0;
+                $this->write_multi($col['vat_code'], 4, $this->data['e_march' . $i . '_tva_id'], '', 'C',fill:$fill);
+                $x = $this->data['e_march' . $i . '_tva_id'];
+                if (!isset($a_tva_amount[$x]))
+                {
+                    $a_tva_amount[$x] = 0;
+                }
+                $a_tva_amount[$x] = bcadd($a_tva_amount[$x], $this->data["e_march" . $i . "_tva_amount"], 2);
+                $tot_vat = bcadd($tot_vat
+                                    , $this->data['e_march' . $i . '_tva_amount']
+                            , 2);
             }
-            $a_tva_amount[$x] = bcadd($a_tva_amount[$x], $this->data["e_march" . $i . "_tva_amount"], 2);
             $tot_amount = bcadd($tot_amount
                                     , bcmul($this->data['e_march' . $i . '_price']
                                             , $this->data['e_quant' . $i]
                                             , 2
                                     )
                                 , 2);
-            $tot_vat = bcadd($tot_vat
-                                , $this->data['e_march' . $i . '_tva_amount']
-                        , 2);
             $this->line_new(4);
             if ($this->GetY()>250) {
                 $this->AddPage();

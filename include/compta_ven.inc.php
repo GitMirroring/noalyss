@@ -158,6 +158,10 @@ if ( isset($_POST['record']) )
         $Ledger=new Acc_Ledger_Sale($cn,$post_jrn);
         try {
             $internal=$Ledger->insert($_POST);
+            
+        /* Save the additional information into jrn_info */
+            $obj=new Acc_Ledger_Info($cn);
+            $obj->save_extra($Ledger->jr_id,$_POST);
             $Ledger->upload_supplemental_document($Ledger->jr_id);
             // var $receipt (string) contains the name of the file name of 
             //              the invoice (document created), if empty there
@@ -290,9 +294,6 @@ if ( isset($_POST['record']) )
         }
 
 
-        /* Save the additional information into jrn_info */
-        $obj=new Acc_Ledger_Info($cn);
-        $obj->save_extra($Ledger->jr_id,$_POST);
 
          /* save followup */
          $Ledger->save_followup($http->request("action_gestion","string",""));

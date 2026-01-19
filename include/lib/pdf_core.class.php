@@ -210,7 +210,7 @@ class PDF_Core extends TFPDF
      * @see TFPDF::SetFontSize()
      * @return void
      */
-    protected function print_row()
+     function print_row()
     {
         static $e=0;
         $e++;

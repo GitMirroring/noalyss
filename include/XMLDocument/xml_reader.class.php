@@ -229,6 +229,9 @@ abstract class XML_Reader
         $result = [];
         $result['ID'] = $this->get_node_value("//cac:AccountingCustomerParty[1]/cac:Party[1]/cbc:EndpointID[1]");
         $result['name'] = $this->get_node_value('//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PartyName[1]/cbc:Name[1]');
+        if ($result['name'] == '') {
+            $result['name'] = $this->get_node_value("//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PartyLegalEntity[1]/cbc:RegistrationName[1]");
+        }
         $result['street'] = $this->get_node_value('//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:StreetName[1]');
         $result['city'] = $this->get_node_value('//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:CityName[1]');
         $result['postcode'] = $this->get_node_value('//cac:AccountingCustomerParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:PostalZone[1]');
@@ -247,12 +250,28 @@ abstract class XML_Reader
         $result = [];
         $result['ID'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cbc:EndpointID[1]");
         $result['name'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PartyName[1]/cbc:Name[1]");
+        if ($result['name'] == '') {
+            $result['name'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PartyLegalEntity[1]/cbc:RegistrationName[1]");
+        }
         $result['street'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:StreetName[1]");
         $result['city'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:CityName[1]");
         $result['postcode'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PostalAddress[1]/cbc:PostalZone[1]");
         $result['country_code'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PostalAddress[1]/cac:Country[1]/cbc:IdentificationCode[1]");
         $result['company_id'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PartyTaxScheme[1]/cbc:CompanyID[1]");
+        if ($result['company_id']  == "" ) {
+            $result['company_id'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:PartyLegalEntity[1]/cbc:CompanyID[1]");
+        }
         $result['scheme'] = $this->get_node("//cac:AccountingSupplierParty[1]/cac:Party[1]/cbc:EndpointID[1]")[0]->getAttribute("schemeID");
+        /**
+         * get contact
+            <cac:Contact>
+                <cbc:Name>Facturation NOALYSS</cbc:Name>
+                <cbc:ElectronicMail>invoice@noalyss</cbc:ElectronicMail>
+            </cac:Contact>
+         */
+        $result['contact_name'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:Contact[1]/cbc:Name[1]");
+        $result['contact_mail'] = $this->get_node_value("//cac:AccountingSupplierParty[1]/cac:Party[1]/cac:Contact[1]/cbc:ElectronicMail");
+
         return $result;
     }
 
@@ -378,8 +397,6 @@ abstract class XML_Reader
     /**
      * 
      * @return array
-     * @TODODNY
-     * Implémenter les allowances
      */
     function get_info(): array
     {
@@ -390,6 +407,7 @@ abstract class XML_Reader
         $result['InvoiceTypeCode'] =$this->get_document_type_code();
         $result['DocumentCurrencyCode'] = $this->get_node_value('cbc:DocumentCurrencyCode');
         $result['BuyerReference'] = $this->get_node_value('cbc:BuyerReference');
+        $result['OrderReference'] = $this->get_node_value('//cac:OrderReference[1]/cbc:ID[1]');
         $result['ActualDeliveryDate'] = $this->get_node_value('//cac:Delivery[1]/cbc:ActualDeliveryDate[1]');
         $result['info']=array();
         
@@ -410,6 +428,7 @@ abstract class XML_Reader
     public function to_pdf(): PDF
     {
         //$pdf = new PDF($cn);
+        
         $pdf = new PDF();
         $result = $this->get_info();
         $info=$result;
@@ -419,97 +438,133 @@ abstract class XML_Reader
         $pdf->AddPage();
         // 180 mm large
         $pdf->setFont("DejaVu", "B", 16);
-        $pdf->write_cell(20, 10, "");
-        $pdf->write_cell(170, 10, _("Résumé facture"),1,0,'C');
-        $pdf->line_new(10);
+        $pdf->line_new(2);
+        $pdf->SetTextColor(0,0,127);
+        $pdf->write_cell(10, 10, "");
+        $pdf->write_cell(170, 10, _("Résumé document"),1,0,'C');
+        $pdf->line_new(20);
+        $pdf->Image(NOALYSS_HOME.'/image/logo10000.png', 10, 10, 20, 0, 'PNG');
+
         $pdf->setFont("DejaVu", "", 7);
+        $pdf->SetTextColor(0,0,0);
         $pdf->write(4, sprintf(_("Document ID %s"), $result['id']));
         $pdf->ln();
-        $pdf->write(4, sprintf(_("Date facture %s"), $result['IssueDate']));
-        $pdf->ln();
-        $pdf->write(4, sprintf(_("Date échéance %s"), $result['DueDate']));
-        $pdf->ln();
+        $pdf->setFont("DejaVu", "B", 8);
+        $pdf->write_cell(20,4,_('Date'));
+        $pdf->print_row();
+        $pdf->setFont("DejaVuCond", "", 7);
+        $pdf->write_multi(38,4, sprintf(_(" Facture %s"), $result['IssueDate']));
+        $pdf->write_multi(38,4, sprintf(_("Echéance %s"), $result['DueDate']));
+        $pdf->write_multi(38,4, sprintf(_("Livraison %s"), $result['ActualDeliveryDate']));
+        $pdf->line_new();
         $pdf->write(4, sprintf(_("Type et code document %s"), $result['InvoiceTypeCode']));
         $pdf->ln();
         $pdf->write(4, sprintf(_("Devise document %s"), $result['DocumentCurrencyCode']));
         $pdf->ln();
         $pdf->write(4, sprintf(_("Référence client %s"), $result['BuyerReference']));
         $pdf->ln();
-        $pdf->write(4, sprintf(_("Date Livraison %s"), $result['ActualDeliveryDate']));
+        $pdf->write(4, sprintf(_("Référence commande %s"), $result['OrderReference']));
         $pdf->ln(10);
 
         $pdf->setFont("DejaVu", "B", 12);
+        $pdf->SetTextColor(0,0,127);
         $pdf->write_cell(60, 4, _("Fournisseur"));
-        $pdf->line_new(12);
+        $pdf->line_new(6);
         $supplier = $this->get_supplier();
-        $pdf->setFont("DejaVu", "", 7);
-        $pdf->write_cell(60, 4, $supplier['name']);
-        $pdf->write_cell(60, 4, $supplier['company_id']);
-        $pdf->write_cell(60, 4,$supplier['scheme'].":". $supplier['ID']);
+        $pdf->setFont("DejaVu", "B", 8);
+        $pdf->write_multi(10, 4, "");
+        $pdf->write_multi(150, 4, $supplier['name']);
         $pdf->line_new();
-        $pdf->write_cell(60, 4, $supplier['street']);
-        $pdf->write_cell(30, 4, $supplier['postcode']);
-        $pdf->write_cell(60, 4, $supplier['city']);
-        $pdf->write_cell(20, 4, $supplier['country_code']);
-        $pdf->line_new(10);
+        $pdf->SetTextColor(0,0,0);
+        $pdf->setFont("DejaVuCond", "", 7);
+        $pdf->write_multi(70, 4, $supplier['street']);
+        $pdf->write_multi(30, 4, $supplier['postcode']);
+        $pdf->write_multi(50, 4, $supplier['city']);
+        $pdf->write_cell(10, 4, $supplier['country_code']);
+        $pdf->line_new();
+        $pdf->write_cell(50, 4, $supplier['company_id']);
+        $pdf->write_cell(50, 4,'PEPPOL ID:'.$supplier['scheme'].":". $supplier['ID']);
+        $pdf->line_new();
+        if ( $supplier['contact_name'] != '' ||  $supplier['contact_mail'] != '') {
+            $pdf->write_multi(100, 4, "contact: ".$supplier['contact_name']." ". $supplier['contact_mail']);
+            $pdf->line_new();
+        }
+        $pdf->line_new(4);
 
         $customer = $this->get_customer();
         $pdf->setFont("DejaVu", "B", 12);
+        $pdf->SetTextColor(0,0,127);
         $pdf->write_cell(60, 4, _("Client"));
-        $pdf->line_new(10);
-        $pdf->setFont("DejaVu", "", 7);
-        $pdf->write_cell(60, 4, $customer['name']);
-        $pdf->write_cell(60, 4, $customer['company_id']);
-        $pdf->write_cell(60, 4, $customer['scheme'].":".$customer['ID']);
+        $pdf->line_new(6);
+        $pdf->setFont("DejaVu", "B", 8);
+        $pdf->write_multi(10, 4, "");
+        $pdf->write_multi(150, 4, $customer['name']);
         $pdf->line_new();
-        $pdf->write_cell(60, 4, $customer['street']);
-        $pdf->write_cell(40, 4, $customer['postcode']);
-        $pdf->write_cell(60, 4, $customer['city']);
-        $pdf->write_cell(20, 4, $customer['country_code']);
-        $pdf->line_new(10);
+        $pdf->SetTextColor(0,0,0);
+        $pdf->setFont("DejaVu", "", 7);
+        $pdf->write_multi(70, 4, $customer['street']);
+        $pdf->write_multi(30, 4, $customer['postcode']);
+        $pdf->write_multi(50, 4, $customer['city']);
+        $pdf->write_multi(10, 4, $customer['country_code']);
+        $pdf->line_new();
+        $pdf->write_cell(50, 4, $customer['company_id']);
+        $pdf->write_cell(50, 4, 'PEPPOL ID:'.$customer['scheme'].":".$customer['ID']);
+        $pdf->line_new(6);
         /**
          * note invoice
          */
          if ( $info['info']['note'] != "")
          {
+            $pdf->SetTextColor(0,0,127);
             $pdf->setFont("DejaVu", "B", 12);
             $pdf->write_cell(60, 4, _("Notes"));
-            $pdf->line_new(10);
+            $pdf->line_new(6);
+            $pdf->SetTextColor(0,0,0);
             $pdf->setFont("DejaVu", "", 7);
-            $pdf->write_multi(50, 4,$info['info']['note']);
+            $pdf->write_multi(130, 8,$info['info']['note']);
             $pdf->line_new(10); 
          }
         /**
          * ITEM
          */
         $pdf->setFont("DejaVu", "B", 12);
+        $pdf->SetTextColor(0,0,127);
         $pdf->write_cell(60, 4, _("Articles"));
-        $pdf->line_new(10);
+        $pdf->line_new(6);
+        $pdf->SetTextColor(0,0,0);
         $pdf->setFont("DejaVu", "", 7);
         $result = $this->get_invoiceLine();
         $pdf->write_cell(50, 4, _("Code"), border: 'B');
-        $pdf->write_cell(50, 4, _("Description"), border: 'B');
-        $pdf->write_cell(30, 4, _("TVA"), border: 'B', align: 'R');
-        $pdf->write_cell(25, 4, _("Quantité"), border: 'B', align: 'R');
-        $pdf->write_cell(25, 4, _("Montant HT"), border: 'B', align: 'R');
+        $pdf->write_cell(60, 4, _("Description"), border: 'B');
+        $pdf->write_cell(20, 4, _("TVA"), border: 'B', align: 'R');
+        $pdf->write_cell(20, 4, _("Prix unitaire"), border: 'B', align: 'R');
+        $pdf->write_cell(20, 4, _("Quantité"), border: 'B', align: 'R');
+        $pdf->write_cell(20, 4, _("Montant HT"), border: 'B', align: 'R');
         $pdf->line_new();
         
         $nb_inline = count($result);
         for ($i = 0; $i < $nb_inline; $i++)
         {
-            $pdf->write_cell(50, 4, $result[$i]['name']);
-            $pdf->write_cell(50, 4, $result[$i]['description']);
-            $pdf->write_cell(25, 4, $result[$i]['tva_percent'], align: 'R');
-            $pdf->write_cell(5, 4, $result[$i]['tva_id']);
-            $pdf->write_cell(25, 4, $result[$i]['quantity'], align: 'R');
-            $pdf->write_cell(25, 4, nbm($result[$i]['amount']), align: 'R');
+            if ( $result[$i]['description'] == '') {
+                $pdf->write_multi(110, 4, $result[$i]['name']);
+            }else {
+                $pdf->write_multi(50, 4, $result[$i]['name']);
+                $pdf->write_multi(60, 4, $result[$i]['description']);
+            }
+            $pdf->write_cell(20, 4, $result[$i]['tva_percent'], align: 'R');
+            //$pdf->write_cell(5, 4, $result[$i]['tva_id']);
+            $pdf->write_cell(20, 4, $result[$i]['unit_price'], align: 'R');
+            $pdf->write_cell(20, 4, $result[$i]['quantity'], align: 'R');
+            $pdf->write_cell(20, 4, nbm($result[$i]['amount']), align: 'R');
             $pdf->line_new();
         }
         $pdf->line_new(10);
-
+        
+        $pdf->SetTextColor(0,0,127);
         $pdf->setFont("DejaVu", "B", 12);
         $pdf->write_cell(60, 4, _("Totaux"));
-        $pdf->line_new(10);
+        $pdf->line_new(6);
+        $pdf->SetTextColor(0,0,0);
         $pdf->setFont("DejaVu", "", 7);
         $result = $this->get_amount_summary();
 //        @TODO DNY : Qu'est-ce que LineExtension Amount ??
@@ -535,9 +590,11 @@ abstract class XML_Reader
         $nb_inline = count($result);
         if ( !empty ($result ))
         {
+            $pdf->SetTextColor(0,0,127);
             $pdf->setFont("DejaVu", "B", 12);
             $pdf->write_cell(60, 4, _("Charge et déduction"));
-            $pdf->line_new(10);
+            $pdf->line_new(6);
+            $pdf->SetTextColor(0,0,0);
             $pdf->setFont("DejaVu", "", 7);
             $pdf->write_cell(20, 4, _("code"), align: 'L', border: '1');
             $pdf->write_cell(20, 4, _("Type"), border: '1');
@@ -564,13 +621,15 @@ abstract class XML_Reader
                 $pdf->line_new();
             }
         }
+        $pdf->SetTextColor(0,0,127);
         $pdf->setFont("DejaVu", "B", 12);
         $pdf->write_cell(60, 4, _("TVA"));
-        $pdf->line_new(10);
+        $pdf->line_new(6);
+        $pdf->SetTextColor(0,0,0);
         $pdf->setFont("DejaVu", "", 7);
         $result = $this->get_taxes();
         $pdf->write_cell(25, 4, _("% Taxe"), align: 'R', border: 'B');
-        $pdf->write_cell(5, 4, _("Code taxe"), border: 'B');
+        $pdf->write_cell(30, 4, _("Code taxe"), border: 'B');
         $pdf->write_cell(50, 4, _("Base"), align: 'R', border: 'B');
         $pdf->write_cell(50, 4, _("Taxe"), align: 'R', border: 'B');
         $pdf->line_new();
@@ -579,7 +638,7 @@ abstract class XML_Reader
         {
             $pdf->write_cell(25, 4, $result[$i]['tax_percent'], align: 'R');
             $pdf->write_cell(5, 4, $result[$i]['tax_id']);
-            $pdf->write_cell(25, 4, $result[$i]['vatex']);
+            $pdf->write_multi(25, 4, $result[$i]['vatex']);
             $pdf->write_cell(50, 4, nbm($result[$i]['taxable_amount']), align: 'R');
             $pdf->write_cell(50, 4, nbm($result[$i]['tax']), align: 'R');
 
@@ -589,8 +648,11 @@ abstract class XML_Reader
       
         
         $pdf->setFont("DejaVu", "B", 12);
+        $pdf->SetTextColor(0,0,127);
         $pdf->write_cell(60, 4, _("Paiement"));
-        $pdf->line_new(10);
+        $pdf->line_new(6);
+        $pdf->SetTextColor(0,0,0);
+        
         $pdf->setFont("DejaVu", "", 7);
         $result = $this->get_payment_mean();
         $pdf->write_cell(50, 4, _("Code"));
@@ -612,6 +674,7 @@ abstract class XML_Reader
             $pdf->write_multi(140, 4, str_replace(["\n", "\r", "\t"], " ", $result['note'][$i]));
             $pdf->line_new();
         }
+         $pdf->line_new(6);
         /**
          * display name of embedded from files
          * @var $result(array of Document_Reference)
@@ -619,17 +682,19 @@ abstract class XML_Reader
         $result=$this->get_embedded_document();
         if ( count($result) > 0)
         {
+            $pdf->SetTextColor(0,0,127);
             $pdf->setFont("DejaVu", "B", 12);
             $pdf->write_cell(60,4,_('Documents inclus'));
             $pdf->line_new();
+            $pdf->SetTextColor(0,0,0);
             $pdf->setFont("DejaVu", "", 7);
             $nb_result=count($result);
             for ($i=0;$i< $nb_result;$i++)
             {
                 $binary=$result[$i]->getBinary_object();
-                $pdf->write_cell(50,4,$result[$i]->getId());
-                $pdf->write_cell(50,4,$binary->filename);
-                $pdf->write_cell(50,4,$result[$i]->getDescription());
+                $pdf->write_multi(50,4,$result[$i]->getId());
+                $pdf->write_multi(50,4,$binary->filename);
+                $pdf->write_multi(50,4,$result[$i]->getDescription());
                 $pdf->line_new();
                 
             }
