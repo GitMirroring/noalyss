@@ -73,6 +73,8 @@ if ( ! $cn->exist_table('version')) {
     echo '</p>';
     return;
 }
+global $level;
+$level=0;
 
 /**
  * if access_mode is MOBILE than force it to mobile.php
@@ -322,6 +324,7 @@ else
         $_GET['ac']=$default;
         $_POST['ac']=$default;
         $_REQUEST['ac']=$default;
+
         show_module($menu_id);
         $all[0] = $default;
         show_menu($menu_id);
