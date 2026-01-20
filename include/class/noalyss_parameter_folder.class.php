@@ -109,6 +109,7 @@ EOF;
     function check_anc_filter($p_value):void
     {
         $tmp_value=$p_value;
+
         $tmp_value=preg_replace("/[0-9]|,/", '', $p_value);
         if ( $tmp_value != "") {
             throw new Exception (sprintf(_("Valeur invalide %s"),$tmp_value),1000);
@@ -167,6 +168,7 @@ EOF;
     function save($p_attr)
     {
         try {
+            if ( trim($this->MY_ANC_FILTER) == "") $this->MY_ANC_FILTER="6,7";
             $value=$this->check($p_attr,$this->$p_attr);
 
             // check if the parameter does exist
