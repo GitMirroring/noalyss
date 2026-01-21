@@ -25,7 +25,7 @@ function modifyModeleDocument(p_value,dossier)
     id='det'+layer;
     var pos_y=posY+offsetY-20;
     var pos_x=posX+offsetX+40;
-    var style="position:absolute;top:"+pos_y+"px;left:10%;width:80%";
+    var style="position:absolute;top:"+pos_y+"px;left:10%;width:80%;z-index:"+get_next_layer();
     var popup={'id':'mod_doc',
 	       'cssclass':'inner_box',
                'html': loading(),
