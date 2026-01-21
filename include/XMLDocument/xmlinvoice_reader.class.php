@@ -115,8 +115,8 @@ class XMLInvoice_Reader extends XML_Reader
             $row ['description'] = $node->item($e)->getElementsByTagName("Description")->item(0)?->textContent; 
             $row ['name'] = $node->item($e)->getElementsByTagName("Name")->item(0)->textContent; 
             $row ['unit_price'] = $node->item($e)->getElementsByTagName("PriceAmount")->item(0)->textContent; 
-            $row ['tva_id'] = $node->item($e)->getElementsByTagName("ID")->item(0)->textContent; 
-            $row ['tva_percent'] = $node->item($e)->getElementsByTagName("Percent")->item(0)->textContent; 
+            $row ['tva_id'] = $node->item($e)->getElementsByTagName("ID")->item(0)?->textContent; 
+            $row ['tva_percent'] = $node->item($e)->getElementsByTagName("Percent")->item(0)?->textContent; 
             $result[] = $row;
         }
         return $result;
