@@ -235,7 +235,7 @@ class InvoiceUBL21 extends XMLInvoice {
         // LegalEntity
         $ple=$this->createElement('cac:PartyLegalEntity');
            ///@todo customer = name doit être fiche
-        $ple->appendChild($this->createElement("cbc:RegistrationName", $this->data['customer']['name']??"ERROR"));
+        $ple->appendChild($this->createElement("cbc:RegistrationName", htmlspecialchars($this->data['customer']['name'],ENT_XML1,'UTF-8')));
            ///@todo customer_vat_id = numéro de TVA doit être dans fiche
         $ple->appendChild($this->createElement("cbc:CompanyID", $this->data['customer']['customer_vat_id']??"ERROR"));
         
