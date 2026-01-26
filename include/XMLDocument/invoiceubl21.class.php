@@ -246,6 +246,31 @@ class InvoiceUBL21 extends XMLInvoice {
         return $customer;
     }
     /**
+     * @brief Delivery Date is mandatory for INTRACOMM , so by default 
+     * we set the invoice date
+<cac:Delivery>
+  <cbc:ActualDeliveryDate>
+        2026-01-06  
+    </cbc:ActualDeliveryDate>
+  </cac:Delivery>
+     */
+    function build_deliveryDate()
+    {
+        $delivery=$this->createElement("cac:Delivery");
+        $delivery->appendChild($this->createElement("cbc:ActualDeliveryDate",$this->data['issue_date']));
+        //(cac:Delivery/cac:DeliveryLocation/cac:Address/cac:Country/cbc:IdentificationCode//
+        $loc= $this->createElement("cac:DeliveryLocation");
+        $addr=$this->createElement('cac:Address');
+        $country=$this->createElement("cac:Country");
+        $country->appendChild($this->createElement("cbc:IdentificationCode", $this->data['customer']['country']));
+        $addr->appendChild($country);
+        $loc->appendChild($addr);
+        $delivery->appendChild($loc);
+               
+        return $delivery;
+    }
+    /**
+    /**
      * @brief Build XML Block for payment
      * @code
   <cac:PaymentMeans>
@@ -658,6 +683,9 @@ class InvoiceUBL21 extends XMLInvoice {
         $root->appendChild($this->build_supplier());
         // add the customer
         $root->appendChild($this->build_customer());
+        
+        // add delivery date
+        $root->appendChild($this->build_deliveryDate());
         
         // add the payment  if there is a bank account
         if ( $company['COMPANY_BANK_IBAN'] != "")
