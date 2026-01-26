@@ -292,7 +292,10 @@ abstract class XMLInvoice extends \DOMDocument
                 $VAT_SubTotal[$idx_subtotal]=array();
                 $VAT_SubTotal[$idx_subtotal]['idx']=$idx;
                 $VAT_SubTotal[$idx_subtotal]['vat_code']=$result['operation'][$i]['vat_code'] ;
-                $VAT_SubTotal[$idx_subtotal]['percent']=$percent;
+                if ( $acc_tva->tva_both_side == 1 )
+                        $VAT_SubTotal[$idx_subtotal]['percent']=0;
+                else
+                        $VAT_SubTotal[$idx_subtotal]['percent']=$percent;
                 $VAT_SubTotal[$idx_subtotal]['vatex']=$acc_tva->vx_code;
                 $VAT_SubTotal[$idx_subtotal]['amount']=$VAT_SubTotal[$idx_subtotal]['vat']=0;
                 
@@ -302,12 +305,19 @@ abstract class XMLInvoice extends \DOMDocument
              * @todo Pour les intracomm , quel taux utilisé ? 0 ou 21%
              */
             $VAT_SubTotal[$n]['amount']=bcadd($VAT_SubTotal[$n]['amount'],$result['operation'][$i]['price']);
-            $VAT_SubTotal[$n]['vat']=bcadd($VAT_SubTotal[$n]['vat'],$result['operation'][$i]['vat']);
-            $VAT_SubTotal[$n]['vat']=bcsub($VAT_SubTotal[$n]['vat'],$result['operation'][$i]['vat_reversed']);
+            if ( $acc_tva->tva_both_side == 0 )
+                $VAT_SubTotal[$n]['vat']=bcadd($VAT_SubTotal[$n]['vat'],$result['operation'][$i]['vat']);
+            
             $result['TaxableAmount']=bcadd( $result['TaxableAmount'],$result['operation'][$i]['price']);
-            $result['TaxAmount']=bcadd( $result['TaxAmount'],$result['operation'][$i]['vat']);
-            $result['TaxAmount']=bcsub( $result['TaxAmount'],$result['operation'][$i]['vat_reversed']);
+            
+            // $result['TaxAmount']=bcsub( $result['TaxAmount'],$result['operation'][$i]['vat_reversed']);
             $result['operation'][$i]['vat_percent']=$percent;
+            if ( $acc_tva->tva_both_side == 1 ) 
+            {
+                $result['operation'][$i]['vat_percent']=0;
+            }else {
+                $result['TaxAmount']=bcadd( $result['TaxAmount'],$result['operation'][$i]['vat']);
+            }
         }
         $result['subTotalVAT']=$VAT_SubTotal;
         $result['LineExtensionAmount']= $result['TaxableAmount'];
