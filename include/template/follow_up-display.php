@@ -38,11 +38,11 @@ $dossier_id=Dossier::id();
  *
  */
 ?>
-<div>
+<div class="p-3">
     <?php
     \Noalyss\Dbg::echo_file(__FILE__);
     ?>
-<div class="row m-0">
+<div class="row ">
 
 <div class="col">
     <table>
