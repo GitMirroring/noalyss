@@ -475,6 +475,7 @@ class InvoiceUBL21 extends XMLInvoice {
 
         $result->appendChild($this->createElement("cbc:ID", $i));
         $amount=sprintf("%.2f",$row['price']);
+        if ( $row['quantity'] > 0 && $amount < 0 ) $row['quantity'] =bcsub(0,$row['quantity'] ,4);
         $result->appendChild(
                 $this->createElement("cbc:InvoicedQuantity", sprintf("%.2f",$row['quantity'])))
                 ->setAttribute("unitCode", $row["code_quantity"]);

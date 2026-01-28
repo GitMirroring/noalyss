@@ -38,8 +38,8 @@ if ( ($g_user->can_write_action($ag_id) == true || $g_user->can_read_action($ag_
 {   
         $menu=new Default_Menu();
 	echo $act->Display('READ', false, "ajax", "");
-	//$action=HtmlInput::array_to_string(array("gDossier","ag_id"), $_GET)."&ac=FOLLOW&sa=detail";
-        $action=  "do.php?".http_build_query(array("gDossier"=>Dossier::id(),"ag_id"=>$ag_id,"ac"=>$menu->get('code_follow'),"sa"=>"detail"));
+	
+        $action=  NOALYSS_URL."/do.php?".http_build_query(array("gDossier"=>Dossier::id(),"ag_id"=>$ag_id,"ac"=>$menu->get('code_follow'),"sa"=>"detail"));
         $code='ok';
 ?>
 <a href="<?php echo $action?>" target="_blank" class="smallbutton"><?php echo _("Modifier")?> </a>

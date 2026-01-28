@@ -40,7 +40,7 @@ $option_detail= Document_Option::option_operation_detail($document_type);
 // default menu for invoice
 $menu=new Default_Menu();
 ?>
-<div id="follow_up_detail">
+<div id="follow_up_detail" class="p-3">
     
     <?php echo h2(_("Détail opération"),'class="h-section"') ?>
     <?php echo HtmlInput::hidden("nb_item", $article_count); ?>
@@ -249,4 +249,5 @@ $menu=new Default_Menu();
         <?php
     endif;
     ?>
+    </div>
 </div>

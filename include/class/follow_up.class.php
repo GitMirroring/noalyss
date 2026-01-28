@@ -283,7 +283,8 @@ class Follow_Up
         $title->name="ag_title";
         $title->value=$this->ag_title;
         $title->size=60;
-	    $title->style='style="font-size:2rem;font-weight:bold"';
+	$title->style='style="font-size:2rem;font-weight:bold"';
+        $title->css_size="45rem";
 
 
         // Priority of the ag_priority
