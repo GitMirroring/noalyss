@@ -208,8 +208,16 @@ abstract class XMLInvoice extends \DOMDocument
             $card=new \Fiche($this->cn,$operation->det->array[$i]['qs_fiche']);
             $result['operation'][$i]['qcode']=$card->get_attribute(ATTR_DEF_QUICKCODE);
             $result['operation'][$i]['name']=$card->get_attribute(ATTR_DEF_NAME);
-            $result['operation'][$i]['description']=($operation->det->array[$i]['j_text']=="")?$card->get_attribute(9):$operation->det->array[$i]['j_text'];
-            
+            $result['operation'][$i]['description']=$operation->det->array[$i]['j_text'];
+            if ($operation->det->array[$i]['j_text'] == "") 
+            {
+                $a=$card->get_attribute(9);
+                if ( $a != "") {
+                  $result['operation'][$i]['description']=$a;
+                }else {
+                    $result['operation'][$i]['description']=$result['operation'][$i]['name'];
+                }
+            }
             // get the type of unity, if not found then it will be EA
             $x= $card->get_attribute(ATTR_DEF_QUANTITY_TYPE,0);
             $result['operation'][$i]['code_quantity']=($x===false||$x=="")?"EA":$x;
