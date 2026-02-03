@@ -910,7 +910,7 @@ EOF;
         // retrieve all info about operation
         $operation = $this->get_quant();
         $array=$operation->compute_array();
-
+        
         global $g_user;
         $a_code=$this->db->get_array("select code from v_menu_dependency vmd  where me_code=$1 and p_id=$2",
                 array( $operation->signature,$g_user->get_profile()));
@@ -1013,6 +1013,8 @@ EOF;
             echo \Noalyss\Dbg::hidden_info("operation->det", $operation->det);
             echo \Noalyss\Dbg::hidden_info("array", $array);
         }
+        $ledger=new \Acc_Ledger($this->db,$operation->det->jr_def_id);
+        $array['nb_item']=max($ledger->get_min_row(),$array['nb_item']);
         // transform the operation into hidden element
         $r.=HtmlInput::simple_array_to_hidden($array);
         $r.=HtmlInput::hidden("e_comm",$operation->det->jr_comment);
