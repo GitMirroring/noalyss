@@ -1539,7 +1539,9 @@ function save_filter(p_div, p_dossier) {
     // Get all elt from the form
     for (var i = 0; i < elt.length; i++) {
         var idx = elt[i];
-        eltValue[idx] = id$(p_div + elt[i]).value;
+        eltValue[idx] = null;
+        if ( document.getElementById(p_div+elt[i]) ) 
+             eltValue[idx]=id$(p_div + elt[i]).value;
 
     }
     if (eltValue['amount_min'] == "") eltValue["amount_min"] = 0;
@@ -1602,7 +1604,9 @@ function load_filter(p_div, p_dossier, p_filter_id) {
                     , 'p_currency_code', 'tva_id_search'];
                 for (var i = 0; i < elt.length; i++) {
                     var idx = elt[i];
-                    id$(p_div + idx).value = answer[elt[i]];
+                    
+                    if ( document.getElementById(p_div + idx))
+                        id$(p_div + idx).value = answer[elt[i]];
                 }
                 // fillup the r_jrn array
                 var eltLedgerId = id$("ledger_id" + p_div);
