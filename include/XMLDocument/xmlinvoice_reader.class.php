@@ -164,7 +164,12 @@ class XMLInvoice_Reader extends XML_Reader
             $row ['taxable_amount'] = $xml->xpath("//cbc:TaxableAmount")[$e] . "";
             $row ['tax'] = $xml->xpath("//cbc:TaxAmount")[$e] . "";
             $row ['tax_id'] = $xml->xpath("//cac:TaxCategory/cbc:ID")[$e] . "";
-            $row ['tax_percent'] = $xml->xpath("//cac:TaxCategory/cbc:Percent")[$e] . "";
+            $row ['tax_percent'] =0;
+            $r=$xml->xpath("//cac:TaxCategory/cbc:Percent");
+            if ( isset($r[$e]) )
+            {
+                $row ['tax_percent'] = $xml->xpath("//cac:TaxCategory/cbc:Percent")[$e] . "";
+            }
             if (isset($xml->xpath("//cac:InvoiceLine/cac:Item/cbc:Name")[$e]))
             {
                 $row ['name'] =$xml->xpath("//cac:InvoiceLine/cac:Item/cbc:Name")[$e]."";   
