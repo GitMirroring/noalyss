@@ -401,7 +401,32 @@ class Noalyss_User
             $sql_cond="   where use_id=$1";
             $sql_array=array($this->id);
         }
-        $sql="select use_id,
+        /**
+         * mono version
+         */
+        if ( $this->repository->exist_table("repo_version")) {
+            $repo_version = $this->repository->get_value("select val from repo_version");
+        } else {
+            $repo_version = $this->repository->get_value("select val from version");
+        }
+        /**
+         * when upgrading , ACCOUNT_REPOSITORY is not yet upgraded
+         */
+        if ( $repo_version < 21)
+        {
+            $sql="select use_id,
+                            use_first_name,
+                            use_name,
+                            use_login,
+                            use_active,
+                            use_admin,
+                            use_pass,
+                            use_email
+                        from ac_users "; 
+            $row=array();
+            $row['use_auth_method']=$row['use_otp_secret']="";
+        } else {
+         $sql="select use_id,
                             use_first_name,
                             use_name,
                             use_login,
@@ -412,6 +437,7 @@ class Noalyss_User
                             use_auth_method,
                             use_otp_secret
                         from ac_users ";
+        }
         $Res=$this->repository->exec_sql($sql.$sql_cond, $sql_array);
         if (($Max=Database::num_row($Res))==0)
             return -1;
