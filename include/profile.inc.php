@@ -204,7 +204,9 @@ if (isset($_POST['delete_profil']))
         {
             throw new Exception('On ne peut pas effacer le profil par défaut');
         }
-        $new_id=$cn->get_value("delete from profile
+        $cn->exec_sql("delete from profile_mobile 
+			where p_id=$1 ", array($p_id));
+        $cn->exec_sql("delete from profile
 			where p_id=$1 ", array($p_id));
         $cn->commit();
     }
