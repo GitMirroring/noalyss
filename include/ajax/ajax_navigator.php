@@ -113,7 +113,11 @@ for ($i=0;$i<$nMax;$i++):
 <?php endfor; ?>        
     </table>
 
-    
+    <ul class="aligned-block ">
+        <li>
+            <?=\HtmlInput::button_hide("navi_div")?>
+        </li>
+    </ul>
 </div>
 <script charset="UTF8" lang="javascript">
     $('lk_navi_tb').focus();

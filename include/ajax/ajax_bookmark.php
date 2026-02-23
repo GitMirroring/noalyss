@@ -124,8 +124,15 @@ echo _("Menu actuel")." : ".hb($_GET['ac']);
 echo HtmlInput::array_to_hidden(array("gDossier","ac"), $_REQUEST); 
 ?>
 <p>
-<?php echo HtmlInput::submit("bookmark_add", _("Ajoutez le menu  actuel à vos favoris"),"","smallbutton"); ?>
 </form>
 
-
+    <ul class="aligned-block ">
+        <li>
+            <?=\HtmlInput::button_hide("bookmark_div")?>
+        </li>
+        <li>
+            <?php echo HtmlInput::submit("bookmark_add", _("Ajoutez le menu  actuel à vos favoris"),"","smallbutton"); ?>
+            
+        </li>
+    </ul>
 </div>
