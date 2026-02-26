@@ -283,7 +283,7 @@ class Follow_Up
         $title->name="ag_title";
         $title->value=$this->ag_title;
         $title->size=60;
-	$title->style='style="font-size:2rem;font-weight:bold"';
+	$title->style='class="input_text" style="font-size:2rem;font-weight:bold"';
         $title->css_size="45rem";
 
 
@@ -304,7 +304,8 @@ class Follow_Up
         $ag_hour->name="ag_hour";
         $ag_hour->value=$this->ag_hour;
         $ag_hour->size=6;
-        $ag_hour->javascript=" onblur=check_hour('ag_hour');";
+        if (! $readonly)        $ag_hour->javascript=" onblur=check_hour('ag_hour');";
+        
         $str_ag_hour=$ag_hour->input();
 
         // Profile in charged of the action
@@ -420,7 +421,7 @@ class Follow_Up
         $h_agrefid=new IHidden();
         $iag_ref=new IText("ag_ref");
         $iag_ref->value=$this->ag_ref;
-        $iag_ref->readOnly=false;
+        $iag_ref->readOnly=$readonly;
         $iag_ref->css_size="100%";
         $str_ag_ref=$iag_ref->input();
         // Preparing the return string

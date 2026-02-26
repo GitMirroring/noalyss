@@ -73,13 +73,15 @@ BODY {
     --underline-menu:#d7e8ee;
     --bg-slide:#c5d5e8;
     --end-level1:#eb7c7e;
+    --border-color:navy;
+    --bg-white:white;
 }
 input{
     font-family: 'OpenSansRegular';
     padding : 2px;
      margin:2px;
     border:1px solid var(--input-color);
-
+    background-color:var(--bg-white);
     color:var(--input-color);
     
 }
@@ -807,8 +809,9 @@ a.document:hover {
 }
 .input_text_ro {
     border:1px solid  #0000FF;
-    background:#EDEDED;
-    color:#0000FF;
+    background-color: var(--bg-white);
+    color:var(--border-color);
+    border-radius: 5px;
     margin:1px;
 }
 .input_text {
@@ -856,9 +859,9 @@ fieldset fieldset legend {
     color:#888;
 }
 select {
-    border: 1px solid #0000FF;
+    border: 1px solid var(--border-color);
     margin:2px;
-    background-color:#FFFFFF;
+    background-color:var(--bg-white);
     border-radius: 3px;
     padding: 3px;
 }
@@ -2705,7 +2708,7 @@ td.selectedmenu {
 .field_follow_up
 {
     margin-top:1px;
-    border:1px solid blue;
+    border:1px solid var(--border-color);
     min-height: 5rem;
 }
 
@@ -3786,7 +3789,7 @@ margin:1px;
  div.concerned_action {
          height: 11rem;
          overflow: auto;
-     background-color: white;
+     background-color: var(--bg-white);
      border:navy 1px solid;
      width: 100%;
      scroll-padding-right: 20px;
@@ -4307,4 +4310,22 @@ span.nb-round {
 #message1 {
     text-align: center;
     padding: 10px;
+}
+
+
+.inner_box  div.fu_comment_div {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    
+}
+
+
+.field_follow_up {
+     padding: 1rem;
+    border-radius: 10px;
+    
+}
+
+.field_follow_up {
+    background-color: var(--bg-white);
 }
