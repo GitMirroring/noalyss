@@ -112,6 +112,7 @@ p.notice,span.notice {
     margin-left: 5ch;
     border:1px solid transparent;
     border-radius: 5px;
+    text-align: center;
 }
  .valid {
      color:green;
@@ -3961,7 +3962,8 @@ h2.h-section {
      content:'';
     left:0;
     bottom:0;
-    right:0;3    position:absolute;
+    right:0.3;
+    position:absolute;
     height:var(--border-size);
     background-color:red;
     transform:scaleX(0);
@@ -4301,4 +4303,8 @@ span.nb-round {
 }
 #ag_title {
   width:80%;
+}
+#message1 {
+    text-align: center;
+    padding: 10px;
 }
