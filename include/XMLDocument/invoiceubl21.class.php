@@ -162,18 +162,10 @@ class InvoiceUBL21 extends XMLInvoice {
                  $a_error[]=$value;
              }
         }
-        if ( $this->data['customer']["endpoint_id"] != "")
+        // check if peppol id has the form 9999:9999...
+         if (preg_match('/[0-9]+:[[:alnum:]]+/',$this->data['customer']["endpoint_id"]) == 0)
         {
-            // check if peppol id has the form 9999:9999...
-            list($scheme_id,$peppol)=explode(":", $this->data['customer'][$value]);
-            if (preg_replace('/[0-9]/', '', $scheme_id) != "") 
-            {
                 $a_error[]='endpoint_id';
-            }elseif(\noalyss_trim($peppol) =="") 
-            {
-                $a_error[]='endpoint_id';
-                
-            }
         }
        if ( $this->data['customer']["customer_vat_id"] != "" && preg_match('/[a-z]{2}/i',$this->data['customer']["customer_vat_id"] ) == false)
        {
