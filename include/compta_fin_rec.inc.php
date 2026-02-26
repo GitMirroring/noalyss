@@ -202,7 +202,7 @@ if (isset($_POST['save']))
 		$cn->start();
 		for ($i = 0; $i < count($array); $i++)
 		{
-			$cn->exec_sql('update jrn set jr_pj_number=$1 where jr_id=$2', array($_POST['ext'], $array[$i]));
+			$cn->exec_sql('update jrn set jr_pj_number=$1 where jr_id=$2', array($receipt_nb, $array[$i]));
 			$tot = bcadd($tot, $cn->get_value('select qf_amount from quant_fin where jr_id=$1', array($array[$i])));
 		}
 		$diff = bcsub($end_extrait, $start_extrait);
@@ -210,22 +210,30 @@ if (isset($_POST['save']))
 		{
 			$remain=bcsub($tot,$diff);
 			$cn->rollback();
-			alert("D'après l'extrait il y aurait du avoir un montant de $diff à rapprocher alors qu'il y a $tot rapprochés, mise à jour annulée, la différence est de $remain");
+                        $str_message=_("D'après l'extrait il y aurait du avoir un montant de $diff à rapprocher alors qu'il y a $tot rapprochés, mise à jour annulée, la différence est de $remain");
+			alert($str_message);
 			echo '<div class="error">';
-			echo '<p>'.$g_failed._("D'après l'extrait il y aurait du avoir un montant de $diff à rapprocher alors qu'il y a $tot rapprochés, la différence est de $remain <br>mise à jour annulée").'</p>';
+			echo '<p>'.$g_failed.$str_message.'</p>';
                         /* if file : warning that file is not uploaded*/
                         echo    '<p>'.
-                                _('Attention : Fichier non chargé').
+                                _('Attention : Fichier non chargé et rapprochement annulé').
                                 '</p>';
 			echo '</div>';
 		}
 		else
-		  {
-		    echo '<div class="content">'.$g_succeed.' Mise à jour extrait '.$_POST['ext'].'</div>';
+		{
+		    echo '<div class="content">'.$g_succeed._(' Mise à jour extrait')." ".$receipt_nb.'</div>';
                     // -- chargement fichier
-                    $oid=$cn->upload('file_receipt',true);
-                    
-                    if ( $oid != false ) {
+                    $oid=null;
+                    if ( $_FILES['file_receipt']['name'] != "" && $_FILES['file_receipt']['error'] == 0)
+                    {
+                        $oid=$cn->upload('file_receipt',true);
+                        echo _("Fichier sauvé");
+                    }
+                    if( $_FILES['file_receipt']['error'] != 4 && $_FILES['file_receipt']['error'] !=0 )
+                        echo_warning(_("Fichier non chargé: mise à jour annulée"));
+                    else    
+                    {
                         for ($i = 0; $i < count($array); $i++)
                         {
                               $cn->exec_sql("update jrn set jr_pj=$1 , jr_pj_name=$2,
@@ -411,6 +419,7 @@ echo '</tr>';
 echo '</table>';
 
 $receipt=new IFile('file_receipt');
+$receipt->setAlertOnSize(true);
 echo _("Pièce justificative"),"&nbsp;" ,
     $receipt->input();
 echo '<p class="text-align:center">';
