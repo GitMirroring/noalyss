@@ -95,6 +95,7 @@ if ( DEBUGNOALYSS > 1 ) {
     \Noalyss\Dbg::display_size();
     \Noalyss\Dbg::display_request();
     \Noalyss\Dbg::display_global();
+    echo "encoding";echo mb_internal_encoding();
 } //<--- if DEBUG 
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 

@@ -528,14 +528,14 @@ class Fiche
             if ( $p_array["av_text".ATTR_DEF_QUICKCODE] =="")
             {
                 if ( ! empty( $p_array['av_text'. ATTR_DEF_ACCOUNT])) {
-                    $base_acc=substr($p_array['av_text'. ATTR_DEF_ACCOUNT]??"",0, 3);
+                    $base_acc=mb_substr($p_array['av_text'. ATTR_DEF_ACCOUNT]??"",0, 3);
                 }else {
                     $base_acc=$this->cn->get_value("select substr(fd_class_base,1,2) from fiche_def where fd_id = $1",
                         [$p_fiche_def]);
                 }
                 $p_array["av_text".ATTR_DEF_QUICKCODE]=sprintf("%s%s"
                             , $base_acc
-                            , substr($p_array["av_text".ATTR_DEF_NAME], 0, 4)
+                            , mb_substr($p_array["av_text".ATTR_DEF_NAME], 0, 4)
                         );
             }
             $sql=sprintf("select insert_quick_code(%d,'%s')", $fiche_id,
