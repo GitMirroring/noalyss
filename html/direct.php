@@ -12,7 +12,7 @@
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *
+ *²
  *   You should have received a copy of the GNU General Public License
  *   along with NOALYSS; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -39,7 +39,7 @@ if ( ! $g_user->is_double_identified()) {
    exit();
 }
 $g_user->check_dossier($http->get('gDossier'));
-$res=$cn->exec_sql("select distinct code,coalesce(description,code) description from get_profile_menu($1) where code ~* $2 or description ~* $2 order by code limit 5  ",array($g_user->get_profile(),$http->post("acs")));
+$res=$cn->exec_sql("select distinct code,coalesce(description,code) as description from get_profile_menu($1) where code ~* $2 or description ~* $2 order by code limit 5  ",array($g_user->get_profile(),$http->post("acs")));
 $nb=Database::num_row($res);
 	echo "<ul>";
 set_language();
