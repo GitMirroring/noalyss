@@ -42,7 +42,15 @@ if ( ($g_user->can_write_action($ag_id) == true || $g_user->can_read_action($ag_
         $action=  NOALYSS_URL."/do.php?".http_build_query(array("gDossier"=>Dossier::id(),"ag_id"=>$ag_id,"ac"=>$menu->get('code_follow'),"sa"=>"detail"));
         $code='ok';
 ?>
+<ul class="aligned-block">
+    <li>
+        
 <a href="<?php echo $action?>" target="_blank" class="smallbutton"><?php echo _("Modifier")?> </a>
+    </li>
+    <li>
+        <?php echo HtmlInput::button_close($div)?>
+    </li>
+</ul>
 <?php
 }
 else
@@ -52,9 +60,13 @@ else
 	<div style="margin:0px;padding:0px;background-color:red;text-align:center;">
         <h2 class="error"><?php echo $forbidden ?></h2>;
 </div>
+<ul class="aligned-block">
+    <li>
+        <?php echo HtmlInput::button_close($div)?>
+    </li>
+</ul>
 	<?php 
 }
-echo HtmlInput::button_close($div);
 $response =  ob_get_clean();
 $html=escape_xml($response);
 header('Content-type: text/xml; charset=UTF-8');

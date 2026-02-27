@@ -1297,14 +1297,12 @@ function search_letter(obj) {
  */
 function op_save(obj) {
     try {
-        var queryString = id$(obj).serialize(true);
-        queryString ["gDossier"] = obj.gDossier.value;
-        var rapt2 = "rapt" + obj.whatdiv.value;
-        queryString ["rapt"] = id$(rapt2).value;
-        queryString  ["jr_id"] = obj.jr_id.value;
-        var jr_id = obj.jr_id.value;
-        queryString ["div"] = obj.whatdiv.value;
-        var divid = obj.whatdiv.value;
+        var queryString = Form.serialize(obj,true);
+        var divid = queryString['whatdiv'];
+        queryString["div"]  = queryString['whatdiv'];
+        queryString["rapt"] = id$("rapt"+divid).value;
+        var jr_id = queryString['jr_id'];
+        
         queryString ["act"] = "save";
         queryString ["op"] = "ledger";
         queryString ["jr_note"]=encodeURI(tinyMCE.get("jrn_note"+divid).getContent());
@@ -1346,7 +1344,7 @@ function op_save(obj) {
                         }
                         new Ajax.Request('ajax_misc.php', {
                             parameters: {
-                                'gDossier': obj.gDossier.value,
+                                'gDossier': queryString ["gDossier"],
                                 'act': 'de',
                                 'op': 'ledger',
                                 'jr_id': jr_id,
@@ -1359,7 +1357,7 @@ function op_save(obj) {
                                     id$(divid).innerHTML = unescape(getNodeText(html[0]));
                                     id$(divid).innerHTML.evalScripts();
                                     remove_waiting_box();
-                                    noalyss.refresh_note(jr_id,obj.gDossier.value);
+                                    noalyss.refresh_note(jr_id,queryString ["gDossier"]);
                                 } catch (e) {
                                     console.error("D1. op_save")
                                     alert_box("1038" + e.message)
