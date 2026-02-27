@@ -1478,6 +1478,9 @@ class Noalyss_User
                         $p_module,
                         $_SERVER['REQUEST_URI'],
                         $action));
+            if ( $action=="FAIL") {
+                record_log("security alert see audit");
+            }
         }
     }
 
