@@ -2996,6 +2996,11 @@ div.progressbar {
 /**
  * Warning
  */
+span.warning::before {
+    content: '\e806';
+    font-family: "fontello" !important;
+    font-weight:normal;   
+}
 span.warning {
     color:white;
     font-style: normal;
@@ -3007,6 +3012,7 @@ span.warning {
      animation-duration: 4s;
      animation-iteration-count: infinite;
      display: block;
+     border-radius: 10px;
 }
 /**********************************************************************************************************************/
  /* LI as list
