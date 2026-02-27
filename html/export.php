@@ -33,6 +33,7 @@ global $g_user,$cn,$g_parameter;
 require_once NOALYSS_INCLUDE.'/class/database.class.php';
 require_once NOALYSS_INCLUDE . '/class/noalyss_user.class.php';
 require_once NOALYSS_INCLUDE.'/lib/http_input.class.php';
+mb_internal_encoding("UTF-8");
 
 //
 // for loading javascripts or style-sheet, it is needed to know the user 
@@ -49,12 +50,47 @@ if (isset ($_REQUEST['loadjs']) && $_REQUEST['loadjs']=='message')
     include_once NOALYSS_INCLUDE."/lib/message_javascript.php";
     return;
 }
+
+
+//------------------------------------------------
+// Export File from ADMINISTRATION MENU
+//------------------------------------------------
+$hi=new HttpInput();
+if ($hi->request("admin","string",0)==1 ) {
+    $g_user=new Noalyss_user(new Database());
+    if ($g_user->admin != 1)
+    {
+        $g_user->audit('FAIL', "ADMIN: export admin".var_export($_REQUEST,true));
+        echo_warning(_("Accès interdit"));
+        exit();
+    }
+    if ( $hi->get("action")=="logfile") {
+        $directory=dir( NOALYSS_BASE.DIRECTORY_SEPARATOR."log");
+        $a_file=[];
+        while ( $file = $directory->read()) {
+            if (preg_match("/noalyss.*log/", $file)) {
+                $a_file[]=$file;
+            }
+        }
+        $file=$hi->get("file");
+        if (! in_array($file,$a_file ) )
+        {
+            echo_warning(sprintf("%s non trouvé",$file));
+            return;
+        }
+        header('Content-Type: application/x-download');
+        header('Content-Disposition: attachment; filename="'.$file.'"');
+        header('Cache-Control: private, max-age=0, must-revalidate');
+        header('Pragma: public');
+        echo file_get_contents(NOALYSS_BASE.DIRECTORY_SEPARATOR."/log/{$file}");
+    }
+    return;
+}
+//------------------------------------------------
 // Connect the user to the current folder and export file
+//------------------------------------------------
 $cn=Dossier::connect();
 $g_user=new Noalyss_user($cn);
-$gDossier=dossier::id();
-$g_parameter=new Noalyss_Parameter_Folder($cn);
-mb_internal_encoding("UTF-8");
 $g_user->Check();
 /**
  * check if 2FA is completed
@@ -62,9 +98,10 @@ $g_user->Check();
 if ( ! $g_user->is_double_identified()) {
    exit();
 }
+$gDossier=dossier::id();
+$g_parameter=new Noalyss_Parameter_Folder($cn);
 $action=$g_user->check_dossier($gDossier);
 
-$hi=new HttpInput();
 $action=$hi->get("act");
 
 if ( $action=='X'  || $g_user->check_print($action)==0 )

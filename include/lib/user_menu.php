@@ -62,6 +62,9 @@ function MenuAdmin()
         case 'info':
             $def=6;
             break;
+        case 'logfile':
+            $def=9;
+            break;
         }
     }
 	if (!defined("MULTI")||(defined("MULTI")&&MULTI==1))
@@ -76,6 +79,10 @@ function MenuAdmin()
                  array("admin-noalyss.php?action=audit_log",_("Audit"),_("Utilisateurs qui se sont connectés"),4),
                  array("admin-noalyss.php?action=info",
                      _("Information système"),('Information à propos de votre installation'),6),
+                 array("admin-noalyss.php?action=logfile"
+                            ,_("Trace")
+                            ,_("Fichiers erreurs")
+                            ,9),
                  array("login.php",_("Accueil"),"",7),
                  array("logout.php",_("Sortie"),"",8)
                 );
@@ -96,6 +103,10 @@ function MenuAdmin()
                  array("admin-noalyss.php?action=audit_log",_("Audit"),_("Utilisateurs qui se sont connectés"),4),
                  array("admin-noalyss.php?action=info",
                      _("Information système"),('Information à propos de votre installation'),6),
+                array("admin-noalyss.php?action=logfile"
+                            ,_("Trace")
+                            ,_("Fichiers erreurs")
+                            ,9),
                  array("login.php",_("Accueil")),
                  array("logout.php",_("Sortie"))
                 );

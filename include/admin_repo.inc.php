@@ -47,6 +47,7 @@ if ($User->admin != 1)
 {
     $theme=(isset($User->theme))?$User->theme:"";
     $User->audit('FAIL',"ADMIN : [$action]".var_export($_REQUEST,true));
+    record_log("Security alert [{$action}]".var_export($_REQUEST,true));
     html_page_start($theme);
     echo '<div class=content" style="padding:5%">';
     echo "<h1 class=\"title\">";
@@ -206,6 +207,12 @@ hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #0
     echo $html->saveHTML();
     
 }
+if ($action== 'logfile')
+{
+    /* List the connexion successfull and failed */
+    require_once NOALYSS_INCLUDE."/admin_logfile.inc.php";
+}
+
 //------------------------------------------------------------------------------
 // Upgrade
 //------------------------------------------------------------------------------
