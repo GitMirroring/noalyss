@@ -207,7 +207,7 @@ hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #0
     echo $html->saveHTML();
     
 }
-if ($action== 'logfile')
+if ($action== 'logfile' && SYSINFO_DISPLAY == true )
 {
     /* List the connexion successfull and failed */
     require_once NOALYSS_INCLUDE."/admin_logfile.inc.php";

@@ -89,7 +89,7 @@ function MenuAdmin()
                 if ( SYSINFO_DISPLAY == false ) {
                     $nb_item = count($tmp_item);
                     for ($i=0;$i<$nb_item;$i++) {
-                        if ($tmp_item[$i][3] <> 6 ) {
+                        if ($tmp_item[$i][3] <> 6 && $tmp_item[$i][3] <> 9 ) {
                             $item[]=$tmp_item[$i];
                         }
                     }
