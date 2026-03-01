@@ -83,7 +83,7 @@ $dossier_id=Dossier::id();
             ?>
           </td>
         </tr>
-        <tr class="font-weight-bolder" style="background: lightsteelblue;color:navy">
+        <tr class="highlight">
             <td style="width: auto" colspan="2" >
                 <?=$sp->input()?>
             </td>

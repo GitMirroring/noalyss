@@ -2191,7 +2191,7 @@ margin-left: 0px;
 .inner_box li.tabs:hover ,li.tabs:hover {
     display:inline;
     background-color: lightblue;
-    color:wheat;
+    color:var(--bg-white);
 margin-left: 2px;
     padding: 5px;
     border-top-left-radius: 10px;
@@ -2216,7 +2216,7 @@ margin-left: 2px;
     .inner_box li.tabs:hover ,li.tabs:hover {
         display:inline;
         background-color: lightblue;
-        color:wheat;
+        color:var(--bg-white);
 margin-left: 2px;
         padding: 15px 7px 10px 10px;
         border-top-left-radius: 5px;
@@ -2341,21 +2341,21 @@ hr {
  ******************************************************************************/
 li.highlight,tr.highlight{
     font-weight: bolder;
-    font-size:90%;
-    background-color: #8A8787;
-    color:whitesmoke !important;
+    font-size:100%;
+    font-size:1rem;
+    background-color: lightsteelblue;
+    color:var(--bg-white) !important;
     border-width:  2px;
     border-style: solid;
     /*! border-color: blue; */
 }
 li.highlight a,tr.highlight a{
-   color:whitesmoke !important;
+   color:var(--bg-white)  !important;
     
 }
 *|*:link {
     color: inherit;
 }
-
 /*****************************************************************************
  * Table of one column to present menu 
  * as in CFGLED, FORECAST, REPORT
@@ -3076,7 +3076,7 @@ span.warning {
  li.tab_row:hover {
      display:block;
      background-color: lightblue;
-     color:wheat;
+     color:var(--bg-white);
 margin-left: 2px;
      padding: 5px;
      border-top-left-radius: 10px;
@@ -3099,7 +3099,7 @@ margin-left: 2px;
      li.tab_row:hover {
          display:block;
          background-color: lightblue;
-         color:wheat;
+         color:var(--bg-white);
 margin-left: 2px;
           padding: 20px 15px 15px 20px;
          margin: 20px 15px 15px 15px;
