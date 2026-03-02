@@ -75,6 +75,7 @@ BODY {
     --end-level1:#eb7c7e;
     --border-color:#b7b7b7;
     --bg-white:white;
+    --bg-readonly:#f9f9f9; 
 }
 input{
     font-family: 'OpenSansRegular';
@@ -809,8 +810,7 @@ a.document:hover {
 }
 .input_text_ro {
     border:1px solid  #0000FF;
-    background-color: var(--bg-white);
-    color:var(--border-color);
+    background-color:var(--bg-readonly);
     border-radius: 5px;
     margin:1px;
 }
