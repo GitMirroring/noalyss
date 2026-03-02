@@ -25,6 +25,10 @@ namespace Noalyss\XMLDocument;
  * @file
  * @brief answer to an inplace object
  */
+/**
+ \pure
+ \brief Abstract class
+*/
 abstract class XML_Reader
 {
 
