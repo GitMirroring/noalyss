@@ -41,7 +41,7 @@ class Invoice extends Widget
      * @return array
      */
     static function getConstantLimit() :array {
-        return  ['P' => _("Prochaines factures"), "R" => "facture en retard",'T'=>_("Aujourd'hui")];
+        return  ['P' => _("Prochaines factures"), "R" => _("facture en retard"),'T'=>_("Aujourd'hui")];
     }
 
     /**
@@ -113,6 +113,7 @@ class Invoice extends Widget
                 $array = $acc_ledger->get_operation_date(date('d.m.Y'), $ledger_type, '=');
                 break;
         }
+ 
         include "invoice-display.php";
         $this->close_div();
 
