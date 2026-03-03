@@ -123,8 +123,6 @@ endif;
 echo _("Menu actuel")." : ".hb($_GET['ac']);
 echo HtmlInput::array_to_hidden(array("gDossier","ac"), $_REQUEST); 
 ?>
-<p>
-</form>
 
     <ul class="aligned-block ">
         <li>
@@ -135,4 +133,5 @@ echo HtmlInput::array_to_hidden(array("gDossier","ac"), $_REQUEST);
             
         </li>
     </ul>
+</form>
 </div>
