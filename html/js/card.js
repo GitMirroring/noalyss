@@ -1215,7 +1215,7 @@ function modify_card(p_fiche_id)
         nTop = 170;
     }
     var str_top = fixed_position(250, nTop)
-    var str_style = str_top + ";width:45em;height:auto;position:absolute";
+    var str_style = str_top + ";width:45em;height:auto;position:absolute"+"; z-index:"+get_next_layer();
 
     var popup = {'id': content, 'cssclass': 'inner_box', 'style': str_style, 'html': loading(), 'drag': false};
 
@@ -1383,7 +1383,7 @@ function linked_card_option(p_action_person_id,p_dossier) {
             },
             onSuccess:function(req) {
                 remove_waiting_box();
-                add_div({ "id":"d_linked_card_option",cssclass:"inner_box",style:"position:fixed;top:30%;min-width:20rem;width:auto;",drag:0});
+                add_div({ "id":"d_linked_card_option",cssclass:"inner_box",style:"position:fixed;top:30%;min-width:20rem;width:auto;z-index:"+get_next_layer(),drag:0});
                 id$("d_linked_card_option").update(req.responseText);
 
             }

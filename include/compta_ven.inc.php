@@ -158,6 +158,10 @@ if ( isset($_POST['record']) )
         $Ledger=new Acc_Ledger_Sale($cn,$post_jrn);
         try {
             $internal=$Ledger->insert($_POST);
+            
+        /* Save the additional information into jrn_info */
+            $obj=new Acc_Ledger_Info($cn);
+            $obj->save_extra($Ledger->jr_id,$_POST);
             $Ledger->upload_supplemental_document($Ledger->jr_id);
             // var $receipt (string) contains the name of the file name of 
             //              the invoice (document created), if empty there
@@ -290,9 +294,6 @@ if ( isset($_POST['record']) )
         }
 
 
-        /* Save the additional information into jrn_info */
-        $obj=new Acc_Ledger_Info($cn);
-        $obj->save_extra($Ledger->jr_id,$_POST);
 
          /* save followup */
          $Ledger->save_followup($http->request("action_gestion","string",""));
@@ -394,7 +395,7 @@ try
         $Ledger->id=$http->request('p_jrn_predef');
 
         echo $Ledger->input($p_post);
-        echo '<div class="content">';
+        echo '<div class="">';
         echo $Ledger->input_paid($payment);
         echo '</div>';
         echo '<script>';
@@ -411,7 +412,7 @@ try
         echo HtmlInput::hidden("sa", "p");
         echo HtmlInput::hidden("action_gestion",$action_id);
         echo $Ledger->input($array);
-        echo '<div class="content">';
+        echo '<div class="">';
         echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);
         echo '</div>';
         echo '<script>';
@@ -426,7 +427,7 @@ try
         $action_id=$http->get('ag_id',"string","");
         echo HtmlInput::hidden("action_gestion",$action_id);
         echo $Ledger->input($array);
-        echo '<div class="content">';
+        echo '<div class="">';
         echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);
         echo '</div>';
         echo '<script>';

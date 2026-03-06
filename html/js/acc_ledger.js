@@ -1297,14 +1297,12 @@ function search_letter(obj) {
  */
 function op_save(obj) {
     try {
-        var queryString = id$(obj).serialize(true);
-        queryString ["gDossier"] = obj.gDossier.value;
-        var rapt2 = "rapt" + obj.whatdiv.value;
-        queryString ["rapt"] = id$(rapt2).value;
-        queryString  ["jr_id"] = obj.jr_id.value;
-        var jr_id = obj.jr_id.value;
-        queryString ["div"] = obj.whatdiv.value;
-        var divid = obj.whatdiv.value;
+        var queryString = Form.serialize(obj,true);
+        var divid = queryString['whatdiv'];
+        queryString["div"]  = queryString['whatdiv'];
+        queryString["rapt"] = id$("rapt"+divid).value;
+        var jr_id = queryString['jr_id'];
+        
         queryString ["act"] = "save";
         queryString ["op"] = "ledger";
         queryString ["jr_note"]=encodeURI(tinyMCE.get("jrn_note"+divid).getContent());
@@ -1346,7 +1344,7 @@ function op_save(obj) {
                         }
                         new Ajax.Request('ajax_misc.php', {
                             parameters: {
-                                'gDossier': obj.gDossier.value,
+                                'gDossier': queryString ["gDossier"],
                                 'act': 'de',
                                 'op': 'ledger',
                                 'jr_id': jr_id,
@@ -1359,7 +1357,7 @@ function op_save(obj) {
                                     id$(divid).innerHTML = unescape(getNodeText(html[0]));
                                     id$(divid).innerHTML.evalScripts();
                                     remove_waiting_box();
-                                    noalyss.refresh_note(jr_id,obj.gDossier.value);
+                                    noalyss.refresh_note(jr_id,queryString ["gDossier"]);
                                 } catch (e) {
                                     console.error("D1. op_save")
                                     alert_box("1038" + e.message)
@@ -1539,7 +1537,9 @@ function save_filter(p_div, p_dossier) {
     // Get all elt from the form
     for (var i = 0; i < elt.length; i++) {
         var idx = elt[i];
-        eltValue[idx] = id$(p_div + elt[i]).value;
+        eltValue[idx] = null;
+        if ( document.getElementById(p_div+elt[i]) ) 
+             eltValue[idx]=id$(p_div + elt[i]).value;
 
     }
     if (eltValue['amount_min'] == "") eltValue["amount_min"] = 0;
@@ -1602,7 +1602,9 @@ function load_filter(p_div, p_dossier, p_filter_id) {
                     , 'p_currency_code', 'tva_id_search'];
                 for (var i = 0; i < elt.length; i++) {
                     var idx = elt[i];
-                    id$(p_div + idx).value = answer[elt[i]];
+                    
+                    if ( document.getElementById(p_div + idx))
+                        id$(p_div + idx).value = answer[elt[i]];
                 }
                 // fillup the r_jrn array
                 var eltLedgerId = id$("ledger_id" + p_div);

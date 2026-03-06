@@ -22,7 +22,7 @@ $dossier_id=Dossier::id();
 <div class="content">
 
     <?php if ( $access=='W') : ?>
-<form class="print" onsubmit="return op_save(this);">
+  <form  class="print" id="<?=$div?>_frm" onsubmit="return op_save('<?=$div?>_frm');">
    <?php endif; ?>
 
     <?php echo HtmlInput::hidden('whatdiv',$div).HtmlInput::hidden('jr_id',$jr_id).dossier::hidden();?>

@@ -88,7 +88,6 @@ $html=var_export($_REQUEST,true);
 // For storing extra information , example the HTML elt id to update
 // after creating
 $extra="";
-$http=new \HttpInput();
 switch($op2)
 {
     case 'attribute':
@@ -717,7 +716,7 @@ case 'upc':
     }
   else
     {
-      if ($cn->get_value('select count(*) from fiche where f_id=$1',array($_GET['f_id'])) == '0' )
+      if ($cn->get_value('select count(*) from fiche where f_id=$1',array($http->get('f_id'))) == '0' )
 	{
 	  $html.=alert(_('Fiche non valide'),true);
 	  }
@@ -726,7 +725,7 @@ case 'upc':
 	{
 	  $html=HtmlInput::title_box(_('Détail fiche (sauvée)'),$ctl);
 
-	  $f=new Fiche($cn,$_GET['f_id']);
+	  $f=new Fiche($cn,$http->get('f_id'));
 	  ob_start();
 	  $f->update($_GET);
 	  $html.=ob_get_contents();

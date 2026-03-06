@@ -72,13 +72,17 @@ BODY {
     --bg-inner-box:#DCE1EF;
     --underline-menu:#d7e8ee;
     --bg-slide:#c5d5e8;
+    --end-level1:#eb7c7e;
+    --border-color:#b7b7b7;
+    --bg-white:white;
+    --bg-readonly:#f9f9f9; 
 }
 input{
     font-family: 'OpenSansRegular';
     padding : 2px;
      margin:2px;
-    border:1px solid var(--input-color);
-
+    border:1px solid var(--border-color);
+    background-color:var(--bg-white);
     color:var(--input-color);
     
 }
@@ -111,6 +115,7 @@ p.notice,span.notice {
     margin-left: 5ch;
     border:1px solid transparent;
     border-radius: 5px;
+    text-align: center;
 }
  .valid {
      color:green;
@@ -805,12 +810,12 @@ a.document:hover {
 }
 .input_text_ro {
     border:1px solid  #0000FF;
-    background:#EDEDED;
-    color:#0000FF;
+    background-color:var(--bg-readonly);
+    border-radius: 5px;
     margin:1px;
 }
 .input_text {
-    border:1px solid var(--input-color);
+    border:1px solid var(--border-color);
     margin:1px;
     border-radius: 5px;
 }
@@ -854,9 +859,9 @@ fieldset fieldset legend {
     color:#888;
 }
 select {
-    border: 1px solid #0000FF;
+    border: 1px solid var(--border-color);
     margin:2px;
-    background-color:#FFFFFF;
+    background-color:var(--bg-white);
     border-radius: 3px;
     padding: 3px;
 }
@@ -2051,9 +2056,9 @@ td.workday ol {
 }
 input.inum {
     text-align:right;
-    border:1px solid var(--input-color);
     margin:2px;
     border-radius: 5px;
+    border:1px solid var(--border-color);
 }
 div.box  {
     background-color:#e4e7ed;
@@ -2089,7 +2094,7 @@ div.box  {
     div.box  {
         width: 35rem;
         max-height: 30%;
-        height: 45vh;
+        height: 40rem;
 
     }
 }
@@ -2186,7 +2191,7 @@ margin-left: 0px;
 .inner_box li.tabs:hover ,li.tabs:hover {
     display:inline;
     background-color: lightblue;
-    color:wheat;
+    color:var(--bg-white);
 margin-left: 2px;
     padding: 5px;
     border-top-left-radius: 10px;
@@ -2211,7 +2216,7 @@ margin-left: 2px;
     .inner_box li.tabs:hover ,li.tabs:hover {
         display:inline;
         background-color: lightblue;
-        color:wheat;
+        color:var(--bg-white);
 margin-left: 2px;
         padding: 15px 7px 10px 10px;
         border-top-left-radius: 5px;
@@ -2336,21 +2341,21 @@ hr {
  ******************************************************************************/
 li.highlight,tr.highlight{
     font-weight: bolder;
-    font-size:90%;
-    background-color: #8A8787;
-    color:whitesmoke !important;
+    font-size:100%;
+    font-size:1rem;
+    background-color: lightsteelblue;
+    color:var(--bg-white) !important;
     border-width:  2px;
     border-style: solid;
     /*! border-color: blue; */
 }
 li.highlight a,tr.highlight a{
-   color:whitesmoke !important;
+   color:var(--bg-white)  !important;
     
 }
 *|*:link {
     color: inherit;
 }
-
 /*****************************************************************************
  * Table of one column to present menu 
  * as in CFGLED, FORECAST, REPORT
@@ -2500,6 +2505,8 @@ ul.aligned-block li {
     padding: 2rem;
     border:1px solid navy;
     margin-right:1rem;
+    width: 20rem;
+    
 }
 /***************************************************************************
  * column in the dashboard
@@ -2513,6 +2520,7 @@ td.cut {
 }
 td.box {
     border-left: #9999ff solid 1px;
+    border-radius: 10px 0px;
 }
 
 /****************************************************************************
@@ -2700,7 +2708,7 @@ td.selectedmenu {
 .field_follow_up
 {
     margin-top:1px;
-    border:1px solid blue;
+    border:1px solid var(--border-color);
     min-height: 5rem;
 }
 
@@ -2988,6 +2996,11 @@ div.progressbar {
 /**
  * Warning
  */
+span.warning::before {
+    content: '\e806';
+    font-family: "fontello" !important;
+    font-weight:normal;   
+}
 span.warning {
     color:white;
     font-style: normal;
@@ -2999,6 +3012,7 @@ span.warning {
      animation-duration: 4s;
      animation-iteration-count: infinite;
      display: block;
+     border-radius: 10px;
 }
 /**********************************************************************************************************************/
  /* LI as list
@@ -3062,7 +3076,7 @@ span.warning {
  li.tab_row:hover {
      display:block;
      background-color: lightblue;
-     color:wheat;
+     color:var(--bg-white);
 margin-left: 2px;
      padding: 5px;
      border-top-left-radius: 10px;
@@ -3085,7 +3099,7 @@ margin-left: 2px;
      li.tab_row:hover {
          display:block;
          background-color: lightblue;
-         color:wheat;
+         color:var(--bg-white);
 margin-left: 2px;
           padding: 20px 15px 15px 20px;
          margin: 20px 15px 15px 15px;
@@ -3781,7 +3795,7 @@ margin:1px;
  div.concerned_action {
          height: 11rem;
          overflow: auto;
-     background-color: white;
+     background-color: var(--bg-white);
      border:navy 1px solid;
      width: 100%;
      scroll-padding-right: 20px;
@@ -3957,7 +3971,8 @@ h2.h-section {
      content:'';
     left:0;
     bottom:0;
-    right:0;3    position:absolute;
+    right:0.3;
+    position:absolute;
     height:var(--border-size);
     background-color:red;
     transform:scaleX(0);
@@ -3973,8 +3988,7 @@ h2.h-section {
  .nav-item.li-active.nav-item-underline::before {
     transform: scale(1);
     background-color: #d03100;
-    background-image: linear-gradient(to right,#cc0000 0%,red 20%) ;
-    background-image: linear-gradient(to right,darkred 0%,red 10%,red 90%,darkred);
+    background-image: linear-gradient(to right,var(--end-level1) 0%,red 10%,red 90%,var(--end-level1));
  }
 
  /**
@@ -4171,7 +4185,7 @@ h2.h-section {
 }
 .topmenu .nav-item.nav-item-underline:hover::before,.topmenu .nav-item.nav-item-underline:focus::before {
   transform: scaleX(1) scaleY(1);
-   background-image: linear-gradient(to right,darkred,red);
+   background-image: linear-gradient(to right,var(--end-level1),red);
 }
 
 
@@ -4182,7 +4196,7 @@ h2.h-section {
 
 .topmenu .nav-item.nav-item-underline:hover::before,.topmenu .nav-item.nav-item-underline:focus::before {
   transform: scaleX(1) scaleY(1);
-   background-image: linear-gradient(to right,darkred 0%,red 30%);
+   background-image: linear-gradient(to right,var(--end-level1) 0%,red 30%);
 }
 
 /*.topmenu .nav-item.nav-item-underline::before {
@@ -4258,6 +4272,8 @@ span.nb-round {
 
  .bt-center {
      margin-bottom: 2rem;
+     float:inherit;
+     clear:both;
  }
 
 
@@ -4287,4 +4303,35 @@ span.nb-round {
  
 #module_setting .selectedcell {
     background-color:beige;
+}
+
+#facturation_div_id{
+    height:auto;
+    float:left
+    
+}
+#ag_title {
+  width:80%;
+}
+#message1 {
+    text-align: center;
+    padding: 10px;
+}
+
+
+.inner_box  div.fu_comment_div {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    
+}
+
+
+.field_follow_up {
+     padding: 1rem;
+    border-radius: 10px;
+    
+}
+
+.field_follow_up {
+    background-color: var(--bg-white);
 }

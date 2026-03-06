@@ -984,7 +984,7 @@ print $html;
             // Note
             $r.='<td>';
             $r.='<span id="als_note'.$row['jr_id'].'" class="font-small">';
-            $r.= substr($row['n_text']??"",0,120);
+            $r.= mb_substr($row['n_text']??"",0,120);
             $r.='<span>';
             $r.='</span>';
             $r.='</td>';

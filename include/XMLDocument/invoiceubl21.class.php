@@ -162,18 +162,10 @@ class InvoiceUBL21 extends XMLInvoice {
                  $a_error[]=$value;
              }
         }
-        if ( $this->data['customer']["endpoint_id"] != "")
+        // check if peppol id has the form 9999:9999...
+         if (preg_match('/[0-9]+:[[:alnum:]]+/',$this->data['customer']["endpoint_id"]) == 0)
         {
-            // check if peppol id has the form 9999:9999...
-            list($scheme_id,$peppol)=explode(":", $this->data['customer'][$value]);
-            if (preg_replace('/[0-9]/', '', $scheme_id) != "") 
-            {
                 $a_error[]='endpoint_id';
-            }elseif(\noalyss_trim($peppol) =="") 
-            {
-                $a_error[]='endpoint_id';
-                
-            }
         }
        if ( $this->data['customer']["customer_vat_id"] != "" && preg_match('/[a-z]{2}/i',$this->data['customer']["customer_vat_id"] ) == false)
        {
@@ -235,7 +227,7 @@ class InvoiceUBL21 extends XMLInvoice {
         // LegalEntity
         $ple=$this->createElement('cac:PartyLegalEntity');
            ///@todo customer = name doit être fiche
-        $ple->appendChild($this->createElement("cbc:RegistrationName", $this->data['customer']['name']??"ERROR"));
+        $ple->appendChild($this->createElement("cbc:RegistrationName", htmlspecialchars($this->data['customer']['name'],ENT_XML1,'UTF-8')));
            ///@todo customer_vat_id = numéro de TVA doit être dans fiche
         $ple->appendChild($this->createElement("cbc:CompanyID", $this->data['customer']['customer_vat_id']??"ERROR"));
         
@@ -245,6 +237,31 @@ class InvoiceUBL21 extends XMLInvoice {
         $customer->appendChild($customer_party);
         return $customer;
     }
+    /**
+     * @brief Delivery Date is mandatory for INTRACOMM , so by default 
+     * we set the invoice date
+<cac:Delivery>
+  <cbc:ActualDeliveryDate>
+        2026-01-06  
+    </cbc:ActualDeliveryDate>
+  </cac:Delivery>
+     */
+    function build_deliveryDate()
+    {
+        $delivery=$this->createElement("cac:Delivery");
+        $delivery->appendChild($this->createElement("cbc:ActualDeliveryDate",$this->data['issue_date']));
+        //(cac:Delivery/cac:DeliveryLocation/cac:Address/cac:Country/cbc:IdentificationCode//
+        $loc= $this->createElement("cac:DeliveryLocation");
+        $addr=$this->createElement('cac:Address');
+        $country=$this->createElement("cac:Country");
+        $country->appendChild($this->createElement("cbc:IdentificationCode", $this->data['customer']['country']));
+        $addr->appendChild($country);
+        $loc->appendChild($addr);
+        $delivery->appendChild($loc);
+               
+        return $delivery;
+    }
+    /**
     /**
      * @brief Build XML Block for payment
      * @code
@@ -450,6 +467,7 @@ class InvoiceUBL21 extends XMLInvoice {
 
         $result->appendChild($this->createElement("cbc:ID", $i));
         $amount=sprintf("%.2f",$row['price']);
+        if ( $row['quantity'] > 0 && $amount < 0 ) $row['quantity'] =bcsub(0,$row['quantity'] ,4);
         $result->appendChild(
                 $this->createElement("cbc:InvoicedQuantity", sprintf("%.2f",$row['quantity'])))
                 ->setAttribute("unitCode", $row["code_quantity"]);
@@ -658,6 +676,9 @@ class InvoiceUBL21 extends XMLInvoice {
         $root->appendChild($this->build_supplier());
         // add the customer
         $root->appendChild($this->build_customer());
+        
+        // add delivery date
+        $root->appendChild($this->build_deliveryDate());
         
         // add the payment  if there is a bank account
         if ( $company['COMPANY_BANK_IBAN'] != "")

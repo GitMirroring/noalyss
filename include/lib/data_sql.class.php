@@ -190,7 +190,7 @@ abstract class Data_SQL
         {
              return $this->$cols;
         }
-             throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
+             throw new \Exception (" unknow cols  {$this->table}[$cols] =".$this,EXC_DATA_SQL);
     }
 
     /**
@@ -203,7 +203,7 @@ abstract class Data_SQL
             $this->$cols=$p_value;
             return $this;
         }        else
-           throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
+           throw new \Exception (" unknow cols  {$this->table}[$cols] =".$this,EXC_DATA_SQL);
             
     }
 
@@ -214,6 +214,7 @@ abstract class Data_SQL
      */
     public function getp($cols)
     {
+        $cols=trim($cols);
         if (array_key_exists($cols, $this->name)) {
             $idx=$this->name[$cols];
             return $this->$idx;
@@ -226,7 +227,7 @@ abstract class Data_SQL
              return $this->$cols;
         }
 
-        throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
+        throw new \Exception (" unknow cols  {$this->table} [$cols] =".$this,EXC_DATA_SQL);
     }
 
     /**
@@ -236,6 +237,7 @@ abstract class Data_SQL
      */
     public function setp($cols, $p_value)
     {
+        $cols=trim($cols);
         if (array_key_exists($cols, $this->name))    {
             $idx=$this->name[$cols];
             $this->$idx=$p_value;
@@ -246,10 +248,11 @@ abstract class Data_SQL
             return $this;
         }
         
-        throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
+        throw new \Exception (" unknow cols {$this->table}[$cols] = ".$this,EXC_DATA_SQL);
     }
 
     public function __set($cols,$p_value) {
+        $cols=trim($cols);
         if (array_key_exists($cols, $this->type))    {
             $this->$cols=$p_value;
             return $this;
@@ -259,10 +262,10 @@ abstract class Data_SQL
              $this->$cols=$p_value;
              return $this;
         }
-        
-           throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
+           throw new \Exception (" unknow cols  {$this->table}[$cols] =".$this,EXC_DATA_SQL);
     }
     public function __get($cols) {
+        $cols=trim($cols);
          if (array_key_exists($cols, $this->type)) {
             return $this->$cols;
         }
@@ -270,7 +273,7 @@ abstract class Data_SQL
         {
              return $this->$cols;
         }
-        throw new \Exception (" unknow cols [$cols] =".$this,EXC_DATA_SQL);
+        throw new \Exception (" unknow cols  {$this->table}[$cols] =".$this,EXC_DATA_SQL);
     }
     abstract function insert();
 

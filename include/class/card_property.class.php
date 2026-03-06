@@ -210,7 +210,7 @@ class Card_Property
        }
        if ( $this->ad_id == ATTR_DEF_QUANTITY_TYPE){
           $result['input']=new IText( "av_text" . $this->ad_id,$this->av_text);
-          $array=$this->cn->get_array("select qc_code,format('%s %s',qc_code,qc_label) label from quantity_code_ref order by qc_label",p_mode: PGSQL_NUM);
+          $array=$this->cn->get_array("select qc_code,format('%s %s',qc_code,qc_label) as label from quantity_code_ref order by qc_label",p_mode: PGSQL_NUM);
           $result['input']->set_datalist($array);
           $result['label']=$this->ad_text;
           return $result;

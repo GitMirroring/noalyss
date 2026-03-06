@@ -73,6 +73,8 @@ if ( ! $cn->exist_table('version')) {
     echo '</p>';
     return;
 }
+global $level;
+$level=0;
 
 /**
  * if access_mode is MOBILE than force it to mobile.php
@@ -93,6 +95,7 @@ if ( DEBUGNOALYSS > 1 ) {
     \Noalyss\Dbg::display_size();
     \Noalyss\Dbg::display_request();
     \Noalyss\Dbg::display_global();
+    echo "encoding";echo mb_internal_encoding();
 } //<--- if DEBUG 
 $g_parameter=new Noalyss_Parameter_Folder($cn);
 
@@ -322,6 +325,7 @@ else
         $_GET['ac']=$default;
         $_POST['ac']=$default;
         $_REQUEST['ac']=$default;
+
         show_module($menu_id);
         $all[0] = $default;
         show_menu($menu_id);

@@ -109,17 +109,17 @@ class XMLInvoice_Reader extends XML_Reader
         for ($e = 0; $e < $node->length; $e++)
         {
             $row = [];
-            $row ['quantity'] = $this->get_node_value("//cbc:InvoicedQuantity", $e);
-            $row ['amount'] = $this->get_node_value("//cbc:LineExtensionAmount", $e);
-            $row ['description'] = $this->get_node_value("//cac:Item/cbc:Description", $e);
-            $row ['name'] = $this->get_node_value("//cac:InvoiceLine/cac:Item/cbc:Name", $e);
-            $row ['unit_price'] = $this->get_node_value("//cac:InvoiceLine/cac:Price/cbc:PriceAmount", $e);
-            $row ['tva_id'] = $this->get_node_value("//cac:InvoiceLine/cac:Item/cac:ClassifiedTaxCategory/cbc:ID", $e);
-            $row ['tva_percent'] = $this->get_node_value("//cac:InvoiceLine/cac:Item/cac:ClassifiedTaxCategory/cbc:Percent", $e);
-
+            $row ['quantity'] = $node->item($e)->getElementsByTagName("InvoicedQuantity")->item(0)->textContent;
+            $row ['code_quantity'] = $node->item($e)->getElementsByTagName("InvoicedQuantity")->item(0)->getAttribute('unitCode');
+            $row ['amount'] = $node->item($e)->getElementsByTagName("LineExtensionAmount")->item(0)->textContent; 
+            $row ['description'] = $node->item($e)->getElementsByTagName("Description")->item(0)?->textContent; 
+            $row ['name'] = $node->item($e)->getElementsByTagName("Name")->item(0)->textContent; 
+            $row ['unit_price'] = $node->item($e)->getElementsByTagName("PriceAmount")->item(0)->textContent; 
+            $row ['tva_id'] = $node->item($e)->getElementsByTagName("ID")->item(0)?->textContent; 
+            $row ['tva_percent'] = $node->item($e)->getElementsByTagName("Percent")->item(0)?->textContent; 
             $result[] = $row;
-            return $result;
         }
+        return $result;
     }
     /**
      * @brief return the code of the document
@@ -164,7 +164,12 @@ class XMLInvoice_Reader extends XML_Reader
             $row ['taxable_amount'] = $xml->xpath("//cbc:TaxableAmount")[$e] . "";
             $row ['tax'] = $xml->xpath("//cbc:TaxAmount")[$e] . "";
             $row ['tax_id'] = $xml->xpath("//cac:TaxCategory/cbc:ID")[$e] . "";
-            $row ['tax_percent'] = $xml->xpath("//cac:TaxCategory/cbc:Percent")[$e] . "";
+            $row ['tax_percent'] =0;
+            $r=$xml->xpath("//cac:TaxCategory/cbc:Percent");
+            if ( isset($r[$e]) )
+            {
+                $row ['tax_percent'] = $xml->xpath("//cac:TaxCategory/cbc:Percent")[$e] . "";
+            }
             if (isset($xml->xpath("//cac:InvoiceLine/cac:Item/cbc:Name")[$e]))
             {
                 $row ['name'] =$xml->xpath("//cac:InvoiceLine/cac:Item/cbc:Name")[$e]."";   

@@ -62,7 +62,7 @@ global $g_parameter;
                     $i = 0;
                     foreach ($avail as $r) {
                         $array[$i]['value'] = $r['dos_id'];
-                        $array[$i]['label'] = sprintf("%s %s (%s)",$r['dos_id'],$r['dos_name'],substr($r['dos_description']??"",0,50));
+                        $array[$i]['label'] = sprintf("%s %s (%s)",$r['dos_id'],$r['dos_name'],mb_substr($r['dos_description']??"",0,50));
                         $i++;
                     }
                     $sAvail = new ISelect('dos_id');

@@ -25,9 +25,9 @@ $str_anc = "";
     $owner = new Noalyss_Parameter_Folder($cn);
     ?>
 
-    <?php if ($access == 'W') :
-        echo '<form class="print" onsubmit="return op_save(this);">';
-    endif; ?>
+    <?php if ($access == 'W') :?>
+          <form  class="print" id="<?=$div?>_frm" onsubmit="return op_save('<?=$div?>_frm');">
+    <?php endif; ?>
 
     <?php echo HtmlInput::hidden('whatdiv', $div) . HtmlInput::hidden('jr_id', $jr_id) . dossier::hidden(); ?>
     <table style="width:100%">

@@ -1988,7 +1988,6 @@ EOF;
             
         }
         $r.='</table>';
-        $r.='</p>';
         if ( $g_parameter->MY_ANALYTIC!='nu' && !$p_summary) // use of AA
             $r.='<input type="button" class="button" value="'._('Vérifiez imputation analytique').'" onClick="verify_ca(\'\');">';
         
@@ -2125,6 +2124,7 @@ EOF;
         $file=new IFile();
         $file->setAlertOnSize(true);
         $file->table=0;
+        $r.='<h3 class="title">'._("Facture").'</h3>';
         $r.=_("Ajoutez une pièce justificative ");
         $r.=$file->input("pj","");
 
@@ -2141,11 +2141,13 @@ EOF;
             $r.=$doc_gen->input().'<br>';
         }
         $r.='</p>';
+        $r.='<h3 class="title">'._("Documents supplémentaires").'</h3>';
         $r.=$this->input_supplemental_document();
         $r.='<p>';
         $obj=new IText();
+         $obj->size=50;
         $r.=_('Numero de bon de commande : ').$obj->input('bon_comm').'<br>';
-        $r.=_('Autre information : ').$obj->input('other_info').'<br>';
+        $r.=_('Communication').$obj->input('other_info').'<br>';
         $r.='</p>';
         $r.='</div>';
         return $r;

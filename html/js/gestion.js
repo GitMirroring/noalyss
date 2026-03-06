@@ -282,7 +282,7 @@ function action_show(p_dossier)
             parameters : {gDossier:p_dossier,'op':'action_show'},
             onSuccess : function(p_xml, p_text) {
                         remove_waiting_box();
-                        add_div({id: 'action_list_div', style:"position:fixed;top:1%;width:90%;left:5%" , cssclass: 'inner_box'});
+                        add_div({id: 'action_list_div', style:"position:fixed;top:1%;width:90%;left:5%;z-index:"+get_next_layer() , cssclass: 'inner_box'});
                         $('action_list_div').innerHTML=p_xml.responseText;
                         var table_followup=document.getElementById('event_followup');
                         if ( table_followup) {                         sorttable.makeSortable(table_followup); }
@@ -312,7 +312,7 @@ function action_add(p_dossier) {
             onSuccess : function(p_xml, p_text) {
                  if (p_xml.responseText === 'NOCONX') { reconnect();return;}
                         remove_waiting_box();
-                        add_div({id: 'action_add_div',style:'top:25px',
+                        add_div({id: 'action_add_div',style:'top:25px;z-index:'+get_next_layer(),
                             cssclass: 'inner_box'});
                         $('action_add_div').innerHTML=p_xml.responseText;
                         p_xml.responseText.evalScripts();

@@ -208,8 +208,16 @@ abstract class XMLInvoice extends \DOMDocument
             $card=new \Fiche($this->cn,$operation->det->array[$i]['qs_fiche']);
             $result['operation'][$i]['qcode']=$card->get_attribute(ATTR_DEF_QUICKCODE);
             $result['operation'][$i]['name']=$card->get_attribute(ATTR_DEF_NAME);
-            $result['operation'][$i]['description']=($operation->det->array[$i]['j_text']=="")?$card->get_attribute(9):$operation->det->array[$i]['j_text'];
-            
+            $result['operation'][$i]['description']=$operation->det->array[$i]['j_text'];
+            if ($operation->det->array[$i]['j_text'] == "") 
+            {
+                $a=$card->get_attribute(9);
+                if ( $a != "") {
+                  $result['operation'][$i]['description']=$a;
+                }else {
+                    $result['operation'][$i]['description']=$result['operation'][$i]['name'];
+                }
+            }
             // get the type of unity, if not found then it will be EA
             $x= $card->get_attribute(ATTR_DEF_QUANTITY_TYPE,0);
             $result['operation'][$i]['code_quantity']=($x===false||$x=="")?"EA":$x;
@@ -257,7 +265,7 @@ abstract class XMLInvoice extends \DOMDocument
                         
             }
         }
-        $result['info']['communication']=($result['info']['communication']=="")?$result['id']:"";
+        $result['info']['communication']=($result['info']['communication']=="")?$result['id']:$result['info']['communication'];
         $result['document']=$this->fill_document($jr_id);
         
          /**
@@ -292,7 +300,10 @@ abstract class XMLInvoice extends \DOMDocument
                 $VAT_SubTotal[$idx_subtotal]=array();
                 $VAT_SubTotal[$idx_subtotal]['idx']=$idx;
                 $VAT_SubTotal[$idx_subtotal]['vat_code']=$result['operation'][$i]['vat_code'] ;
-                $VAT_SubTotal[$idx_subtotal]['percent']=$percent;
+                if ( $acc_tva->tva_both_side == 1 )
+                        $VAT_SubTotal[$idx_subtotal]['percent']=0;
+                else
+                        $VAT_SubTotal[$idx_subtotal]['percent']=$percent;
                 $VAT_SubTotal[$idx_subtotal]['vatex']=$acc_tva->vx_code;
                 $VAT_SubTotal[$idx_subtotal]['amount']=$VAT_SubTotal[$idx_subtotal]['vat']=0;
                 
@@ -302,12 +313,19 @@ abstract class XMLInvoice extends \DOMDocument
              * @todo Pour les intracomm , quel taux utilisé ? 0 ou 21%
              */
             $VAT_SubTotal[$n]['amount']=bcadd($VAT_SubTotal[$n]['amount'],$result['operation'][$i]['price']);
-            $VAT_SubTotal[$n]['vat']=bcadd($VAT_SubTotal[$n]['vat'],$result['operation'][$i]['vat']);
-            $VAT_SubTotal[$n]['vat']=bcsub($VAT_SubTotal[$n]['vat'],$result['operation'][$i]['vat_reversed']);
+            if ( $acc_tva->tva_both_side == 0 )
+                $VAT_SubTotal[$n]['vat']=bcadd($VAT_SubTotal[$n]['vat'],$result['operation'][$i]['vat']);
+            
             $result['TaxableAmount']=bcadd( $result['TaxableAmount'],$result['operation'][$i]['price']);
-            $result['TaxAmount']=bcadd( $result['TaxAmount'],$result['operation'][$i]['vat']);
-            $result['TaxAmount']=bcsub( $result['TaxAmount'],$result['operation'][$i]['vat_reversed']);
+            
+            // $result['TaxAmount']=bcsub( $result['TaxAmount'],$result['operation'][$i]['vat_reversed']);
             $result['operation'][$i]['vat_percent']=$percent;
+            if ( $acc_tva->tva_both_side == 1 ) 
+            {
+                $result['operation'][$i]['vat_percent']=0;
+            }else {
+                $result['TaxAmount']=bcadd( $result['TaxAmount'],$result['operation'][$i]['vat']);
+            }
         }
         $result['subTotalVAT']=$VAT_SubTotal;
         $result['LineExtensionAmount']= $result['TaxableAmount'];

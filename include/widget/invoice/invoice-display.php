@@ -36,6 +36,12 @@ foreach ($array as $item):
     if ( $aParam['time_limit'] == 'P' && $today->format('ymd')>$ech->format('ymd') )
         continue;
     $p++;
+    $card_tiers=false;
+    if ( $ledger_type=="ACH") {
+        $card_tiers=new \Fiche($this->db,$this->db->get_value("select distinct qp_supplier from quant_purchase JOIN JRNX using (j_id) join jrn on (jr_grpt_id=j_grpt) where jrn.jr_id=$1",[$item['jr_id']]));
+    } else {
+        $card_tiers=new \Fiche($this->db,$this->db->get_value("select distinct  qs_client from quant_sold JOIN JRNX using (j_id) join jrn on (jr_grpt_id=j_grpt) where jrn.jr_id=$1",[$item['jr_id']]));
+    }
     $class=($p&1)?' odd ':'even';
 ?>
 <div class="row <?=$class?>">
@@ -45,11 +51,18 @@ foreach ($array as $item):
     <div class="col-2">
         <?=\HtmlInput::detail_op($item['jr_id'],$item['jr_pj_number'])?>
     </div>
+    <div>
+        <?php if ($card_tiers != false ) 
+        {
+          echo \HtmlInput::card_detail($card_tiers->get_quick_code());  
+        }
+        ?>
+    </div>
     <div class="col">
         <?=h($item['jr_comment'])?>
         <?=h($item['jr_date'])?>
     </div>
-    <div class="col-2">
+    <div class="col-2" style="text-align: right">
         <?=nbm($item['jr_montant'],2)?>
     </div>
 </div>

@@ -21,9 +21,7 @@
  * \file
  * \brief 
  */
-
-?>
-<?php
+$cn=\Dossier::connect();
 echo HtmlInput::title_box($p_title, $this->dialog_box_id,"close","","y")
 ?>
 
@@ -33,6 +31,7 @@ echo HtmlInput::title_box($p_title, $this->dialog_box_id,"close","","y")
                     <th><?php echo _('Date')?></th>
                     <th><?php echo _('Code Interne')?></th>
                     <th><?php echo _('Pièce')?></th>
+                    <th><?php echo _('Tiers')?></th>
                     <th><?php echo _('Description')?></th>
                     <th>
                         <?php echo _('Montant')?>
@@ -41,6 +40,17 @@ echo HtmlInput::title_box($p_title, $this->dialog_box_id,"close","","y")
                 </tr>
                 <?php
                 for ($i=0;$i<count($p_array);$i++):
+                    $card_tiers=false;
+                    if ( mb_substr($p_array[$i]['jr_internal'],0,1) =="A") {
+                        $card_tiers=new \Fiche($cn
+                                ,$cn->get_value("select distinct qp_supplier from quant_purchase JOIN JRNX using (j_id) join jrn on (jr_grpt_id=j_grpt) where jrn.jr_id=$1"
+                                        ,[$p_array[$i]['jr_id']]));
+                    } else {
+                    $card_tiers=new \Fiche($cn
+                            ,$cn->get_value("select distinct  qs_client from quant_sold JOIN JRNX using (j_id) join jrn on (jr_grpt_id=j_grpt) where jrn.jr_id=$1"
+                                    ,[$p_array[$i]['jr_id']]));
+                
+                        }
                     ?>
                     <tr class="<?php echo (($i%2)==0)?'odd':'even';?>">
                         <td>
@@ -51,6 +61,14 @@ echo HtmlInput::title_box($p_title, $this->dialog_box_id,"close","","y")
                         </td>
                         <td>
                             <?php echo h($p_array[$i]['jr_pj_number'])?>
+                        </td>
+                        <td>
+                            <?php
+                             if ($card_tiers != false ) 
+                            {
+                              echo \HtmlInput::card_detail($card_tiers->get_quick_code());  
+                            }
+                            ?>
                         </td>
                         <td>
                             <?php echo h($p_array[$i]['jr_comment']) ?>

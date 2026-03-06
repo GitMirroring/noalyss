@@ -38,11 +38,11 @@ $dossier_id=Dossier::id();
  *
  */
 ?>
-<div>
+<div class="p-3">
     <?php
     \Noalyss\Dbg::echo_file(__FILE__);
     ?>
-<div class="row m-0">
+<div class="row ">
 
 <div class="col">
     <table>
@@ -83,7 +83,7 @@ $dossier_id=Dossier::id();
             ?>
           </td>
         </tr>
-        <tr class="font-weight-bolder" style="background: lightsteelblue;color:navy">
+        <tr class="highlight">
             <td style="width: auto" colspan="2" >
                 <?=$sp->input()?>
             </td>
@@ -321,8 +321,13 @@ function small(p_id_textarea){
    }
 </script>
     <p style="margin-left:5%;">
-    <?php echo $title->input();
-    ?>
+        <?php if ( ! $readonly) : ?>
+        <?php echo $title->input(); ?>
+        <?php else: ?>
+        <span style="font-size:2rem;font-weight:bold;">
+        <?php echo $title->value; ?>
+        </span>
+        <?php endif; ?>
 </p>
     <div class="nicEdit-main">
         <?php 
@@ -408,11 +413,18 @@ function small(p_id_textarea){
         }
     }
 
-        //---------------------------------- Comment -----------------------------------------------------------------------
-   
+//---------------------------------- -----------------------------------
+//Comment
+//---------------------------------- -----------------------------------
+
+    //------------------------------------------------
+    // Single comment to edit
+    //------------------------------------------------
+
    if (    Document_Option::can_add_comment($ag_id)  && 
            Document_Option::option_comment($this->dt_id) == "ONE_EDIT" ) 
    {
+       echo '<div class="fu_comment_div">';
         if (count($acomment) > 1 )  {
             echo h2(_("Commentaire"));
             $comment=new ITextarea("ag_comment_edit");
@@ -451,14 +463,18 @@ function small(p_id_textarea){
             }
             echo '</span>';
         }
+        echo '</div>';
    }
-
-    if (  count($acomment) > 0
+    //------------------------------------------------
+    // Multiple comments
+    //------------------------------------------------
+   
+   if (  count($acomment) > 0
             &&  Document_Option::can_add_comment($ag_id)
             && Document_Option::option_comment($this->dt_id) == "SOME_FIXED")
     {
         echo h2(_("Commentaire"));
-
+        echo '<div class="fu_comment_div">';
         for( $c=1;$c<count($acomment);$c++){
             $m_desc=_('Commentaire');
              $comment="";
@@ -522,6 +538,7 @@ function small(p_id_textarea){
             if  ($p_view == 'UPD') {
 
         }
+        echo '</div>';
     }
    
 

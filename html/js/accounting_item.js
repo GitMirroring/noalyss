@@ -273,7 +273,7 @@ function search_account_card(p_obj)
         onSuccess: function (req){
             
             var pos=calcy(50);
-            var obj={id:"search_account_div",cssclass:"inner_box",style:"top:"+pos+"px",
+            var obj={id:"search_account_div",cssclass:"inner_box",style:"top:"+pos+"px;z-index:"+get_next_layer(),
             html:req.responseText};
             add_div(obj);
             remove_waiting_box();

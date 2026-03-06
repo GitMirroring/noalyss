@@ -165,7 +165,13 @@ function display_file_config($p_array, $from_setup = 1, $p_os = 1)
     echo PHP_EOL;
     print ('define ("NOALYSS_ADMIN_PASSWORD","' . $cpassword_admin . '");');
     echo PHP_EOL;
-
+    echo "
+        /*
+         *  LOCALE 0 means no language change , on some PHP installation
+         * you cannot change the language 
+         */
+         ";
+    echo PHP_EOL;
     print ('define ("LOCALE",' . $clocale . ');');
     echo PHP_EOL;
     echo "

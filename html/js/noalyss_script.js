@@ -579,7 +579,7 @@ function cat_doc_change(p_dt_id, p_dossier) {
     var queryString = "gDossier=" + p_dossier + "&op=mod_cat_doc" + "&dt_id=" + p_dt_id;
     var nTop = calcy(posY);
     var nLeft = "200px";
-    var str_style = "top:" + nTop + "px;left:" + nLeft + ";width:50em;height:auto";
+    var str_style = "top:" + nTop + "px;left:" + nLeft + ";width:50em;height:auto"+"; z-index:"+get_next_layer();
 
     removeDiv('change_doc_div');
     waiting_box();
@@ -1170,7 +1170,7 @@ function display_periode(p_dossier, p_id) {
             'id': 'mod_periode',
             'cssclass': 'inner_box',
             'html': loading(),
-            'style': 'width:30em',
+            'style': 'width:30em'+"; z-index:"+get_next_layer(),
             'drag': true
         };
         if (!document.getElementById('mod_periode')) {
@@ -1295,7 +1295,7 @@ function fill_box(req) {
 function mod_predf_op(dossier_id, od_id, p_ledger) {
     var target = "mod_predf_op";
     removeDiv(target);
-    var str_style = "top:10%;left:2%;width:96%";
+    var str_style = "top:10%;left:2%;width:96%;"+"; z-index:"+get_next_layer();
 
     var div = {id: target, cssclass: 'inner_box', style: str_style, html: loading(), drag: 1};
 
@@ -1582,7 +1582,7 @@ function mod_menu(gdossier, pm_id) {
     waiting_box();
     removeDiv('divdm' + pm_id);
     var qs = "op=det_menu&gDossier=" + gdossier + "&pm_id=" + pm_id + "&ctl=divdm" + pm_id;
-    var pos = fixed_position(50, 250);
+    var pos = fixed_position(50, 250)+"; z-index:"+get_next_layer();
     var action = new Ajax.Request('ajax_misc.php',
         {
             method: 'get',
@@ -1690,7 +1690,7 @@ function add_menu(obj) {
 
     waiting_box();
     removeDiv('divdm' + p_id);
-    var pos = fixed_position(250, 150) + ";width:50%;";
+    var pos = fixed_position(250, 150) + ";width:50%;"+"; z-index:"+get_next_layer();
     var action = new Ajax.Request('ajax_misc.php',
         {
             method: 'get',
@@ -1736,7 +1736,7 @@ function add_plugin(p_dossier) {
             onSuccess: function (req) {
                 try {
                     remove_waiting_box();
-                    var pos = fixed_position(250, 150) + ";width:30%";
+                    var pos = fixed_position(250, 150) + ";width:30%"+"; z-index:"+get_next_layer();
                     add_div({id: "divplugin", drag: 1, cssclass: "inner_box", style: pos});
                     id$('divplugin').innerHTML = req.responseText;
                 } catch (e) {
@@ -1766,7 +1766,7 @@ function mod_plugin(p_dossier, me_code) {
             onSuccess: function (req) {
                 try {
                     remove_waiting_box();
-                    var pos = fixed_position(250, 150) + ";width:30%";
+                    var pos = fixed_position(250, 150) + ";width:30%"+"; z-index:"+get_next_layer();
                     add_div({id: "divplugin", drag: 1, cssclass: "inner_box", style: pos});
                     id$('divplugin').innerHTML = req.responseText;
 
@@ -1791,7 +1791,7 @@ function create_menu(p_dossier) {
             onSuccess: function (req) {
                 try {
                     remove_waiting_box();
-                    var pos = fixed_position(250, 150) + ";width:30%";
+                    var pos = fixed_position(250, 150) + ";width:30%"+"; z-index:"+get_next_layer();
                     add_div({
                         id: "divmenu",
                         drag: 1,
@@ -1820,7 +1820,7 @@ function modify_menu(p_dossier, me_code) {
             onSuccess: function (req) {
                 try {
                     remove_waiting_box();
-                    var pos = fixed_position(250, 150) + ";width:30%";
+                    var pos = fixed_position(250, 150) + ";width:30%"+"; z-index:"+get_next_layer();
                     add_div({
                         id: "divmenu",
                         drag: 1,
@@ -2603,7 +2603,7 @@ function show_tag(p_dossier, p_ac, p_tag_id, p_post) {
                     code_html = unescape_xml(code_html);
                     remove_waiting_box();
                     var posy = calcy(250);
-                    add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0, style: "position:fixed;top:15%;"});
+                    add_div({id: 'tag_div', cssclass: 'inner_box', drag: 0, style: "position:fixed;top:15%; z-index:"+get_next_layer()});
                     id$('tag_div').innerHTML = code_html;
                     try {
                         code_html.evalScripts();
@@ -2670,7 +2670,7 @@ function action_tag_select(p_dossier, ag_id) {
                     }
                     var code_html = getNodeText(html[0]);
                     code_html = unescape_xml(code_html);
-                    var pos = fixed_position(35, 229);
+                    var pos = fixed_position(35, 229)+"; z-index:"+get_next_layer();
                     add_div({id: 'tag_div', style: pos, cssclass: 'inner_box tag', drag: 0});
 
                     remove_waiting_box();
@@ -2806,7 +2806,7 @@ function search_display_tag(p_dossier, p_prefix, p_object) {
                     var code_html = getNodeText(html[0]);
                     code_html = unescape_xml(code_html);
                     remove_waiting_box();
-                    add_div({id: p_prefix + 'tag_div', style: 'left:10%;width:70%', cssclass: 'inner_box', drag: 1});
+                    add_div({id: p_prefix + 'tag_div', style: 'left:10%;width:70%;z-index:'+get_next_layer(), cssclass: 'inner_box', drag: 1});
                     id$(p_prefix + 'tag_div').style.top = calcy(200) + "px"
                     id$(p_prefix + 'tag_div').style.left = 20 + "%";
                     remove_waiting_box();
@@ -2966,7 +2966,7 @@ function calendar_zoom(obj) {
                         obj.outdiv = 'calendar_zoom_div';
                     }
                     if (id$(obj.outdiv) == undefined) {
-                        var str_style = 'top:10%;min-height:60rem';
+                        var str_style = 'top:10%;min-height:60rem'+"; z-index:"+get_next_layer();
 //                            var str_style = fixed_position(0, 120);
                         add_div({
                             id: obj.outdiv,
@@ -3464,7 +3464,7 @@ var Periode = function (p_ledger) {
                     var y = 100;
                     add_div({
                         "id": "mod_periode",
-                        "style": "position:fixed;top:" + y + "px;width:50%",
+                        "style": "position:fixed;top:" + y + "px;width:50%"+"; z-index:"+get_next_layer(),
                         "cssclass": "inner_box",
                         'html': "wait"
                     });
@@ -4026,7 +4026,7 @@ var operation_tag = function (p_div) {
                         }
                         var code_html = getNodeText(html[0]);
                         code_html = unescape_xml(code_html);
-                        var pos = fixed_position(35, 229);
+                        var pos = fixed_position(35, 229)+"; z-index:"+get_next_layer();
                         add_div({id: 'tag_div', style: pos, cssclass: 'inner_box tag', drag: 0});
 
                         remove_waiting_box();

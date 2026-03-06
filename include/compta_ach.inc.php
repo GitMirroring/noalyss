@@ -256,7 +256,7 @@ try
         $Ledger->id=$p_jrn_predef;
         $p_post['p_jrn']=$Ledger->id;
         echo $Ledger->input($p_post);
-        echo '<div class="content">';
+        echo '<div class="">';
         echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);
         echo '</div>';
         echo '<script>';
@@ -273,7 +273,7 @@ try
         echo HtmlInput::hidden("sa", "p");
         echo HtmlInput::hidden("action_gestion",$action_id);
         echo $Ledger->input($array);
-        echo '<div class="content">';
+        echo '<div class="">';
         echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);
         echo '</div>';
         echo '<script>';
@@ -285,7 +285,7 @@ try
         echo $Ledger->input($array);
         echo HtmlInput::hidden("p_action", "ach");
         echo HtmlInput::hidden("sa", "p");
-        echo '<div class="content">';
+        echo '<div class="">';
         echo $Ledger->input_paid($payment,$acompte,$date_payment,$comm_payment);
         echo '</div>';
         echo '<script>';
