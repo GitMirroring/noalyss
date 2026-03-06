@@ -5113,6 +5113,6 @@ VAT_Code.prototype.filter_country=function()
         return false;
     }
 }
-noalyss=new Noalyss();
+var noalyss=new Noalyss();
 
-bookmark=new Bookmark();
+var bookmark=new Bookmark();
