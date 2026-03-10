@@ -35,9 +35,49 @@
  * progress in the db.
  * The ajax parameter for following the task is task_id
  * 
+ * How to use it
+ * 
+ * a) in the javascript , can an ajax to perform your task
+ * 
+ * @code
+<script>
+    function UpgradeCore()
+    {
+        progress_bar_start('upgradeCore');
+        new Ajax.Request("ajax_misc.php",{
+                method:'POST',
+                parameters:{op:"upgradeCore",gDossier:0,task_id:'upgradeCore'
+                },
+                onSuccess:function (req) {
+                    $('info_admin').update(req.responseText);
+                    new Effect.Appear('info_admin',{duration:1})
+                }
+            }
+            );
+    }
+ </script>
+ * @endcode
+ * 
+ * b) in ajax function in PHP
+ // create the progress back with the task id
+ if ($op=='upgradeCore')
+{
+    $task_id=$http->request("task_id");
+    $progress=new Progress_Bar($task_id);
+   // with set_value you increment the progress bar
+    $progress->set_value(2);
+  
+ * 
+ *  
+ * 
+ * 
+ * 
+ * 
  *@note you have to use session_write_close(); in the ajax file , otherwise, 
  * the function progress_bar_check will be blocked and won't update the progress
  * bar
+ * 
+ *
  * 
  *@see progress_bar_start
  *@see progress_bar_check
@@ -47,7 +87,7 @@
 class Progress_Bar 
 {
     private $db ; //!< database connexion
-    private $task_id ; //! task id (progress_bar.p_id)
+    private $task_id ; //! task id must be unique  (progress_bar.p_id)
     private $value; //!< value of progress (between 0 & 100)
     /**
      * @example progress-bar.test.php test of this class
