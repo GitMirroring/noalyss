@@ -20,11 +20,11 @@
 // Copyright Author Dany De Bontridder danydb@aevalys.eu
 
 /*! 
- * \file
+ * \file document.class.php
  * \brief Class Document corresponds to the table document
  */
 /*! 
- * \class
+ * \class Document
  * \brief 
  * Class Document corresponds to the table DOCUMENT
  */
@@ -1485,7 +1485,7 @@ class Document
                             ."  from action_gestion_comment "
                             ."where ag_id=$1 order by AGC_ID asc limit 1"
                             , [$p_array['ag_id']]);
-                    return $description;
+                    return html_entity_decode($description);
             	}
             if ( isset($p_array['e_comm'])) {return $p_array['e_comm'] ; }
             
@@ -1517,7 +1517,7 @@ class Document
                                 $aComment[$counter_comment]['tech_user'], $aComment[$counter_comment]['agc_comment']);
                         $counter_comment++;
                     }
-                    return $description;
+                    return html_entity_decode($description);
                 }
                 return "";
                 break;

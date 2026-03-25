@@ -85,6 +85,8 @@ class Follow_Up_Detail
     }
     public function verify()
     {
+        $vat= Acc_Tva::build($this->db, $this->ad_tva_id);
+        $this->ad_tva_id=($vat->tva_id==-1)?0:$vat->tva_id;
         // Verify that the elt we want to add is correct
         return 0;
     }
@@ -235,7 +237,9 @@ class Follow_Up_Detail
         if (trim($this->ad_quant)=="" || isNumber($this->ad_quant)==0) $this->ad_quant=0;
         if (trim($this->ad_tva_amount)==""||isNumber($this->ad_tva_amount)==0) $this->ad_tva_amount=0;
         if (trim($this->ad_total_amount)==""||isNumber($this->ad_total_amount)==0) $this->ad_total_amount=0;
-        if (trim($this->ad_tva_id)=="" || isNumber($this->ad_tva_id)==0) $this->ad_tva_id=0;
+        if (trim($this->ad_tva_id)=="" ) $this->ad_tva_id=0;
+        $vat= Acc_Tva::build($this->db, $this->ad_tva_id);
+        $this->ad_tva_id=($vat->tva_id==-1)?0:$vat->tva_id;
     }
     
     public static function display(Follow_Up $p_follow_up,$p_view)
