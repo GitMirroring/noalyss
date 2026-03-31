@@ -862,8 +862,8 @@ select {
     border: 1px solid var(--border-color);
     margin:2px;
     background-color:var(--bg-white);
-    border-radius: 3px;
-    padding: 3px;
+    border-radius: 5px;
+    padding: 5px;
 }
 
 .infobulle {
