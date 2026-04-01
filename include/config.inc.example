@@ -98,3 +98,6 @@ define ("DEBUGNOALYSS",0);
 // with NGINX it is needed to set the NOALYSS_URL , it is the default URL of 
 // your installation, example with https://demo.noalyss.eu
 // define ("NOALYSS_URL","https://demo.noalyss.eu");
+// For POSTFIX, when sending email from NOALYSS via sendmail an extra parameter is needed
+// for the Return-Path, the FROM will be replaced by the Sendmail_Core->from value
+//define("MAIL_EXTRA_PARAM","-f [FROM]")
