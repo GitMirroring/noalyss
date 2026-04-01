@@ -46,11 +46,39 @@ class Sendmail_Core
     protected $content;
     protected $header;
     protected $format;
+    
+    protected $supplemental_header; //!< $supplemental_header(string) supplemental header to add
+    protected $supplemental_param; //!< $supplemental_param (string)  5th parameter for mail() 
+                            // for postfix, it should be "-f {$this->from}" for the Return-Path
+                                   
     function __construct()
     {
         $this->format='PLAIN';
+        $this->supplemental_header="";
+        $this->supplemental_param=MAIL_EXTRA_PARAM;
     }
-    
+    public function getSupplemental_param()
+    {
+        return $this->supplemental_param;
+    }
+
+    public function setSupplemental_param($supplemental_param)
+    {
+        $this->supplemental_param = $supplemental_param;
+        return $this;
+    }
+
+    public function getSupplemental_header()
+    {
+        return $this->supplemental_header;
+    }
+
+    public function setSupplemental_header($supplemental_header)
+    {
+        $this->supplemental_header = $supplemental_header;
+        return $this;
+    }
+
     public function get_format() {
         return $this->format;
     }
@@ -137,7 +165,7 @@ class Sendmail_Core
      */
     function add_supplemental_header()
     {
-        return '';
+        return $this->supplemental_header;
     }
     /**
     *@brief  create the message before sending
@@ -156,6 +184,7 @@ class Sendmail_Core
 
         // main header (multipart mandatory)
         $this->header = "From: " . $this->from . $eol;
+        $this->header .= "Reply-To: " . $this->from . $eol;
         $this->header .= "MIME-Version: 1.0" . $eol;
         $this->header .= $this->add_supplemental_header();
         if ($this->format == 'PLAIN')
@@ -232,6 +261,7 @@ eof;
         if ( empty ($this->afile) ) $this->content.=$eol;
 
         $this->content .= "--" . $separator . "--";
+        $this->supplemental_param= str_replace("[FROM]", $this->from, $this->supplemental_param);
     }
 
     /**
@@ -246,8 +276,9 @@ eof;
         } catch (Exception $e) {
             throw $e;
         }
-
-        if (!mail($this->mailto, $this->subject, $this->content,$this->header))
+        $encoded_subject = mb_encode_mimeheader( $this->subject, 'UTF-8', 'B');
+        
+        if (!mail($this->mailto,$encoded_subject, $this->content,$this->header,$this->supplemental_param))
         {
             throw new Exception('send failed');
         }
