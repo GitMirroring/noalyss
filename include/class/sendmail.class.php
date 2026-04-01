@@ -42,10 +42,7 @@ class Sendmail extends  Sendmail_Core
     {
         if ( $this->can_send() == false )            throw new Exception(_('Email non envoyé'),EMAIL_LIMIT);
 
-        if (!mail($this->mailto, $this->subject, $this->content,$this->header))
-        {
-            throw new Exception('send failed');
-        }
+        parent::send();
         // Increment email amount
         $repo =new Database();
         $date=date('Ymd');
@@ -167,7 +164,7 @@ class Sendmail extends  Sendmail_Core
                 array(1,$p_dossier,$p_date));
             return;
         } else {
-            // update + sp_emaoun_email
+            // update + amount of sent emails 
             $p_repo->exec_sql("update dossier_sent_email set de_sent_email=de_sent_email+1 where dos_id=$1 and de_date=$2",
                 array($p_dossier,$p_date));
         }

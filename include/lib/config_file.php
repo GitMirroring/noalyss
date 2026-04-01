@@ -306,6 +306,13 @@ function display_file_config($p_array, $from_setup = 1, $p_os = 1)
 // your installation, example with https://demo.noalyss.eu $a
 // define ("NOALYSS_URL","https://demo.noalyss.eu"); $a
 EOF;
+    echo <<<EOF
+// $a 
+// $a
+// For POSTFIX, when sending email from NOALYSS via sendmail an extra parameter is needed $a
+// for the Return-Path, the FROM will be replaced by the email of the sender (Sendmail_Core->from value)$a
+//define("MAIL_EXTRA_PARAM","-f FROM") $a
+EOF;    
 }
 /*!
  * \brief create the config file
