@@ -261,7 +261,7 @@ eof;
         if ( empty ($this->afile) ) $this->content.=$eol;
 
         $this->content .= "--" . $separator . "--";
-        $this->supplemental_param= str_replace("FROM", $this->from, $this->supplemental_param);
+        $this->supplemental_param= str_replace("[FROM]", $this->from, $this->supplemental_param);
     }
 
     /**

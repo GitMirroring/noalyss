@@ -453,7 +453,7 @@ function noalyss_class_autoloader($class)
 
 }
 if ( ! defined("MAIL_EXTRA_PARAM")) {
-    define("MAIL_EXTRA_PARAM","-f FROM");
+    define("MAIL_EXTRA_PARAM","-f [FROM]");
 }
 spl_autoload_register('\noalyss_class_autoloader', true);
 

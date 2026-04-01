@@ -310,8 +310,8 @@ EOF;
 // $a 
 // $a
 // For POSTFIX, when sending email from NOALYSS via sendmail an extra parameter is needed $a
-// for the Return-Path, the FROM will be replaced by the email of the sender (Sendmail_Core->from value)$a
-//define("MAIL_EXTRA_PARAM","-f FROM") $a
+// for the Return-Path, the [FROM] will be replaced by the email of the sender (Sendmail_Core->from value)$a
+//define("MAIL_EXTRA_PARAM","-f [FROM]") $a
 EOF;    
 }
 /*!
