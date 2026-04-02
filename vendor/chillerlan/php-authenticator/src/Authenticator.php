@@ -164,5 +164,8 @@ class Authenticator{
 
 		return sprintf('otpauth://%s/%s?%s', $this->mode, rawurlencode($label), $values);
 	}
-
+        function getOptions()
+        {
+            return $this->options;
+        }
 }
