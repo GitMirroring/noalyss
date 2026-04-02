@@ -149,40 +149,43 @@ class XMLInvoice_Reader extends XML_Reader
      * @brief get the Taxes info from XML
      * @return array
      */
-    function get_taxes(): array
+     function get_taxes(): array
     {
         $result = [];
         $node = $this->get_node("//cac:TaxTotal/cac:TaxSubtotal");
-
         for ($e = 0; $e < $node->length; $e++)
         {
             $row = [];
-            $xml = simplexml_import_dom($node->item($e));
-            // /Invoice/cac:TaxTotal[1]/cac:TaxSubtotal[1]/cbc:TaxableAmount[1]
-            $this->registerNS($xml);
             
-            $row ['taxable_amount'] = $xml->xpath("//cbc:TaxableAmount")[$e] . "";
-            $row ['tax'] = $xml->xpath("//cbc:TaxAmount")[$e] . "";
-            $row ['tax_id'] = $xml->xpath("//cac:TaxCategory/cbc:ID")[$e] . "";
-            $row ['tax_percent'] =0;
+            $xml = simplexml_import_dom($node->item($e));
+            $this->registerNS($xml);
+           
+           
+            $row ['taxable_amount'] = $xml->xpath("cbc:TaxableAmount")[0] . "";
+            $row ['tax'] = $xml->xpath("cbc:TaxAmount")[0] . "";
+            $row['tax_currency']=$xml->xpath("cbc:TaxAmount")[0]->attributes()['currencyID']."";
+            $row ['tax_id'] = $xml->xpath("cac:TaxCategory/cbc:ID")[0]. "";
+            $row ['tax_percent'] =0; 
             $r=$xml->xpath("//cac:TaxCategory/cbc:Percent");
             if ( isset($r[$e]) )
             {
-                $row ['tax_percent'] = $xml->xpath("//cac:TaxCategory/cbc:Percent")[$e] . "";
+                $row ['tax_percent'] = $xml->xpath("cac:TaxCategory/cbc:Percent")[0] . "";
             }
-            if (isset($xml->xpath("//cac:InvoiceLine/cac:Item/cbc:Name")[$e]))
+            $row ['name'] ="";
+            if ( $xml->xpath("cac:TaxCategory/cbc:Name") != null)
             {
-                $row ['name'] =$xml->xpath("//cac:InvoiceLine/cac:Item/cbc:Name")[$e]."";   
-            }else {
-                $row ['name'] ="";
+                $row['name']=$xml->xpath("cac:TaxCategory/cbc:Name")[0].'';
             }
-            if ( isset ($xml->xpath("//cbc:TaxExemptionReasonCode")[$e]))
+            $row['vatex']="";
+            if ( $xml->xpath("cac:TaxCategory/cbc:TaxExemptionReason") != null)
             {
-                $row['vatex']=$xml->xpath("//cbc:TaxExemptionReasonCode")[$e];
-            }else {
-                $row['vatex']="";
+                $row['vatex']=$xml->xpath("cac:TaxCategory/cbc:TaxExemptionReason")[0].'';
             }
-                $result[] = $row;
+            if ( $xml->xpath("cac:TaxCategory/cbc:TaxExemptionReason") != null)
+            {
+                $row['vatex'].=$xml->xpath("cac:TaxCategory/cbc:TaxExemptionReason")[0].'';
+            }
+            $result[] = $row;
         }
         return $result;
     }
