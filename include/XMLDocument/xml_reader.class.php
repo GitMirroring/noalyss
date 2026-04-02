@@ -31,7 +31,6 @@ namespace Noalyss\XMLDocument;
 */
 abstract class XML_Reader
 {
-
     protected \DOMDocument $domDocument;
     protected readonly \DOMXPath $xpath;
 
@@ -578,12 +577,16 @@ abstract class XML_Reader
         $pdf->write_cell(50, 4, _("Total Hors Taxe"));
         $pdf->write_cell(50, 4, nbm($result['TaxExclusiveAmount']),align:'R');
         $pdf->line_new();
-        $pdf->write_cell(50, 4, _("Total avec Taxe"));
-        $pdf->write_cell(50, 4, nbm($result['TaxInclusiveAmount']),align:'R');
+        $pdf->setFont("DejaVu", "B", 7);
+        $pdf->write_cell(50, 4, _("Total avec Taxe"),border:1);
+        $pdf->write_cell(50, 4, nbm($result['TaxInclusiveAmount']),border:1,align:'R');
         $pdf->line_new();
-        $pdf->write_cell(50, 4, _("Total à payer"));
-        $pdf->write_cell(50, 4, nbm($result['PayableAmount']),align:'R');
+        
+        $pdf->setFont("DejaVu", "B", 7);
+        $pdf->write_cell(50, 4, _("Total à payer"),border:1);
+        $pdf->write_cell(50, 4, nbm($result['PayableAmount']),border:1,align:'R');
         $pdf->line_new();
+        $pdf->setFont("DejaVu", "", 7);
         $pdf->write_cell(50, 4, _("Total réduction"));
         $pdf->write_cell(50, 4, nbm($result['AllowanceTotalAmount']),align:'R');
         $pdf->line_new();
@@ -633,19 +636,21 @@ abstract class XML_Reader
         $pdf->setFont("DejaVu", "", 7);
         $result = $this->get_taxes();
         $pdf->write_cell(25, 4, _("% Taxe"), align: 'R', border: 'B');
-        $pdf->write_cell(30, 4, _("Code taxe"), border: 'B');
-        $pdf->write_cell(50, 4, _("Base"), align: 'R', border: 'B');
-        $pdf->write_cell(50, 4, _("Taxe"), align: 'R', border: 'B');
+        $pdf->write_cell(100, 4, _("Code taxe"), border: 'B');
+        $pdf->write_cell(30, 4, _("Base"), align: 'R', border: 'B');
+        $pdf->write_cell(30, 4, _("Taxe"), align: 'R', border: 'B');
         $pdf->line_new();
         $nb_inline = count($result);
         for ($i = 0; $i < $nb_inline; $i++)
         {
-            $pdf->write_cell(25, 4, $result[$i]['tax_percent'], align: 'R');
+            $pdf->write_cell(20, 4, $result[$i]['tax_percent'], align: 'R');
             $pdf->write_cell(5, 4, $result[$i]['tax_id']);
-            $pdf->write_multi(25, 4, $result[$i]['vatex']);
-            $pdf->write_cell(50, 4, nbm($result[$i]['taxable_amount']), align: 'R');
-            $pdf->write_cell(50, 4, nbm($result[$i]['tax']), align: 'R');
+            $pdf->write_multi(100, 4, $result[$i]['vatex']);
+            $pdf->write_cell(30, 4, nbm($result[$i]['taxable_amount']),border:'R',align: 'R');
+            $pdf->write_cell(30, 4, nbm($result[$i]['tax']), border:'R',align: 'R');
 
+            $pdf->line_new();
+            $pdf->write_cell(185,0,'',border:'T');
             $pdf->line_new();
         }
         $pdf->line_new(10);
