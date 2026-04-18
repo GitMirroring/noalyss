@@ -2180,7 +2180,7 @@ function view_action(ag_id, dossier, modify) {
                     }
                     var code_html = getNodeText(html[0]);
                     code_html = unescape_xml(code_html);
-                    var pos = fixed_position(0, 50) + ";width:90%;left:5%;z-index:"+layer+";";
+                    var pos = "position:absolute;"+"top : "+calcy(50)+"px;"+"z-index:"+layer;
                     add_div({
                         id: id,
                         cssclass: "inner_box",
