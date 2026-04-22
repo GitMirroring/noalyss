@@ -1355,7 +1355,7 @@ function check()
             $root->appendChild($s2);
             $root->appendChild($s3);
             $root->appendChild($s4);
-            $root->appendChild($s5);
+            if ( isset($s5) ) $root->appendChild($s5);
             $xml->appendChild($root);
         }
         return $xml;
