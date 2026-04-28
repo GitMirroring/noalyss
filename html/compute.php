@@ -42,6 +42,23 @@ MaintenanceMode("block.html");
 
 
 $http=new HttpInput();
+//------------------------------------------------
+// refresh code from otp-link.php
+//------------------------------------------------
+if ($http->post("action","string","xx")=="qr_refresh") {
+     try {
+         
+        $authenticator = new \Noalyss\OTP();
+        $secret=$http->post("secret");
+        echo $authenticator->compute_code($secret);
+         
+     } catch (Exception $exc) {
+         record_log("refresh BarCode invalide");
+     }
+    return;
+
+}
+
 // TVA id or TVA code
 $t=$http->get("t");
 // string  qcode card
