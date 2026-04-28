@@ -134,8 +134,8 @@
  * </ul>
  */
 
-
-if (! file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config.inc.php') )
+// -- if there is not config.inc.php file then redirect to install.php
+if ( ! file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config.inc.php') )
 {
     echo <<<EOF
 
@@ -143,9 +143,6 @@ if (! file_exists('..'.DIRECTORY_SEPARATOR.'include'.DIRECTORY_SEPARATOR.'config
 window.location="install.php";
 </script>
 EOF;
-
-    header("Location: install.php");
-
     exit(0);
 }
 
