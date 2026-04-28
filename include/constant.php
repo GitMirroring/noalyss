@@ -369,16 +369,16 @@ define("ARROWUP","&#8679;");
 // Url of NOALYSS (http://...) 
 // 
 if (!defined("NOALYSS_URL")) {
-    if ( isset ( $_SERVER)) {
-    $protocol = "http";
-    if (isset ($_SERVER['REQUEST_SCHEME'])) {
-        $protocol = $_SERVER['REQUEST_SCHEME'];
-    }
-    $base = $protocol . '://' .
-        $_SERVER['SERVER_NAME'] .
-        ":" . $_SERVER['SERVER_PORT'] .
-        dirname($_SERVER['PHP_SELF']);
-    define("NOALYSS_URL", $base);
+    if ( isset ( $_SERVER['SERVER_NAME'])) {
+        $protocol = "http";
+        if (isset ($_SERVER['REQUEST_SCHEME'])) {
+            $protocol = $_SERVER['REQUEST_SCHEME'];
+        }
+        $base = $protocol . '://' .
+            $_SERVER['SERVER_NAME'] .
+            ":" . $_SERVER['SERVER_PORT'] .
+            dirname($_SERVER['PHP_SELF']);
+        define("NOALYSS_URL", $base);
     }else {
         define("NOALYSS_URL","command-line");
     }
