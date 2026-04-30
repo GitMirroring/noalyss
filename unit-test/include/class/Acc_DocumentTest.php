@@ -195,17 +195,6 @@ class Acc_DocumentTest extends TestCase {
 //    }
 
     /**
-     * @testdox description of the test
-     * @covers Acc_Balance::summary_add
-     * @depend Acc_Balance::summary_init
-     * @backupGlobals enabled
-     * @dataProvider dataExample
-     * @global $g_connection
-     */
-    function testFunction() {
-        
-    }
-    /**
      * @testdox Test the standard invoice, check file
      * @covers Document::generate
      */

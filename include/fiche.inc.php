@@ -35,7 +35,7 @@ global $g_user, $g_failed;
  */
 /* var categorie ISelect select card category */
 $categorie = new ISelect('cat');
-$categorie->value = $cn->make_array("select fd_id,fd_label||' ('||(select count(*) from fiche where fiche.fd_id=fiche_def.fd_id)::text||')' from fiche_def order by fd_label");
+$categorie->value = $cn->make_array("select fd_id,fd_label||' ('||(select count(*) from fiche where fiche.fd_id=fiche_def.fd_id and f_enable='1')::text||')' from fiche_def order by fd_label");
 $categorie->selected = $http->get('cat','number',0);
 
 // var $str_categorie  string

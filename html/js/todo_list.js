@@ -53,7 +53,9 @@ function todo_list_show(p_id)
 
 
                             todo_div.style.top = (posY + offsetY) + 'px';
-                            todo_div.style.left = (posX + offsetX + 20) + 'px';
+                            if (document.viewport.getWidth()> 970) {
+                                todo_div.style.left = (posX + offsetX + 20) + 'px';
+                            }
 
                             var answer = req.responseXML;
                             var tl_id = answer.getElementsByTagName('tl_id');

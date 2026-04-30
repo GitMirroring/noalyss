@@ -118,9 +118,15 @@ form {
     width:70%;
     margin-left:15%;
 }
+#otp_code_span {
+    font-size:160%;
+    color:navy;
+    background-color:white;
+    padding:0.8rem;
+}
 </style>
    <img id="logo_id" src="image/logo10000.png" >
-<div class="content">
+<div class="content" style="display:flex;flex-direction: row;justify-content: space-evenly;">
 <?php
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
@@ -180,10 +186,45 @@ try {
     );
 
     $result = $writer->write($qrCode);
-    echo '<div style="margin:4rem">';
+    echo '<div  id="otp_qrcode" >';
     // generate the QRCode
     echo '<h1>',_("Scanner ceci avec votre application OTP"),'</h1>';
+    
     ?>
+   
+    <?php
+    echo '<p>';
+    echo _("Scanner ce QRCode avec votre application OTP afin de l'ajouter");
+    echo '</p>';
+    echo '<p>';
+   
+    echo _("Dans votre application OTP vous devez avoir ce nombre ");
+    
+    ?>
+    <span id="otp_code_span">
+    <?=$authenticator->compute_code($secret)?>
+    </span>
+    
+    <?php
+    echo '</p>';
+    ?>
+    <?php
+    printf('<img src="data:image/png;base64,%s">', base64_encode($result->getString()));
+    
+} catch (Exception $exc) {
+    record_log($e);
+    return;
+}
+?>
+</div>
+    <div id="otp_install">
+          <h1><?=_("Installation d'une application OTP")?></h1>
+     <p>
+        <?=_("Si vous n'en avez pas installé sur votre smartphone ou PC, voici notre sélection")?>
+    </p>
+    <h2>
+        <?=_("Android")?>
+    </h2>
     <ol>
         <li>
             <a href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp" target="_blank">FreeOTP (libre)</a>
@@ -195,22 +236,43 @@ try {
             <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Google Authenticator</a>
         </li>
     </ol>
-    <?php
-    echo '<p>';
-    echo _("Scanner ce QRCode avec votre application OTP afin de l'ajouter");
-    
-    if ( DEBUGNOALYSS > 1) { echo "code attendu",$authenticator->code();}
-    echo '</p>';
-    
-    
-    printf('<img src="data:image/png;base64,%s">', base64_encode($result->getString()));
-    
-} catch (Exception $exc) {
-    record_log($e);
-    return;
-}
-?>
-
+    <h2>
+        <?=_('IPhone')?>
+        
+    </h2>
+    <ol>
+        <li>
+            <a href="https://apps.apple.com/fr/app/freeotp-authenticator/id872559395" target="_blank">FreeOTP (libre)</a>
+        </li>
+    </ol>
+    <h2>
+        PC 
+    </h2>
+    <p>
+        
+        <?=_("Article à propos de otpclient")?>
+        <a href="https://blog.apps.education.fr/articles/otpclient-un-client-otp-sur-gnulinux-tres-utile2023-01-08t165554043z">
+            OTPClient , un outil très utile sous PC
+        </a>
+        <br/>
+        <?=_('Debian , Ubuntu,...')?>
+        <code>
+              apt install otpclient
+        </code>
+    </p>
+    <ol>
+        <li>
+            <a href="https://github.com/paolostivanin/OTPClient" target="_blank">Site OTPClient </a>
+            
+        </li>
+    </ol>
+    </div>
 </div>
 
 
+<script>
+    function refresh_code() {
+        new Ajax.Updater("otp_code_span","compute.php",{parameters:{secret:"<?=$secret?>",action:"qr_refresh"}});
+    }
+    setInterval(refresh_code, 500);
+</script>

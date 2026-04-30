@@ -90,11 +90,16 @@ class SMTPMail
     }
 
     /**
-     * @param mixed $blind_copy
+     * @param string $blind_copy list of emails BCC separated by a comma 
      */
     public function setBlindCopy($blind_copy): SMTPMail
     {
-        $this->phpmailer->addBCC($this->blind_copy);
+        $a_blind_copy=explode(",",$blind_copy??"");
+        $nb_blind_copy=count($a_blind_copy);
+        for ($i=0;$i<$nb_blind_copy;$i++)
+        {
+             $this->phpmailer->addBCC($a_blind_copy[$i]);
+        }
         return $this;
     }
 

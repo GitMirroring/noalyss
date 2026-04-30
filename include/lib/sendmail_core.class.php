@@ -23,7 +23,8 @@
  *@brief API for sending email 
  */
 
-
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 /**
  *@class Sendmail_Core
  *@brief API for sending email
@@ -43,19 +44,35 @@ class Sendmail_Core
     protected $subject;
     protected $message;
     protected $from;
-    protected $content;
-    protected $header;
-    protected $format;
+    protected $header; //!< unused
+    protected $format; //!< PLAIN or HTML, message format
     
     protected $supplemental_header; //!< $supplemental_header(string) supplemental header to add
     protected $supplemental_param; //!< $supplemental_param (string)  5th parameter for mail() 
                             // for postfix, it should be "-f {$this->from}" for the Return-Path
+    protected $phpmailer;   //!< PHPMailer object;
+    protected $blind_copy;   //!< email of blind copy (list of emails separated by comma)
+    protected $reply_to; //!< reply to 
                                    
     function __construct()
     {
         $this->format='PLAIN';
         $this->supplemental_header="";
         $this->supplemental_param=MAIL_EXTRA_PARAM;
+        $this->phpmailer = new PHPMailer;
+        $this->phpmailer->CharSet = PHPMailer::CHARSET_UTF8;
+
+        //$this->phpmailer->SMTPDebug = SMTP::DEBUG_CLIENT;
+        $this->phpmailer->SMTPDebug = SMTP::DEBUG_OFF;
+        $this->phpmailer->isSendmail(true);
+        $this->phpmailer->XMailer = "noalyss-email";
+        $this->phpmailer->Host = "localhost";
+        $this->phpmailer->Port = "25";
+        $this->phpmailer->Username = "";
+        $this->phpmailer->Password = "";
+        $this->phpmailer->SMTPAuth = false;
+        $this->afile=[];
+        
     }
     public function getSupplemental_param()
     {
@@ -67,8 +84,18 @@ class Sendmail_Core
         $this->supplemental_param = $supplemental_param;
         return $this;
     }
+    public function getPhpmailer()
+    {
+        return $this->phpmailer;
+    }
 
-    public function getSupplemental_header()
+    public function setPhpmailer($phpmailer)
+    {
+        $this->phpmailer = $phpmailer;
+        return $this;
+    }
+
+        public function getSupplemental_header()
     {
         return $this->supplemental_header;
     }
@@ -172,96 +199,44 @@ class Sendmail_Core
     */
     function compose()
     {
-        $this->verify();
-	    $this->header="";
-	    $this->content="";
-
-        // a random hash will be necessary to send mixed content
-        $separator = md5(time());
-
-        // carriage return type (we use a PHP end of line constant)
-        $eol = PHP_EOL;
-
-        // main header (multipart mandatory)
-        $this->header = "From: " . $this->from . $eol;
-        $this->header .= "Reply-To: " . $this->from . $eol;
-        $this->header .= "MIME-Version: 1.0" . $eol;
-        $this->header .= $this->add_supplemental_header();
-        if ($this->format == 'PLAIN')
+        
+        $this->phpmailer->setFrom($this->from);
+        
+        
+        if ( $this->format == "HTML")
         {
-            $this->header .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\""  ;
-            // message PLAIN
-            $this->content .= "--" . $separator . $eol;
-            $this->content .= "Content-Type: text/plain; charset=UTF-8" . $eol;
-            $this->content .= "Content-Transfer-Encoding: 8bit" . $eol.$eol ;
-            $this->content .= $this->message . $eol ;
-        } elseif ($this->format == 'HTML') {
-            $separator_second=md5(rand());
-            
-            $this->header .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\"" .$eol ;
-             // message PLAIN
-            $this->content .= "--" . $separator . $eol;
-            $this->content .= "Content-Type: multipart/alternative; boundary=\"" . $separator_second . "\"".$eol  ;
-            $this->content.= "--$separator_second".$eol;
-            $this->content .= "Content-Type: text/plain; charset=UTF-8; format=flowed".$eol;
-            $this->content .= "Content-Transfer-Encoding: 8bit" . $eol.$eol ;
-            $this->content .= strip_tags($this->message) . $eol ;
-            $this->content.=$eol;
-            $this->content.=$eol;
-            $this->content.=$eol;
-            // message HTML
-            $this->content .= "--" . $separator_second.$eol;
-            $this->content .= "Content-Type: text/html; charset=UTF-8" . $eol;
-            $this->content .= "Content-Transfer-Encoding: 8bit" . $eol.$eol ;
-            $this->content .=<<<eof
-<!DOCTYPE html>{$eol}
-<html>{$eol}
-<head>{$eol}
-
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">{$eol}
-</head>{$eol}
-<body>
-{$eol}
-{$eol}
-{$eol}
-eof;
-            $this->content .= $this->message. $eol ;
-            $this->content .="  </body> </html>".$eol;
-            $this->content .= "--" . $separator_second."--" . $eol;
-    
-        }else {
-            throw new \Exception('SC172 : unknow format ');            
+            $this->phpmailer->Body = $this->message;
+            $this->phpmailer->AltBody = \strip_tags($this->message);
+            $this->phpmailer->isHTML(true);     
+        }
+        else
+        {
+            $this->phpmailer->Body = $this->message;
+            $this->phpmailer->isHTML(false);         
+        }
+        $this->phpmailer->Subject = $this->subject;
+        $nb_file=count($this->afile);
+        for ($i=0;$i<$nb_file;$i++)
+        {
+            $this->phpmailer->addAttachment($this->afile[$i]->full_name);
         }
         
-        if ( ! empty($this->afile ) )
+        $a_email = explode(',', $this->mailto);
+        foreach ($a_email as $item)
         {
-            // attachment
-            for ($i = 0; $i < count($this->afile); $i++)
-            {
-                
-                $file = $this->afile[$i];
-                $file_size = filesize($file->full_name);
-                $mimetype=( $file->type=="")?mime_content_type($file->full_name):$file->type;
-                $handle = fopen($file->full_name, "r");
-                if ( $handle == false ){ 
-                    \record_log("SC159 ".var_export($file,true));
-                    throw new Exception ('SC159 email not send file not added'.$file->full_name);
-                }
-                $content = fread($handle, $file_size);
-                fclose($handle);
-                $content = chunk_split(base64_encode($content));
-                $this->content .= "--" . $separator . $eol;
-                $this->content .= "Content-Type: " . $mimetype . "; name=\"" . $file->filename . "\"" . $eol;
-                $this->content .= "Content-Disposition: attachment; filename=\"" . $file->filename . "\"" . $eol;
-                $this->content .= "Content-Transfer-Encoding: base64" . $eol;
-                $this->content.=$eol;
-                $this->content .= $content . $eol ;
-            }
+            $this->phpmailer->addAddress($item);
         }
-        if ( empty ($this->afile) ) $this->content.=$eol;
-
-        $this->content .= "--" . $separator . "--";
-        $this->supplemental_param= str_replace("[FROM]", $this->from, $this->supplemental_param);
+        $a_blind_copy=explode(",",$this->blind_copy??"");
+        $nb_blind_copy=count($a_blind_copy);
+        for ($i=0;$i<$nb_blind_copy;$i++)
+        {
+             $this->phpmailer->addBCC($a_blind_copy[$i]);
+        }
+        if ( ! empty ($this->reply_to)) {
+            $this->phpmailer->addReplyTo($this->reply_to);
+        }
+        $this->phpmailer->preSend();
+       
     }
 
     /**
@@ -270,17 +245,6 @@ eof;
      */
     function send()
     {
-        try {
-            $this->verify();
-
-        } catch (Exception $e) {
-            throw $e;
-        }
-        $encoded_subject = mb_encode_mimeheader( $this->subject, 'UTF-8', 'B');
-        
-        if (!mail($this->mailto,$encoded_subject, $this->content,$this->header,$this->supplemental_param))
-        {
-            throw new Exception('send failed');
-        }
+       $this->phpmailer->send();
     }
 }

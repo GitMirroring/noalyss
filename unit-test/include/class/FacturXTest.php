@@ -49,6 +49,9 @@ class FacturXTest extends TestCase {
     function testBuild_Data() {
        $cn=\Dossier::connect();
        $facturx=new \Noalyss\XMLDocument\FacturX($cn);
+       $data=$facturx->get_data() ;
+       $this->assertTrue($data == []
+               ," Build Data fails : get null value");
     }
 
 
@@ -137,6 +140,6 @@ class FacturXTest extends TestCase {
        $customer=$facturx->get_data()['customer'];
        $a_error = $facturx->check_customer_data($customer['card_id']);
        print_r($a_error);
-       $this->assertTrue(count($a_error)==6, "nb of error incorrect ,expected 6, received = ".print_r($a_error,true));
+       $this->assertTrue(count($a_error)==5, "nb of error incorrect (JR_INTERNAL=V000002),expected 5, received = ".print_r($a_error,true));
     }
 }

@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the NOALYSS package.
 # Dany De Bontridder <dany@alchimerys.be>
 #
-# dany, 2014.
-# Dany De Bontridder <danydb@noalyss.eu>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025.
 #: include/database.item.php:104
+# dany, 2014.
+# Dany De Bontridder <danydb@noalyss.eu>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: NOALYSS 672\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-06 08:28+0100\n"
-"PO-Revision-Date: 2025-12-06 07:29+0100\n"
+"PO-Revision-Date: 2026-04-28 12:40+0200\n"
 "Last-Translator: dany <dany@galactee.intra-alchimerys.be>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: en_US\n"
@@ -159,7 +159,7 @@ msgstr "Fixed Asset"
 #: include/ext/copy_parameter/class/Tva.php:167
 #: include/ext/copy_parameter/class/Analytic.php:141
 msgid " Importation TVA a échoué, aucun changement "
-msgstr ""
+msgstr " VAT import failed, no changes"
 
 #: include/class/acc_ledger_sale.class.php:261
 #: include/class/acc_ledger_purchase.class.php:274
@@ -220,17 +220,13 @@ msgid " Un poste comptable est manquant"
 msgstr "Missing accounting "
 
 #: html/install.php:501
-#, fuzzy
 msgid ""
 " Vous devez  utiliser au minimum une version 12 de PostgreSQL, si votre "
 "distribution n'en\n"
 "offre pas, installez-en une en la compilant. Lisez attentivement la notice "
 "sur postgresql.org pour migrer\n"
 "vos bases de données"
-msgstr ""
-"The version of Postgresql must be higher than 9.0, if you can't install it "
-"thanks a package , compile one, read carefully instructions to migrate your "
-"databases "
+msgstr "Minimum version for PostgreSQL is 12"
 
 #: include/ajax/ajax_card.php:586
 msgid " d'administration"
@@ -285,7 +281,7 @@ msgstr "and the account"
 #: include/ext/noalyss-export/template/export_param.php:74
 #: include/ext/noalyss-export/template/export_param.php:127
 msgid " grâce à l'extension \"importation avancé\""
-msgstr ""
+msgstr " thanks to the \"advanced import\" extension"
 
 #: include/class/acc_bilan.class.php:73
 #: include/ext/bilan_interne/acc_bilaninterne.class.php:307
@@ -315,14 +311,12 @@ msgid " pour la fiche "
 msgstr "For the card"
 
 #: include/ext/noalyss_document/template/document-display_detail.php:121
-#, fuzzy
 msgid " rotation droite"
-msgstr "Direct use"
+msgstr "Turn right"
 
 #: include/ext/noalyss_document/template/document-display_detail.php:121
-#, fuzzy
 msgid " rotation à droite"
-msgstr "Staffing"
+msgstr "Turn right"
 
 #: include/ext/rapport_avance/include/formulaire_param_detail.class.php:339
 msgid " utilisé avec le poste comptable"
@@ -347,12 +341,10 @@ msgid "%"
 msgstr "%"
 
 #: include/XMLDocument/xml_reader.class.php:554
-#, fuzzy
 msgid "% Taxe"
-msgstr "Other tax"
+msgstr "% tax"
 
 #: include/ext/alchimerys_peppol_synchro/nds_synchro.php:236
-#, fuzzy, php-format
 msgid "%d Fichiers intégrés dans %s"
 msgstr "%d card are added into the category %s"
 
@@ -369,12 +361,12 @@ msgstr "%s"
 #: include/XMLDocument/invoiceubl21.class.php:105
 #, php-format
 msgid "%s : %s code Exemption pour PEPPOL non configuré code TVA [ %s %s ]"
-msgstr ""
+msgstr " %s: %s Exemption code for PEPPOL not configured VAT code [%s %s]"
 
 #: include/XMLDocument/invoiceubl21.class.php:89
 #, php-format
 msgid "%s : %s code TVA pour PEPPOL non configuré code TVA [ %s %s ]"
-msgstr ""
+msgstr " %s: %s VAT code for PEPPOL not configured VAT code [%s %s]"
 
 #: include/template/ledger_detail_fin.php:139
 #, php-format
@@ -387,9 +379,9 @@ msgid "%s dans la col %s & %s <br>"
 msgstr "%s in column %s & %s <br>"
 
 #: include/ext/listing/ajax/ajax_upload_file.php:93
-#, fuzzy, php-format
+#, php-format
 msgid "%s erreur chargement"
-msgstr "%s Reason of change"
+msgstr "%s Loading fails"
 
 #: include/lib/sendmail_core.class.php:128
 #, php-format
@@ -448,9 +440,8 @@ msgstr "(optional) The number of bank receipt"
 
 #: include/ext/noalyss_xmlpayment/ajax/ajax_save_bank.php:85
 #: include/ext/noalyss_xmlpayment/template/list_operation-select.php:38
-#, fuzzy
 msgid "*** Nouveau ***"
-msgstr "New"
+msgstr "*** New ***"
 
 #: include/class/tva_rate_mtable.class.php:195 include/template/module.php:171
 msgid "-"
@@ -470,12 +461,11 @@ msgstr "-- Choice --"
 
 #: include/class/acc_ledger_sale.class.php:1398
 msgid "0 - Facture PDF Standard"
-msgstr ""
+msgstr " 0 - Standard PDF Invoice"
 
 #: include/ajax/ajax_ledger.php:640
-#, fuzzy
 msgid "1 Echec "
-msgstr "Fail"
+msgstr "1 Fail"
 
 #: include/impress_rapport.inc.php:290
 msgid "1 mois"
@@ -486,9 +476,8 @@ msgid "100 dernières connexions"
 msgstr "100 Last entries"
 
 #: include/ajax/ajax_ledger.php:650
-#, fuzzy
 msgid "2 Echec "
-msgstr "Fail"
+msgstr "2 Fail"
 
 #: include/template/balance_aged_result.php:59
 msgid "< 30 jours"
@@ -509,7 +498,6 @@ msgid "A Effacer"
 msgstr "to delete"
 
 #: include/ext/noalyss-timesheet/template/employee_mtable-input.php:49
-#, fuzzy
 msgid "A accès aux projets"
 msgstr "No access"
 
@@ -520,16 +508,15 @@ msgstr "To amortize"
 
 #: include/template/xmlinvoice-display_error.php:57
 msgid "A corriger dans COMPANY"
-msgstr ""
+msgstr " To be corrected in COMPANY"
 
 #: include/template/xmlinvoice-display_error.php:110
 msgid "A corriger dans la configuration TVA (C0TVA)"
-msgstr ""
+msgstr " To be corrected in the VAT configuration (C0TVA)"
 
 #: include/template/xmlinvoice-display_error.php:79
-#, fuzzy
 msgid "A corriger dans la fiche"
-msgstr "Error in formula"
+msgstr "Correct in the card"
 
 #: include/ext/importbank/include/template/detail_item.php:125
 msgid "A effacer"
@@ -555,17 +542,16 @@ msgstr "From"
 #: include/ext/noalyss-timesheet/template/employee_schedule-display_date_block-draft.php:82
 #: include/ext/noalyss-timesheet/template/employee_schedule-display_date_block-confirmed.php:82
 msgid "A prester"
-msgstr ""
+msgstr " To perform"
 
 #: include/ext/noalyss-timesheet/ajax/ajax_validate_employee_confirmed.php:35
 #: include/ext/noalyss-timesheet/template/manager-display_employee_to_validate.php:37
-#, fuzzy
 msgid "A valider"
-msgstr "Validate"
+msgstr "To validate"
 
 #: include/class/tva_rate_mtable.class.php:197
 msgid "AE Autoliquidate mais pas INTRACOMM."
-msgstr ""
+msgstr " AE Autoliquidate but not INTRACOMM."
 
 #: include/class/acc_ledger_search.class.php:667
 msgid "ALS01 Etat inconnu"
@@ -585,7 +571,7 @@ msgstr "Warning : if the accounting is empty it will be created automatically"
 
 #: include/ext/noalyss_document/ajax/ajax_validate_operation.php:34
 msgid "AVO38.Vide"
-msgstr ""
+msgstr " AVO38.Empty"
 
 #: include/class/acc_operation.class.php:834
 msgid "Acc_Operation::set_id , id invalide "
@@ -601,7 +587,6 @@ msgid "Accueil"
 msgstr "Home"
 
 #: include/ext/rash/template/beneficiary-input.php:359
-#, fuzzy
 msgid "Accueil "
 msgstr "Home"
 
@@ -786,14 +771,13 @@ msgid "Actions sur plusieurs documents"
 msgstr "Action on different documents"
 
 #: include/ext/noalyss-webservice/template/parameter_display.php:89
-#, fuzzy
 msgid "Activation audit "
-msgstr "For today "
+msgstr "Activate audit"
 
 #: include/ext/alchimerys_peppol_synchro/nds_synchro.php:68
 #, php-format
 msgid "Activez l'extension %s puis allez dans %s pour qu'il s'installe"
-msgstr ""
+msgstr "Activate the %s extension, then go to %s to install it."
 
 #: include/class/anc_acc_list.class.php:53
 msgid "Activité/Fiche"
@@ -820,9 +804,8 @@ msgstr "Refresh"
 
 #: include/ext/tva/class/parameter/tva_parameter.class.php:375
 #: include/ext/tva/template/ext_tva+display_detail_amount.php:39
-#, fuzzy
 msgid "Addition"
-msgstr "Action"
+msgstr "Addition"
 
 #: html/user_login.php:134 include/user_detail.inc.php:113
 #: include/export/export_security_pdf.php:107
@@ -840,9 +823,8 @@ msgid "Administrateur ne peut pas être effacé"
 msgstr "Administrator cannot be removed"
 
 #: include/ext/rash/template/beneficiary-input.php:192
-#, fuzzy
 msgid "Administratif"
-msgstr "Administration"
+msgstr "Administrative"
 
 #: html/user_login.php:151 include/admin_repo.inc.php:77
 #: include/database.item.php:102
@@ -850,7 +832,6 @@ msgid "Administration"
 msgstr "Administration"
 
 #: include/database.item.php:159
-#, fuzzy
 msgid "Administration TS"
 msgstr "Administration"
 
@@ -873,13 +854,12 @@ msgid "Adresse Serveur Postgresql"
 msgstr "Postgresql Host"
 
 #: include/ext/alchimerys_peppol_synchro/template/peppol_parameter+input.php:28
-#, fuzzy
 msgid "Adresse URL"
-msgstr "Address"
+msgstr "URL"
 
 #: include/XMLDocument/error_message.class.php:86
 msgid "Adresse de la société"
-msgstr ""
+msgstr " Company address"
 
 #: include/class/document_modele.class.php:70
 msgid "Affect."
@@ -907,20 +887,18 @@ msgid "Afficher la période comptable pour éviter les erreurs de date"
 msgstr "Display the accounting period dates to AVOID errors"
 
 #: include/ajax/ajax_admin.php:394
-#, fuzzy, php-format
 msgid ""
 "Afin de terminer l'installation, aller sur %s. A la fin de la procédure de "
 "mise à jour, demander à effacer le fichier install.php"
 msgstr ""
 "In order to finish the installation , go to %s at the end of the procedure. "
-"Ask to remove the file install.php"
+"Remove the file install.php"
 
 #: include/database.item.php:125
 msgid "Agenda"
 msgstr "Calendar"
 
 #: include/database.item.php:125
-#, fuzzy
 msgid "Agenda  &#x1f4c5"
 msgstr "Schedule  &#x1f4c5;"
 
@@ -974,9 +952,8 @@ msgid "Ajout"
 msgstr "Add"
 
 #: include/ext/noalyss-portal-client/template/customer-input.php:285
-#, fuzzy
 msgid "Ajout Login"
-msgstr "Add a row "
+msgstr "Add user"
 
 #: include/ext/sav/include/template/sas_display_detail.php:175
 msgid "Ajout Matériel"
@@ -995,9 +972,8 @@ msgid "Ajout action"
 msgstr "Add Action"
 
 #: include/ext/noalyss-webservice/template/parameter_display.php:106
-#, fuzzy
 msgid "Ajout adresse :"
-msgstr "Adding others"
+msgstr "Add address:"
 
 #: include/ext/modop/modop_display.php:88
 #: include/ext/modop/modop_display.php:122
@@ -1103,9 +1079,8 @@ msgid "Ajout de fiche"
 msgstr "Adding Record"
 
 #: include/template/ajax_ledger+input_file.php:39
-#, fuzzy
 msgid "Ajout de fichier"
-msgstr "Adding Record"
+msgstr "Add a file"
 
 #: include/ext/amortis/include/template/material_add.php:22
 msgid "Ajout de matériel"
@@ -1132,7 +1107,6 @@ msgstr "Add repair card"
 
 #: include/ext/rash/template/beneficiary-input.php:632
 #: include/template/ledger_detail_sup_files.php:100
-#, fuzzy
 msgid "Ajout fichier"
 msgstr "Add an attachment"
 
@@ -1141,9 +1115,8 @@ msgid "Ajout fichier Analytique"
 msgstr "Add Analytic files"
 
 #: include/ext/rash/class/Beneficiary.php:161
-#, fuzzy
 msgid "Ajout impossible"
-msgstr "Export failed"
+msgstr "Adding impossible"
 
 #: include/class/acc_ledger.class.php:2604
 msgid "Ajout journal"
@@ -1154,9 +1127,8 @@ msgid "Ajout ligne"
 msgstr "Add a row "
 
 #: include/ext/noalyss-portal-client/ajax/ajax_customer.php:45
-#, fuzzy
 msgid "Ajout login"
-msgstr "Add a row "
+msgstr "Add an user"
 
 #: include/ext/tools/include/tool_function.php:470
 msgid "Ajout pièce "
@@ -1185,7 +1157,6 @@ msgid "Ajout étiquette"
 msgstr "Add tag"
 
 #: include/ext/rash/ajax/ajax_benefit.php:64
-#, fuzzy
 msgid "Ajoute"
 msgstr "Add"
 
@@ -1197,7 +1168,6 @@ msgid "Ajouter"
 msgstr "Add"
 
 #: include/ext/noalyss_document/template/document_load-display_table.php:220
-#, fuzzy
 msgid "Ajouter Etiquette"
 msgstr "Add tag"
 
@@ -1206,30 +1176,25 @@ msgid "Ajouter ce plugin"
 msgstr "Add this plugin"
 
 #: include/ext/noalyss_document/template/document_load-display_table.php:219
-#, fuzzy
 msgid "Ajouter dans le suivi"
 msgstr "Save in follow up"
 
 #: include/template/ajax_ledger+input_file.php:45
-#, fuzzy
 msgid "Ajouter des fichiers à cette opération"
-msgstr "Do you want to delete this transaction"
+msgstr "Add files to this operation"
 
 #: include/ext/noalyss_document/template/document_load-display_table.php:277
-#, fuzzy
 msgid "Ajouter documents"
-msgstr "No document"
+msgstr "Add document"
 
 #: include/ext/noalyss_xmlpayment/ajax/ajax_search_multi_operation.php:130
 #: include/ext/noalyss_xmlpayment/ajax/ajax_search_multi_operation.php:141
-#, fuzzy
 msgid "Ajouter la sélection aux paiements"
-msgstr "Move selection to"
+msgstr "Add selection to payment"
 
 #: include/ext/noalyss-timesheet/ajax/ajax_input_day_comment.php:70
-#, fuzzy
 msgid "Ajouter les documents du suivi"
-msgstr "See documents monitoring"
+msgstr "Add documents"
 
 #: include/dossier.inc.php:229
 msgid "Ajouter un dossier"
@@ -1418,18 +1383,15 @@ msgstr "After clicking validate, you must reload"
 
 #: include/class/invoice_pdf.class.php:237
 #: include/template/ajax-search_vatex.php:53
-#, fuzzy
 msgid "Article"
-msgstr "Add item"
+msgstr "Item"
 
 #: include/XMLDocument/xml_reader.class.php:468
 #: include/ext/noalyss_document/template/document_operation-display_recap.php:135
-#, fuzzy
 msgid "Articles"
-msgstr "Add item"
+msgstr "Item"
 
 #: include/ext/rash/template/pedagocical_followup-input.php:102
-#, fuzzy
 msgid "Assistant social"
 msgstr "Social workers"
 
@@ -1443,7 +1405,6 @@ msgid "Assistants sociaux"
 msgstr "Social workers"
 
 #: include/ext/rash/template/security_social_worker-form_social_worker.php:43
-#, fuzzy
 msgid "Assitants sociaux"
 msgstr "Social workers"
 
@@ -1458,10 +1419,9 @@ msgstr "Tips"
 
 #: include/ext/noalyss-timesheet/template/admin-menu.php:176
 msgid "Astuce : les projets sont présentés par ordre alphabétique"
-msgstr ""
+msgstr " Tip: Projects are presented in alphabetical order."
 
 #: include/ext/noalyss-portal-client/class/customer_news.php:101
-#, fuzzy
 msgid "Astuces"
 msgstr "Tips"
 
@@ -1491,7 +1451,7 @@ msgstr "Warning error Acc_Legder::insert"
 #: include/ext/noalyss-timesheet/ajax/ajax_display_allocate.php:200
 #, php-format
 msgid "Attention , il faut d'abord saisir le total dans la feuille de présence"
-msgstr ""
+msgstr " Please note, you must first enter the total in the attendance sheet."
 
 #: include/compta_fin_rec.inc.php:218
 msgid "Attention : Fichier non chargé"
@@ -1555,9 +1515,9 @@ msgid "Attention Différence entre TVA calculée et donnée"
 msgstr "Warning difference computed with VAT"
 
 #: include/ext/noalyss-timesheet/ajax/ajax_display_allocate.php:190
-#, fuzzy, php-format
+#, php-format
 msgid "Attention Total ventilées %s > Heure Feuille de présence %s"
-msgstr "Users of timesheet"
+msgstr "warning Total hours > Total detailled hours"
 
 #: include/ajax/ajax_preference.php:120
 msgid ""
@@ -1571,6 +1531,8 @@ msgid ""
 "Attention il y a %s erreurs , les opérations en erreur ne seront pas "
 "transférées à moins que vous ne les corrigiez"
 msgstr ""
+" Warning: There are %s errors; erroneous operations will not be transferred"
+" unless you correct them."
 
 #: html/install.php:542
 #, php-format
@@ -1597,7 +1559,6 @@ msgid ""
 msgstr "Warning : period not found from %s to %s"
 
 #: html/test.php:45
-#, fuzzy
 msgid "Attention zend.assertions devrait être activé"
 msgstr "Caution : current folder will be overwritten"
 
@@ -1633,6 +1594,8 @@ msgid ""
 "Attention,vous allez ajouter des opérations qui sont avant la dernière "
 "opération de ce journal"
 msgstr ""
+" Warning: You will be adding transactions that precede the last transaction"
+" in this journal."
 
 #: html/do.php:148
 msgid ""
@@ -1689,7 +1652,6 @@ msgid "Aucun attribut "
 msgstr "No property"
 
 #: include/ext/noalyss_document/class/document_operation.php:235
-#, fuzzy
 msgid "Aucun bien ou service"
 msgstr "No goods or services"
 
@@ -1698,12 +1660,10 @@ msgid "Aucun client"
 msgstr "No customer"
 
 #: include/ext/importbank/class/import_bank.class.php:315
-#, fuzzy
 msgid "Aucun compte en banque"
-msgstr "Bank account"
+msgstr "No bank account"
 
 #: include/ext/noalyss_xmlpayment/class/operation_mtable.class.php:226
-#, fuzzy
 msgid "Aucun compte en banque donné"
 msgstr "No bank account given"
 
@@ -1729,12 +1689,10 @@ msgstr "No file"
 
 #: include/ext/noalyss-timesheet/template/manager-display_employee.php:28
 #: include/ext/noalyss-timesheet/template/proxy_user-display_proxy.php:28
-#, fuzzy
 msgid "Aucun employee"
 msgstr "no data"
 
 #: include/ext/noalyss-timesheet/template/schedule-display_employee.php:29
-#, fuzzy
 msgid "Aucun employé"
 msgstr "no data"
 
@@ -1763,9 +1721,8 @@ msgstr "No file"
 
 #: include/ext/noalyss_document/class/document_load.php:117
 #: include/ext/rash/class/Beneficiary.php:449
-#, fuzzy
 msgid "Aucun fichier accepté"
-msgstr "Any given file"
+msgstr "No file uploaded"
 
 #: include/ext/profile_mgt/class/profile_mgt.class.php:160
 #: include/ext/transform/include/intervat_listing_assujetti_step_2.inc.php:108
@@ -1781,14 +1738,12 @@ msgid "Aucun filtre, tous les journaux"
 msgstr "No filter, all ledgers"
 
 #: include/ext/invoicing/include/invoicing.inc.php:59
-#, fuzzy
 msgid "Aucun format choisi"
-msgstr "No equipment"
+msgstr "No format"
 
 #: include/ext/noalyss-form/template/form-display_list.php:31
-#, fuzzy
 msgid "Aucun formulaire"
-msgstr "Add a Form"
+msgstr "No form"
 
 #: include/ext/tva/ajax.php:113
 msgid "Aucun journal accessible"
@@ -1860,7 +1815,6 @@ msgid "Aucun poste trouvé"
 msgstr "No accounting found"
 
 #: include/ext/noalyss_document/template/document_load-display_table.php:67
-#, fuzzy
 msgid "Aucun profil de gestion"
 msgstr "No available profile"
 
@@ -1873,14 +1827,12 @@ msgid "Aucun profil utilisateur"
 msgstr "No user profile"
 
 #: include/ext/noalyss-timesheet/template/employee_mtable-input.php:43
-#, fuzzy
 msgid "Aucun project"
-msgstr "No document"
+msgstr "No project"
 
 #: include/ext/noalyss-timesheet/ajax/ajax_select_project_code.php:57
-#, fuzzy
 msgid "Aucun projet pour cet utilisateur"
-msgstr "No user profile"
+msgstr "No user project"
 
 #: include/ext/rapport_avance/include/rapav_repository.class.php:48
 msgid "Aucun rapport trouvé"
@@ -1888,9 +1840,8 @@ msgstr "No reportfound"
 
 #: include/ext/noalyss-timesheet/template/manager-display_list.php:28
 #: include/ext/noalyss-timesheet/template/proxy_user-display_list.php:28
-#, fuzzy
 msgid "Aucun responsable"
-msgstr "No matching"
+msgstr "No manager"
 
 #: include/class/acc_ledger.class.php:706
 #: include/ajax/ajax_boxcard_search.php:75
@@ -1913,9 +1864,8 @@ msgid "Aucun titre"
 msgstr "No title"
 
 #: include/ext/noalyss-timesheet/template/employee-display_list.php:26
-#, fuzzy
 msgid "Aucun utilisateur"
-msgstr "No user profile"
+msgstr "No user "
 
 #: include/widget/event/event-display.php:27
 msgid "Aucun événement en retard ou prévu"
@@ -1985,9 +1935,8 @@ msgid "Aucune donnée trouvée"
 msgstr "No data found"
 
 #: include/ext/noalyss-timesheet/include/Employee/employee_schedule.class.php:314
-#, fuzzy
 msgid "Aucune entrée à valider"
-msgstr "No room to send"
+msgstr "Nothing to validate"
 
 #: include/widget/invoice/invoice-display.php:25
 #: include/widget/invoice/invoice-display.php:60
@@ -1999,9 +1948,8 @@ msgid "Aucune fiche demandée"
 msgstr "No card Abebooks web sites"
 
 #: include/ext/noalyss_xmlpayment/class/operation_mtable.class.php:231
-#, fuzzy
 msgid "Aucune fiche donnée"
-msgstr "Any given file"
+msgstr "No file"
 
 #: include/fiche.inc.php:150 include/fiche.inc.php:440
 msgid "Aucune fiche trouvée"
@@ -2017,7 +1965,7 @@ msgstr "No plugin available"
 
 #: include/ext/noalyss_document/ajax/ajax_display_xmlpy.php:64
 msgid "Aucune liste de paiement en brouillon"
-msgstr ""
+msgstr " No draft payment list"
 
 #: include/ext/tools/include/tool_function.php:527
 msgid "Aucune opération choisie"
@@ -2037,9 +1985,8 @@ msgid "Aucune opération sélectionnée"
 msgstr "No operation selected"
 
 #: include/ext/noalyss_document/ajax/ajax_validate_operation.php:105
-#, fuzzy
 msgid "Aucune opération à transférer"
-msgstr "No operation selected"
+msgstr "No operation"
 
 #: include/widget/mini_report/mini_report.php:65
 msgid "Aucune periode par defaut"
@@ -2151,9 +2098,8 @@ msgid "Autre exercice %s"
 msgstr "Other exercise %s"
 
 #: include/ext/noalyss_document/template/document_operation-input.php:130
-#, fuzzy
 msgid "Autre info"
-msgstr "Other info"
+msgstr "Other information"
 
 #: include/ext/importbank/ajax.php:106
 #: include/ext/importbank/include/template/detail_item.php:96
@@ -2248,7 +2194,7 @@ msgstr "Warning can not be empty"
 
 #: include/ext/rash/template/schedule_watch-display_month.php:58
 msgid "Avr."
-msgstr ""
+msgstr " Apr."
 
 #: include/class/periode.class.php:684
 msgid "Avril"
@@ -2260,12 +2206,12 @@ msgstr "Analytic axis"
 
 #: include/ext/copy_parameter/template/Analytic-display.php:55
 msgid "Axes"
-msgstr ""
+msgstr " Axes"
 
 #: include/XMLDocument/xml_reader.class.php:583
 #: include/ext/noalyss_xmlpayment/template/header_bank-input.php:53
 msgid "BIC"
-msgstr ""
+msgstr " BIC"
 
 #: include/modele.inc.php:336 include/database.item.php:161
 msgid "Backup"
@@ -2384,9 +2330,8 @@ msgid "Banque"
 msgstr "Bank"
 
 #: include/ext/noalyss_xmlpayment/class/operation_mtable.class.php:237
-#, fuzzy
 msgid "Banque incorrecte"
-msgstr "wrong balance"
+msgstr "Bank incorrect"
 
 #: include/class/acc_ledger_fin.class.php:488
 msgid "Banque, caisse"
@@ -2398,7 +2343,7 @@ msgstr "Based on"
 
 #: include/XMLDocument/xml_reader.class.php:556
 msgid "Base"
-msgstr ""
+msgstr " Base"
 
 #: include/dossier.inc.php:420
 msgid "Base de donnée "
@@ -2428,13 +2373,12 @@ msgid "Base de données"
 msgstr "Database"
 
 #: include/XMLDocument/xml_reader.class.php:498
-#, fuzzy
 msgid "Base taxe"
-msgstr "Other tax"
+msgstr "Base tax"
 
 #: include/class/noalyss_parameter_folder.class.php:248
 msgid "Basic"
-msgstr ""
+msgstr " Basic"
 
 #: include/class/document.class.php:1715 include/class/follow_up.class.php:296
 #: include/class/follow_up.class.php:832
@@ -2471,18 +2415,16 @@ msgid "Bilan"
 msgstr "Balance sheet"
 
 #: include/database.item.php:185
-#, fuzzy
 msgid "Bilan Interne"
-msgstr "Internal"
+msgstr "Internal balance"
 
 #: include/database.item.php:178
-#, fuzzy
 msgid "Bilan SMT"
-msgstr "Balance sheet"
+msgstr "Bilan SMT"
 
 #: include/database.item.php:178
 msgid "Bilan SMT OHADA"
-msgstr ""
+msgstr " OHADA SMT Assessment"
 
 #: include/ext/bilan_interne/output_bilaninterne.class.php:183
 #, php-format
@@ -2500,9 +2442,9 @@ msgid "Bon de commande"
 msgstr "Customer order"
 
 #: include/class/invoice_pdf.class.php:231
-#, fuzzy, php-format
+#, php-format
 msgid "Bon de commande / référence %s"
-msgstr "Customer order"
+msgstr "Customer order %s"
 
 #: include/database.item.php:256
 msgid "Bon de commande Fournisseur"
@@ -2529,7 +2471,6 @@ msgid "Brouillon"
 msgstr "Draft"
 
 #: include/ext/noalyss-timesheet/template/manager-display_employee_to_validate.php:36
-#, fuzzy
 msgid "Brouillons"
 msgstr "Draft"
 
@@ -2539,36 +2480,35 @@ msgstr "Budget"
 
 #: include/ext/rash/template/pedagocical_followup-input.php:88
 msgid "Bâtiment"
-msgstr ""
+msgstr " Building"
 
 #: include/ext/rash/adm.php:62 include/ext/rash/index.php:77
 msgid "Bénéficiaire"
-msgstr ""
+msgstr " Beneficiary"
 
 #: include/ext/rash/raw.php:159
 msgid "Bénéficiaire code"
-msgstr ""
+msgstr " Beneficiary code"
 
 #: include/ext/rash/raw.php:158
 msgid "Bénéficiaire prénom"
-msgstr ""
+msgstr " Beneficiary's first name"
 
 #: include/ext/rash/adm.php:62 include/ext/rash/index.php:77
 msgid "Bénéficiaires d'hébergement"
-msgstr ""
+msgstr " Accommodation beneficiaries"
 
 #: include/ext/rash/raw.php:157
 msgid "Bénéficiare nom"
-msgstr ""
+msgstr " Beneficiary name"
 
 #: include/export/export_poste_detail_pdf.php:195
 msgid "C"
 msgstr "D / C "
 
 #: include/ext/ohada/include/data/data_financial.class.php:56
-#, fuzzy
 msgid "C.Exploitant"
-msgstr "Explanation"
+msgstr "Manager"
 
 #: include/lib/itva_popup.class.php:155
 msgid "C.TVA"
@@ -2794,7 +2734,7 @@ msgstr "No plugin"
 #: include/ext/noalyss-export/template/export_param.php:72
 #: include/ext/noalyss-export/template/export_param.php:125
 msgid "Ce qui est exporté en CSV ou en FEC peut être réimporté dans NOALYSS"
-msgstr ""
+msgstr " Files exported as CSV or FEC can be re-imported into NOALYSS"
 
 #: include/ajax/ajax_periode.php:151
 msgid "Cela pourrait avoir un impact sur les opérations déjà existantes"
@@ -2885,9 +2825,8 @@ msgstr "This version need at least PHP Version 8.2"
 
 #: include/ext/rash/class/Reference_MTable.php:44
 #: include/ext/rash/template/pedagocical_followup-input.php:92
-#, fuzzy
 msgid "Chambre"
-msgstr "Number"
+msgstr "Room"
 
 #: include/ext/bilan_interne/row_descriptor.class.php:74
 msgid "Champ \"linetype\" vide mais autres valeurs présentes"
@@ -3439,6 +3378,9 @@ msgid ""
 "        il est impératif de la comptabilité soit tenue dans l'ordre "
 "chronologique et suive l'ordre de la comptabilisation"
 msgstr ""
+"Check to replace the invoice date with the accounting date; the accounting"
+" date determines the tax period. It is imperative that accounting records be"
+" kept in chronological order and follow the order of accounting entries."
 
 #: include/ext/importbank/include/template/show_field.php:52
 #: include/ext/importbank/include/template/confirm_transfer.php:162
@@ -3506,7 +3448,7 @@ msgstr "Currency code"
 
 #: include/class/tva_rate_mtable.class.php:60
 msgid "Code Exemption TVA (vatex)"
-msgstr ""
+msgstr " VAT Exemption Code (Vatex)"
 
 #: include/class/tva_rate_mtable.class.php:59
 #, fuzzy
@@ -3611,6 +3553,8 @@ msgid ""
 "Code TVA est utilisé pour les factures électroniques, plus d'information "
 "dans le manuel"
 msgstr ""
+" The VAT code is used for electronic invoices; more information can be found"
+" in the manual."
 
 #: include/ext/tva/template/tva_parameter-display.php:427
 #, fuzzy
@@ -3661,7 +3605,7 @@ msgstr "VAT Code"
 
 #: include/class/tva_rate_mtable.class.php:98
 msgid "Code exemption pour facture PEPPOL (ubl)"
-msgstr ""
+msgstr " Exemption code for PEPPOL invoice (ubl)"
 
 #: include/class/acc_ledger_sale.class.php:1835
 #: include/class/acc_ledger_purchase.class.php:2257
@@ -3887,7 +3831,7 @@ msgstr "Bank account  closed"
 
 #: include/database.item.php:195
 msgid "Compte de résultat SMT OHADA"
-msgstr ""
+msgstr " SMT OHADA Income Statement"
 
 #: include/compta_fin_saldo.inc.php:46 include/class/fiche.class.php:1418
 #: include/template/param_jrn.php:54 include/template/ledger_detail_fin.php:44
@@ -3933,7 +3877,7 @@ msgstr "Accounting"
 
 #: include/ext/noalyss-timesheet/template/employee_schedule-display_week.php:166
 msgid "Compteur pour les heures validées"
-msgstr ""
+msgstr " Counter for validated hours"
 
 #: include/ext/rapport_avance/ajax/ajax_modify_param_detail.php:43
 #, fuzzy
@@ -4165,16 +4109,18 @@ msgid ""
 "Conseil : quickcode de moins de 9 car. commençant pas les 2 ou 3 premiers "
 "chiffres du poste comptable"
 msgstr ""
+" Tip: Quickcode of fewer than 9 characters, starting with the first 2 or 3"
+" digits of the accounting entry."
 
 #: include/ext/noalyss-timesheet/include/Employee/employee_schedule.class.php:201
 #, php-format
 msgid "Conso. %s"
-msgstr ""
+msgstr " Consumption %s"
 
 #: include/ext/noalyss-timesheet/template/employee_carriedOver_hour-display_row.php:110
 #, php-format
 msgid "Consommé %s"
-msgstr ""
+msgstr "Consumed %s"
 
 #: include/template/follow_up-display.php:93 include/database.item.php:47
 #: include/category_card.inc.php:81
@@ -4238,7 +4184,7 @@ msgstr "co-ownership"
 
 #: include/ext/noalyss-portal-client/class/customer_news.php:90
 msgid "Corbeille"
-msgstr ""
+msgstr " Basket"
 
 #: include/compta_ven.inc.php:112 include/compta_ach.inc.php:78
 #: include/compta_fin.inc.php:89 include/operation_ods_confirm.inc.php:45
@@ -4706,7 +4652,7 @@ msgstr "Date %s to %s"
 
 #: include/ext/noalyss-timesheet/include/Export/csv_timesheet.class.php:89
 msgid "Date (yyyy.mm.dd)"
-msgstr ""
+msgstr " Date (yyyy.mm.dd)"
 
 #: include/ext/tools/raw.php:75
 msgid "Date DMY"
@@ -4928,7 +4874,7 @@ msgstr "Deadline"
 
 #: include/ext/noalyss-timesheet/include/Employee/employee_carriedover_hour.class.php:88
 msgid "Date limite pour récupérer"
-msgstr ""
+msgstr " Deadline for collection"
 
 #: include/ajax/ajax_display_letter.php:111
 #: include/ajax/ajax_display_letter.php:127
@@ -5018,7 +4964,7 @@ msgstr "Debit / Credit"
 
 #: include/ext/rash/template/schedule_watch-display_month.php:66
 msgid "Dec."
-msgstr ""
+msgstr " Dec."
 
 #: html/user_login.php:156
 msgid "Deconnexion"
@@ -5356,7 +5302,7 @@ msgstr "Let Diff."
 
 #: include/ext/tva/class/ext_tva.class.php:715
 msgid "Diff. Crédit - Débit"
-msgstr ""
+msgstr " Credit/Debit Difference"
 
 #: include/template/anticipation-display.php:183
 msgid "Diff. cumul."
@@ -5624,7 +5570,7 @@ msgstr "Invalid data"
 
 #: include/ext/noalyss-timesheet/template/employee-menu.php:103
 msgid "Données modifiées et non sauvées"
-msgstr ""
+msgstr " Data modified but not saved"
 
 #: include/lib/ac_common.php:964
 msgid "Données non disponibles"
@@ -5886,7 +5832,7 @@ msgstr "Definition"
 
 #: include/database.item.php:172
 msgid "Définition de formulaire qu'on pourrait recevoir"
-msgstr ""
+msgstr " Definition of a form that one might receive"
 
 #: include/ext/noalyss_document/class/document_operation.php:699
 #, fuzzy
@@ -6153,7 +6099,7 @@ msgstr "Details VAT"
 
 #: include/class/tva_rate_mtable.class.php:202
 msgid "E Exempté de TVA"
-msgstr ""
+msgstr " E Exempt from VAT"
 
 #: include/ext/noalyss-export/class/install/install.class.php:50
 #: include/ext/import-advanced/class/install/install_plugin.class.php:49
@@ -6531,17 +6477,17 @@ msgstr "Email not sent"
 #: include/ext/noalyss-timesheet/template/manager-display_employee.php:40
 #: include/ext/noalyss-timesheet/template/proxy_user-display_proxy.php:40
 msgid "Employee"
-msgstr ""
+msgstr " Employee"
 
 #: include/ext/noalyss-timesheet/include/Admin/employee_mtable.class.php:261
 msgid "Employé"
-msgstr ""
+msgstr " Employee"
 
 #: include/ext/noalyss-timesheet/ajax/ajax_manager_detail.php:38
 #: include/ext/noalyss-timesheet/ajax/ajax_proxy_user_detail.php:38
 #: include/ext/noalyss-timesheet/template/admin-menu.php:95
 msgid "Employés"
-msgstr ""
+msgstr " Employees"
 
 #: include/lib/message_javascript.php:120
 msgid ""
@@ -6641,7 +6587,7 @@ msgstr "Description"
 
 #: include/ajax/ajax_search_peppol.php:83
 msgid "Endpoint (PEPPOL ID)"
-msgstr ""
+msgstr " Endpoint (PEPPOL ID)"
 
 #: include/ext/rash/ajax/ajax_benefit.php:49
 #: include/ext/rash/template/beneficiary-input.php:42
@@ -6749,13 +6695,15 @@ msgstr "Replace an accounting by a card"
 
 #: include/ext/rapport_avance/ajax/ajax_modify_param_detail.php:46
 msgid "Entrez une formule avec des codes utilisés dans ce formulaire"
-msgstr ""
+msgstr " Enter a formula with codes used in this form"
 
 #: include/ext/rapport_avance/ajax/ajax_modify_param_detail.php:24
 msgid ""
 "Entrez une formule avec des postes comptables, la syntaxe est la même que "
 "celle des \"rapports\""
 msgstr ""
+" Enter a formula with accounting entries; the syntax is the same as for"
+" \"reports\""
 
 #: include/class/mobile_device_mtable.class.php:42
 msgid "Entêtes standards"
@@ -6957,7 +6905,7 @@ msgstr "Error:"
 
 #: include/ext/noalyss_document/class/document_load.php:365
 msgid "Error"
-msgstr ""
+msgstr " Error"
 
 #: include/ext/noalyss-portal-client/index.php:93
 #, fuzzy
@@ -7030,7 +6978,7 @@ msgstr "Step 2/3"
 
 #: include/ext/alchimerys_peppol_synchro/nds_synchro.php:186
 msgid "Etape 2: Envoi et réception depuis PEPPOL"
-msgstr ""
+msgstr " Step 2: Sending and receiving from PEPPOL"
 
 #: include/ext/transform/include/intervat_listing_assujetti_step_3.inc.php:33
 msgid "Etape 3/3"
@@ -7059,7 +7007,7 @@ msgstr "State"
 
 #: include/ext/noalyss-timesheet/include/Export/csv_timesheet.class.php:100
 msgid "Etat Confirmé,Validé,D-Brouillon"
-msgstr ""
+msgstr " Status: Confirmed, Validated, Draft"
 
 #: include/database.item.php:132
 msgid "Etat des documents"
@@ -7080,7 +7028,7 @@ msgstr "Financial SMT"
 
 #: include/database.item.php:204
 msgid "Etats annexes amortissements SMT OHADA"
-msgstr ""
+msgstr " OHADA SMT Depreciation Annexes"
 
 #: include/database.item.php:193 include/database.item.php:194
 #, fuzzy
@@ -7140,7 +7088,7 @@ msgstr "14 days events"
 
 #: include/database.item.php:179
 msgid "Example of an XML File for developing a plugin."
-msgstr ""
+msgstr " Example of an XML File for developing a plugin."
 
 #: include/template/action_search.php:64
 msgid "Exclure Etat"
@@ -7394,7 +7342,7 @@ msgstr "Export follow-up"
 
 #: include/database.item.php:205
 msgid "Export and import backup as compressed XML files"
-msgstr ""
+msgstr " Export and import backup as compressed XML files"
 
 #: include/ext/export-import-xml/index.php:48
 msgid "Export d'un dossier comptable noalyss"
@@ -7667,7 +7615,7 @@ msgstr "Closed"
 
 #: include/ext/rash/template/schedule_watch-display_month.php:56
 msgid "Fev."
-msgstr ""
+msgstr " Feb."
 
 #: include/class/payment_method_mtable.class.php:46
 #: include/class/anc_group_operation.class.php:114
@@ -8163,7 +8111,7 @@ msgstr "February"
 
 #: include/class/tva_rate_mtable.class.php:200
 msgid "G TVA exempt pour export hors Europe"
-msgstr ""
+msgstr " G VAT exempt for export outside Europe"
 
 #: include/lib/dbg.php:151
 msgid "GLOBALS"
@@ -8195,7 +8143,7 @@ msgstr "GSM"
 
 #: include/ext/rash/class/Child.php:145
 msgid "Garde"
-msgstr ""
+msgstr " Guard"
 
 #: include/database.item.php:185
 #, fuzzy
@@ -8313,12 +8261,14 @@ msgid ""
 "Grille 46 : Livraisons intracommunautaires exemptées effectuées en Belgique "
 "et ventes ABC"
 msgstr ""
+"Table 46: Intra-Community deliveries exempt from VAT in Belgium and ABC sales"
 
 #: include/ext/tva/template/tva_parameter-display.php:124
 msgid ""
 "Grille 47 :Autres opérations exemptées et autres opérations effectuées à "
 "l’étranger"
 msgstr ""
+" Grid 47: Other exempt transactions and other transactions carried out abroad"
 
 #: include/ext/tva/template/tva_parameter-display.php:125
 msgid ""
@@ -8383,18 +8333,23 @@ msgid ""
 "Grille 84 : Montant des notes de crédit reçues et des corrections négatives "
 "relatif aux opérations inscrites en grilles 86 et 88"
 msgstr ""
+" Grid 84: Amount of credit notes received and negative corrections relating"
+" to transactions recorded in grids 86 and 88"
 
 #: include/ext/tva/template/tva_parameter-display.php:135
 msgid ""
 "Grille 85 : Montant des notes de crédit reçues et des corrections négatives "
 "relatif aux autres opérations du cadre III  "
 msgstr ""
+" Grid 85: Amount of credit notes received and negative corrections relating"
+" to other transactions in section III"
 
 #: include/ext/tva/template/tva_parameter-display.php:136
 msgid ""
 "Grille 86 : Acquisitions intracommunautaires effectuées en Belgique et "
 "ventes ABC  "
 msgstr ""
+" Grid 86: Intra-Community acquisitions carried out in Belgium and ABC sales"
 
 #: include/class/follow_up.class.php:716
 #: include/class/anc_account_table.class.php:49
@@ -8538,12 +8493,12 @@ msgstr "Hour"
 
 #: include/ext/noalyss-timesheet/template/admin-menu.php:122
 msgid "Heures / semaine (HH:MM)"
-msgstr ""
+msgstr " Hours/week (HH:MM)"
 
 #: include/ext/noalyss-timesheet/ajax/ajax_display_allocate.php:109
 #, php-format
 msgid "Heures à ventiler %s"
-msgstr ""
+msgstr " Hours to ventilate %s"
 
 #: include/verif_bilan.inc.php:173
 msgid "Hist."
@@ -8704,7 +8659,7 @@ msgstr "Host"
 #: include/ext/noalyss_xmlpayment/template/header_bank-input.php:49
 #: include/lib/iban_number.class.php:35
 msgid "IBAN"
-msgstr ""
+msgstr " IBAN"
 
 #: include/ext/importbank/class/import_coda.class.php:187
 #, fuzzy
@@ -8750,7 +8705,7 @@ msgstr "Id"
 #: include/XMLDocument/error_message.class.php:83
 #: include/XMLDocument/error_message.class.php:99
 msgid "Identifiant PEPPOL"
-msgstr ""
+msgstr " PEPPOL ID"
 
 #: include/ext/modop/index.php:64
 msgid ""
@@ -8758,6 +8713,8 @@ msgid ""
 "écritures supplémentaires pour corriger et ajoutez leur une note "
 "d'explication"
 msgstr ""
+" It is not recommended to modify accounting entries; instead, make additional"
+" entries to correct them and add an explanatory note."
 
 #: include/ext/rash/class/PedagogicalFollowUp.php:152
 #, fuzzy
@@ -8948,6 +8905,8 @@ msgid ""
 "\t    Version modifiée de import_account.\n"
 "            Supporte les devises"
 msgstr ""
+" Import and export of accounting and analytical transactions. Modified"
+" version of import_account. Supports currencies"
 
 #: include/database.item.php:155
 #, fuzzy
@@ -9125,7 +9084,7 @@ msgstr "Print great ledger"
 
 #: include/database.item.php:160
 msgid "Impressions avancées pour l'extension  feuilles de présence (timesheet)"
-msgstr ""
+msgstr " Advanced printing options for the timesheet extension"
 
 #: include/ext/bilan_interne/index.php:115 include/lib/html_input.class.php:613
 msgid "Imprimer"
@@ -9137,7 +9096,7 @@ msgstr "Disabled"
 
 #: include/ext/noalyss-portal-client/template/customer-input.php:201
 msgid "Incident"
-msgstr ""
+msgstr " Incident"
 
 #: include/template/trait_card-form_search.php:68
 #, fuzzy
@@ -9193,7 +9152,7 @@ msgstr "Spare part not found"
 
 #: include/ext/tva/template/ext_tva+display_detail_amount.php:71
 msgid "Info"
-msgstr ""
+msgstr " Info"
 
 #: include/ext/importbank/bank_constant.php:61
 msgid "Info supplémentaire"
@@ -9334,7 +9293,7 @@ msgstr "label is empty"
 
 #: include/ext/alchimerys_peppol_synchro/template/peppol_parameter+input.php:23
 msgid "Introduisez ici les éléments reçus pour vous connecter à PEPPOL"
-msgstr ""
+msgstr " Enter the information received here to log in to PEPPOL"
 
 #: include/ext/import-advanced/index.php:69
 msgid "Intégration"
@@ -9388,7 +9347,7 @@ msgstr "Item"
 
 #: include/ext/rash/template/schedule_watch-display_month.php:55
 msgid "Jan."
-msgstr ""
+msgstr " Jan."
 
 #: include/class/periode.class.php:684
 msgid "Janvier"
@@ -9419,7 +9378,7 @@ msgstr " days"
 
 #: include/ext/noalyss-timesheet/template/admin-menu.php:37
 msgid "Jour de fermeture et féries"
-msgstr ""
+msgstr " Closing days and public holidays"
 
 #: include/compta_fin_saldo.inc.php:47
 #: include/class/acc_ledger_search.class.php:1140
@@ -9554,7 +9513,7 @@ msgstr "Miscellaneous ledger"
 
 #: include/ext/noalyss-timesheet/ajax/ajax_display_allocate.php:126
 msgid "Journée confirmée, commentaires non possible"
-msgstr ""
+msgstr " Day confirmed, no comments possible"
 
 #: include/ext/amortis/ajax.php:115
 msgid "Jours"
@@ -9599,7 +9558,7 @@ msgstr "Autoreverse"
 
 #: include/XMLDocument/error_message.class.php:77
 msgid "L'email de la société "
-msgstr ""
+msgstr " The company's email"
 
 #: include/company.inc.php:284
 msgid "L'exercice commence par un report des soldes"
@@ -9646,7 +9605,7 @@ msgstr "The database is properly configured"
 
 #: include/ext/noalyss_document/ajax/ajax_validate_operation.php:139
 msgid "La date de facture sera sauvegardée dans le libellé d'opération"
-msgstr ""
+msgstr " The invoice date will be saved in the transaction description."
 
 #: include/ext/transform/include/intervat_listing_assujetti_step_2.inc.php:54
 #: include/ext/transform/include/intervat_listing_assujetti_step_2.inc.php:58
@@ -9700,7 +9659,7 @@ msgstr "number of decimal must be a number"
 
 #: include/ajax/ajax_search_peppol.php:66
 msgid "La recherche par nom et numéro de TVA sont limitées à la Belgique"
-msgstr ""
+msgstr " Searches by name and VAT number are limited to Belgium"
 
 #: include/class/card_attribut_mtable.class.php:216
 msgid "La requête SQL est vide "
@@ -9766,6 +9725,9 @@ msgid ""
 "            le reporting vers la Région Wallonne qui inclut des données "
 "spécifiques à indiquer."
 msgstr ""
+" The purpose of the application is to manage the entry of beneficiaries and"
+" their follow-up, as well as reporting to the Walloon Region, which includes"
+" specific data to be indicated."
 
 #: html/install.php:166
 msgid "Le chemin vers le repertoire contenant psql, pg_dump..."
@@ -9779,12 +9741,13 @@ msgstr "the name cannot be empty"
 #: include/class/tva_rate_mtable.class.php:463
 msgid "Le code d'exemption TVA n' pas de sens sans code Facture électronique"
 msgstr ""
+" The VAT exemption code is meaningless without an electronic invoice code."
 
 #: include/class/tva_rate_mtable.class.php:458
 msgid ""
 "Le code d'exemption TVA ne peut être utilisé avec ce  code Facture "
 "électronique UBL "
-msgstr ""
+msgstr " The VAT exemption code cannot be used with this UBL e-invoice code."
 
 #: include/dossier.inc.php:433
 #, php-format
@@ -9913,7 +9876,7 @@ msgstr "Receipt number"
 
 #: include/ext/noalyss_document/ajax/ajax_validate_operation.php:138
 msgid "Le numéro des pièces ne suivra pas l'ordre chronologique."
-msgstr ""
+msgstr " The part numbers will not follow chronological order."
 
 #: include/class/acc_ledger.class.php:1357
 #, php-format
@@ -9993,10 +9956,12 @@ msgid ""
 "Les employés doivent avoir un profil rempli pour pouvoir accèder aux modules "
 "de Feuille de Présence pour lesquels ils ont un accès"
 msgstr ""
+"Employees must have a completed profile to access the Timesheet modules to"
+" which they have access"
 
 #: include/ext/noalyss-timesheet/template/admin-menu.php:154
 msgid "Les employés ne peuvent saisir des dates que pour le calendrier défini"
-msgstr ""
+msgstr " Employees can only enter dates for the defined calendar"
 
 #: include/class/anc_grandlivre.class.php:211
 msgid ""
@@ -10031,6 +9996,8 @@ msgid ""
 "Les gestions de dépôt et des groupes de gestion ne sont ni importés ni "
 "exportés."
 msgstr ""
+" Deposit management and management group management are neither imported nor"
+" exported."
 
 #: include/ext/import-advanced/include/imd_transfer.inc.php:70
 #, php-format
@@ -10068,9 +10035,8 @@ msgstr ""
 "main menu without setting the dependency"
 
 #: include/class/invoice_pdf.class.php:224
-#, php-format
 msgid "Les montants sont en %s taux %s"
-msgstr ""
+msgstr " The amounts are in % rates %s"
 
 #: include/database.item.php:48
 msgid ""
@@ -10103,6 +10069,8 @@ msgid ""
 "Les responsables, doivent avoir un profil complet et accès au module TS4/"
 "Validation"
 msgstr ""
+" Managers must have a complete profile and access to the TS4/Validation"
+" module."
 
 #: include/ext/noalyss-export/template/export_param.php:46
 msgid ""
@@ -10272,7 +10240,7 @@ msgstr "Link"
 
 #: include/ext/rash/ajax/ajax_benefit.php:55
 msgid "Lien avec le bénéficiaire "
-msgstr ""
+msgstr " Link with the beneficiary"
 
 #: include/database.item.php:5
 msgid "Lien entre comptabilité et Comptabilité analytique"
@@ -10318,7 +10286,7 @@ msgstr "Folders limit"
 
 #: include/ext/listing/ajax/ajax_upload_file.php:140
 msgid "Limite email = 2MB supprimez ou compressez les fichiers"
-msgstr ""
+msgstr " Email limit = 2MB, delete or compress the files"
 
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:205
 msgid ""
@@ -10494,7 +10462,7 @@ msgstr "Representative"
 
 #: include/ext/ohada/include/data/data_financial.class.php:62
 msgid "Loyer"
-msgstr ""
+msgstr " Rent"
 
 #: include/class/calendar.class.php:195 include/class/calendar.class.php:287
 #: include/ajax/ajax_preference.php:179
@@ -10516,15 +10484,15 @@ msgstr "Administration"
 
 #: include/ext/rash/raw.php:89
 msgid "ME Ass Alcool"
-msgstr ""
+msgstr " ME Ass Alcohol"
 
 #: include/ext/rash/raw.php:88
 msgid "ME Ass Drogue"
-msgstr ""
+msgstr " ME Ass Drug"
 
 #: include/ext/rash/raw.php:90
 msgid "ME Ass Medicament"
-msgstr ""
+msgstr " ME Ass Medicament"
 
 #: include/ext/rash/raw.php:95 include/ext/rash/raw.php:96
 #, fuzzy
@@ -10538,15 +10506,15 @@ msgstr "Financial"
 
 #: include/ext/rash/raw.php:94
 msgid "ME Parentalité"
-msgstr ""
+msgstr " ME Parenting"
 
 #: include/ext/rash/raw.php:92
 msgid "ME Santé mental"
-msgstr ""
+msgstr " ME Mental Health"
 
 #: include/ext/rash/raw.php:91
 msgid "ME Violence Conj"
-msgstr ""
+msgstr " ME Violence Conjugal"
 
 #: include/class/periode.class.php:685
 #: include/ext/rash/template/schedule_watch-display_month.php:59
@@ -10601,7 +10569,7 @@ msgstr "Manual"
 
 #: include/ext/ohada/include/data/data_financial.class.php:60
 msgid "Marchandise"
-msgstr ""
+msgstr " Merchandise"
 
 #: include/class/calendar.class.php:195 include/class/calendar.class.php:287
 #: include/ajax/ajax_preference.php:180
@@ -10623,7 +10591,7 @@ msgstr "March"
 
 #: include/ext/ohada/include/data/data_financial.class.php:61
 msgid "Mat.première"
-msgstr ""
+msgstr " Mat.première"
 
 #: include/ext/amortis/include/am_card.class.php:349
 msgid "Matériel déjà dans la liste"
@@ -10783,7 +10751,7 @@ msgstr "Message reverse"
 
 #: include/ext/listing/template/parameter_send_mail_input.php:78
 msgid "Message précédent"
-msgstr ""
+msgstr " Previous message"
 
 #: include/ext/listing/ajax/ajax_show_previous_message.php:43
 #, fuzzy
@@ -11309,7 +11277,7 @@ msgstr "Incorrect currency amount"
 
 #: include/ext/tva/class/parameter/tva_parameter.class.php:382
 msgid "Montant doit être négatif (ex :Note de crédit )"
-msgstr ""
+msgstr " The amount must be negative (e.g., credit note)."
 
 #: include/template/ledger_detail_misc.php:244
 #: include/template/ledger_detail_ven.php:341
@@ -11478,7 +11446,7 @@ msgstr "Multiple"
 #: include/ext/rash/class/Child.php:70
 #: include/ext/rash/ajax/ajax_benefit.php:51
 msgid "Mère"
-msgstr ""
+msgstr " Mother"
 
 #: include/class/acc_ledger_history_purchase.class.php:335
 msgid "Méthode paiement"
@@ -11630,7 +11598,7 @@ msgstr "No action"
 
 #: include/ext/noalyss-timesheet/class/pdf_trait.php:35
 msgid "Noalyss Projet"
-msgstr ""
+msgstr " Noalyss Project"
 
 #: include/class/acc_other_tax_mtable.class.php:37
 #: include/class/currency_mtable.class.php:58
@@ -12097,7 +12065,7 @@ msgstr "Notes"
 
 #: include/ext/modop/index.php:61
 msgid "Nous recommandons fortement d'utiliser le mode strict"
-msgstr ""
+msgstr " We strongly recommend using strict mode"
 
 #: include/ajax/ajax_add_menu.php:142
 #: include/ext/noalyss_document/class/document_load.php:362
@@ -12234,7 +12202,7 @@ msgstr "News, announce and tips"
 
 #: include/ext/rash/template/schedule_watch-display_month.php:65
 msgid "Nov."
-msgstr ""
+msgstr " Nov."
 
 #: include/class/periode.class.php:686
 msgid "Novembre"
@@ -12268,7 +12236,7 @@ msgstr "Number"
 
 #: include/ext/tva/template/xml_belgian_tax_representative-input.php:101
 msgid "Numéro (TVA, Douane ou NISS)"
-msgstr ""
+msgstr " Number (VAT, Customs or NISS)"
 
 #: include/class/acc_ledger_sale.class.php:991
 #: include/class/acc_ledger_sale.class.php:997
@@ -12349,7 +12317,7 @@ msgstr "Internal number"
 
 #: include/ajax/ajax_search_peppol.php:129
 msgid "Numéro entreprise belge valide: 10 chiffres"
-msgstr ""
+msgstr "Valid Belgian company number: 10 digits"
 
 #: include/ext/modop/template_ledger_fin.php:15
 #: include/template/form_ledger_fin.php:75
@@ -12447,13 +12415,15 @@ msgstr "Dutch"
 
 #: include/class/tva_rate_mtable.class.php:201
 msgid "O TVA Hors périmètre application"
-msgstr ""
+msgstr " VAT outside the scope of application"
 
 #: include/database.item.php:155
 msgid ""
 "OBSOLETE Importation et exportation d'operations\n"
 "\t    remplacé par noalyss-export et import-advanced"
 msgstr ""
+" OBSOLETE Import and export operations replaced by noalyss-export and"
+" import-advanced"
 
 #: include/database.item.php:8
 msgid "OD analytique"
@@ -12503,7 +12473,7 @@ msgstr "Mandatory for FIN ledger: give here the card of the bank"
 
 #: include/ext/rash/template/schedule_watch-display_month.php:64
 msgid "Oct."
-msgstr ""
+msgstr " Oct."
 
 #: include/class/periode.class.php:686
 msgid "Octobre"
@@ -12626,6 +12596,8 @@ msgid ""
 "Opération de paiement crée en plus de cette opération, ne concerne pas la "
 "facturation électronique"
 msgstr ""
+" This payment transaction, created in addition to the previous one, is not"
+" related to electronic invoicing."
 
 #: include/ext/transform/include/intervat_listing_assujetti_step_1.inc.php:135
 msgid "Opération de vente"
@@ -12871,7 +12843,7 @@ msgstr "Yes to load the javascripts and CSS standard files"
 
 #: include/database.item.php:181
 msgid "Outils comptable, chgt poste,fiche..."
-msgstr ""
+msgstr " Accounting tools, job change, form..."
 
 #: include/database.item.php:181
 #, fuzzy
@@ -12932,15 +12904,15 @@ msgstr "Conversion to PDF failed , PDFTK fails"
 
 #: include/ext/noalyss-portal-client/class/customer_peppol_mtable.class.php:43
 msgid "PEPPOL"
-msgstr ""
+msgstr " PEPPOL"
 
 #: include/ext/alchimerys_peppol_synchro/template/peppol_parameter+input.php:30
 msgid "PEPPOL ID"
-msgstr ""
+msgstr " PEPPOL ID"
 
 #: include/lib/ipeppol_id.class.php:35
 msgid "PEPPOL_ID"
-msgstr ""
+msgstr " PEPPOL_ID"
 
 #: include/class/acc_ledger.class.php:292
 msgid "PERIODE FERMEE"
@@ -12981,7 +12953,7 @@ msgstr "Payment"
 #: include/class/invoice_pdf.class.php:327
 #, php-format
 msgid "Paiement avant le %s sur le compte %s (BIC %s) avec comme message %s"
-msgstr ""
+msgstr " Payment before %s to account %s (BIC %s) with the message %s"
 
 #: include/template/status_operation_event-main_display.php:122
 msgid "Paiement client"
@@ -13162,7 +13134,7 @@ msgstr "Parameter for VAT"
 msgid ""
 "Paramètre, utilisateurs et sécurité pour l'extension feuilles de présence "
 "(timesheet)"
-msgstr ""
+msgstr "Settings, users and security for the timesheet extension"
 
 #: include/database.item.php:67
 msgid "Paramètres divers"
@@ -13177,6 +13149,8 @@ msgid ""
 "Paramétrer les coordonnées du déclarant et les code TVA pour les listing "
 "intracomm"
 msgstr ""
+" Configure the declarant's contact details and VAT codes for intra-community"
+" listings"
 
 #: include/template/todo_list_display.php:87
 #: include/template/todo_list_display.php:90
@@ -13301,7 +13275,7 @@ msgstr "Todo List"
 
 #: include/ext/rash/template/beneficiary-input.php:716
 msgid "Pensez à sauver vos changements"
-msgstr ""
+msgstr " Remember to save your changes"
 
 #: include/template/forecast_item_mtable-input.php:79
 msgid "Periode"
@@ -13358,7 +13332,7 @@ msgstr "Let you to export operation in CSV by ledger"
 
 #: include/database.item.php:196
 msgid "Permet d'importer et d'exporter des profiles, avec toutes dépendances"
-msgstr ""
+msgstr " Allows importing and exporting profiles, along with all dependencies."
 
 #: include/database.item.php:149
 #, fuzzy
@@ -13392,17 +13366,18 @@ msgstr "Link between Accounting and Cost Accounting"
 
 #: include/database.item.php:200
 msgid "Permet de gérer la sécurité de l'extension RASH"
-msgstr ""
+msgstr " Allows you to manage the security of the RASH extension"
 
 #: include/database.item.php:206
 msgid ""
 "Permet de valider les feuilles de présence(Timesheet) des personnes dont on "
 "est responsable"
 msgstr ""
+" Allows you to validate the timesheets of the people you are responsible for."
 
 #: include/database.item.php:170
 msgid "Permet l'export des données de Noalyss , en différent format : FEC, CSV"
-msgstr ""
+msgstr " Allows export of Noalyss data in different formats: FEC, CSV"
 
 #: include/ext/noalyss-export/template/export_param.php:35
 msgid "Permet l'export des opérations en CSV par journal"
@@ -13417,6 +13392,8 @@ msgid ""
 "Permet la restauration de différent dossiers dans le but d'avoir des "
 "dossiers de démonstration"
 msgstr ""
+" Allows the restoration of different folders in order to have demonstration"
+" folders"
 
 #: include/class/package_core.class.php:59
 #, php-format
@@ -13442,7 +13419,7 @@ msgstr "Staff"
 #: include/ext/rash/ajax/ajax_rash_admin_group.php:33
 #: include/ext/rash/template/security_beneficiary-form_beneficiary.php:66
 msgid "Personnes hébergées"
-msgstr ""
+msgstr " People being housed"
 
 #: include/lib/message_javascript.php:63
 msgid "Peut contenir un numéro de bon de commande"
@@ -13545,7 +13522,7 @@ msgstr "Analytically"
 #: include/ext/noalyss-timesheet/template/employee_carriedOver_hour-display_row.php:129
 #, php-format
 msgid "Planifié %s"
-msgstr ""
+msgstr " Planned %s"
 
 #: include/database.item.php:183
 #, fuzzy
@@ -13556,7 +13533,7 @@ msgstr "This extension let make VAT listing and form"
 
 #: include/database.item.php:157
 msgid "Plugin to manage the client"
-msgstr ""
+msgstr " Plugin to manage the client"
 
 #: include/ajax/ajax_preference.php:232
 #: include/ext/noalyss-export/class/export/export.class.php:120
@@ -13875,7 +13852,7 @@ msgstr ""
 
 #: include/ext/profile_mgt/template/profile_mgt-display_profile.php:29
 msgid "Pour corriger le résultat vous devez aller sur C0PROFL"
-msgstr ""
+msgstr " To correct the result you need to go to C0PROFL"
 
 #: include/user_detail.inc.php:173
 #, fuzzy
@@ -13949,6 +13926,8 @@ msgid ""
 "Pour pouvoir saisir les heures d'une autre personne, le mandataire doit "
 "avoir accès à  TS1/Saisie et avoir un profil complet"
 msgstr ""
+" To be able to enter another person's hours, the authorized representative"
+" must have access to TS1/Entry and have a complete profile"
 
 #: include/template/impress_cat_card.php:21
 msgid "Pour toutes les catégories"
@@ -13988,7 +13967,7 @@ msgstr "First road"
 #: include/ext/noalyss-timesheet/include/Employee/employee_schedule.class.php:200
 #, php-format
 msgid "Presté %s"
-msgstr ""
+msgstr " Performed %s"
 
 #: include/class/follow_up.class.php:2096
 #: include/ext/noalyss-portal-client/template/ajax_customer_login_add.php:47
@@ -14141,20 +14120,20 @@ msgstr "Progr."
 
 #: include/ext/noalyss-timesheet/template/project_mtable-input.php:44
 msgid "Project"
-msgstr ""
+msgstr " Project"
 
 #: include/ext/noalyss-timesheet/ajax/ajax_select_project_code.php:63
 #, php-format
 msgid "Projects utilisés ce mois entre le %s et %s"
-msgstr ""
+msgstr " Projects used this month between %s and %s"
 
 #: include/ext/noalyss-timesheet/template/employee_schedule-display_week.php:48
 msgid "Projet"
-msgstr ""
+msgstr " Project"
 
 #: include/ext/noalyss-timesheet/template/admin-menu.php:171
 msgid "Projets"
-msgstr ""
+msgstr " Projects"
 
 #: include/database.item.php:251
 msgid "Proposition"
@@ -14249,7 +14228,7 @@ msgstr ""
 #: include/ext/noalyss_document/class/document_operation.php:42
 #: include/ext/noalyss_document/template/document_load-display_table.php:154
 msgid "Prêt"
-msgstr ""
+msgstr " Ready"
 
 #: include/template/todo_list_display.php:70
 msgid "Public"
@@ -14274,7 +14253,7 @@ msgstr "Then perform the install procedure to upgrade the database"
 #: include/ext/rash/class/Child.php:70
 #: include/ext/rash/ajax/ajax_benefit.php:51
 msgid "Père"
-msgstr ""
+msgstr " Father"
 
 #: include/class/acc_ledger_sale.class.php:1822
 #: include/class/acc_ledger_purchase.class.php:2244
@@ -14456,7 +14435,7 @@ msgstr "Quick_code"
 
 #: include/database.item.php:198
 msgid "RASH"
-msgstr ""
+msgstr "RASH"
 
 #: include/database.item.php:200
 #, fuzzy
@@ -14488,7 +14467,7 @@ msgstr "Refresh"
 
 #: include/XMLDocument/xml_reader.class.php:526
 msgid "Raison"
-msgstr ""
+msgstr " Reason"
 
 #: include/class/card_property.class.php:182
 msgid "Rappel: Poste créé automatiquement à partir de "
@@ -14576,7 +14555,7 @@ msgstr "Search &#x1F50E;"
 
 #: include/ajax/ajax_search_peppol.php:68
 msgid "Recherche PEPPOL Directory"
-msgstr ""
+msgstr " PEPPOL Directory Search"
 
 #: include/ajax/ajax_anc_search.php:38
 msgid "Recherche activité"
@@ -14716,7 +14695,7 @@ msgstr "Rejected"
 #: include/ext/rash/template/pedagocical_followup-input.php:111
 #: include/ext/rash/template/financial_followup-input.php:82
 msgid "Remarque"
-msgstr ""
+msgstr " Noticed"
 
 #: include/ajax/ajax_search_filter.php:156
 msgid "Remise à zéro"
@@ -14909,7 +14888,7 @@ msgstr "Reconciliation %s"
 #: include/ext/noalyss-timesheet/include/Employee/employee_schedule.class.php:199
 #, php-format
 msgid "Récup  %s"
-msgstr ""
+msgstr " Recovery %s"
 
 #: include/template/anticipation-display.php:104
 msgid "Réel"
@@ -15083,7 +15062,7 @@ msgstr "inexistent rate"
 
 #: include/ext/tva/class/ext_list_intra.class.php:337
 msgid "S/L/T"
-msgstr ""
+msgstr " S/L/T"
 
 #: include/class/follow_up.class.php:1951
 msgid "SECURITE : Ajout impossible"
@@ -15106,7 +15085,7 @@ msgstr "First day of the week"
 
 #: include/database.item.php:158
 msgid "Saisie présence"
-msgstr ""
+msgstr " Attendance entry"
 
 #: include/ext/ohada/include/data/data_financial.class.php:63
 #: include/database.item.php:288
@@ -15280,7 +15259,7 @@ msgstr "Select your language"
 #: include/ext/noalyss-timesheet/template/employee_schedule-display_week.php:51
 #, php-format
 msgid "Sem %s"
-msgstr ""
+msgstr " Sem %s"
 
 #: include/ext/rash/ajax/ajax_schedule_watch_input.php:31
 #: include/ext/rash/template/schedule_watch-display_month.php:93
@@ -15290,7 +15269,7 @@ msgstr "Domain "
 
 #: include/ext/rash/template/schedule_watch-display_month.php:63
 msgid "Sept."
-msgstr ""
+msgstr " Seven."
 
 #: include/class/periode.class.php:685
 msgid "Septembre"
@@ -15408,11 +15387,11 @@ msgstr ""
 
 #: include/ext/tva/template/ext_tva+display_detail_amount.php:69
 msgid "Signe"
-msgstr ""
+msgstr " Sign"
 
 #: include/ext/tva/class/ext_tva.class.php:520
 msgid "Simple PDF"
-msgstr ""
+msgstr " Simple PDF"
 
 #: include/ext/rash/template/pedagocical_followup-input.php:84
 #: include/ext/rash/template/beneficiary-listing.php:36
@@ -15428,7 +15407,7 @@ msgstr "website"
 
 #: include/database.item.php:179
 msgid "Skeleton for plugin"
-msgstr ""
+msgstr " Skeleton for plugin"
 
 #: include/template/xmlinvoice-display_error.php:55
 #: include/template/contact-summary.php:17
@@ -15574,15 +15553,15 @@ msgstr "Status"
 
 #: include/ext/rash/raw.php:100
 msgid "Status motif entrée auteur"
-msgstr ""
+msgstr " Status pattern entry author author"
 
 #: include/ext/rash/raw.php:99
 msgid "Status motif entrée enfant"
-msgstr ""
+msgstr " Status pattern child entry"
 
 #: include/ext/rash/raw.php:98
 msgid "Status motif entrée victime"
-msgstr ""
+msgstr " Status: Reason for entry victim"
 
 #: include/ext/rash/template/beneficiary-input.php:395
 #: include/ext/rash/template/beneficiary-input.php:445
@@ -15592,7 +15571,7 @@ msgstr "Status"
 
 #: include/ext/noalyss_document/template/document_load-display_table.php:222
 msgid "Statut Prêt"
-msgstr ""
+msgstr "Loan Status"
 
 #: include/database.item.php:94 include/database.item.php:176
 msgid "Stock"
@@ -15647,7 +15626,7 @@ msgstr "Followed Supplier, customer, bank, quote, order, mail"
 
 #: include/ext/rash/template/beneficiary-input.php:43
 msgid "Suivi Pédagogique"
-msgstr ""
+msgstr " Educational Monitoring"
 
 #: include/database.item.php:102
 msgid "Suivi administration, banque"
@@ -15685,7 +15664,7 @@ msgstr "Amortization accounting"
 
 #: include/ext/rash/template/pedagocical_followup-input.php:28
 msgid "Suivi pédagogique"
-msgstr ""
+msgstr " Educational monitoring"
 
 #: include/ext/invoicing/template/recorded_message_list.php:27
 #: include/ext/invoicing/template/recorded_message_display.php:24
@@ -15825,7 +15804,7 @@ msgstr "Invalid separator"
 #: include/ext/ohada/include/amortization.class.php:38
 #: include/ext/ohada/include/amortization.class.php:39
 msgid "TABLEAU SMT DE SUIVI DU MATERIEL, DU MOBILIER ET DES CAUTIONS"
-msgstr ""
+msgstr " SMT TRACKING TABLE FOR EQUIPMENT, FURNITURE AND SECURITY DEPOSITS"
 
 #: include/class/document_export.class.php:313
 msgid "TKPDF n'est pas installé"
@@ -15833,7 +15812,7 @@ msgstr "TKPDF is not installed"
 
 #: include/ext/alchimerys_peppol_synchro/template/peppol_parameter+input.php:32
 msgid "TOKEN"
-msgstr ""
+msgstr " TOKEN"
 
 #: include/compta_fin_saldo.inc.php:156 include/class/invoice_pdf.class.php:307
 msgid "TOTAUX"
@@ -16170,7 +16149,7 @@ msgstr "Used rate"
 #: include/XMLDocument/xml_reader.class.php:557
 #: include/ext/ohada/include/data/data_financial.class.php:64
 msgid "Taxe"
-msgstr ""
+msgstr " Tax"
 
 #: include/class/invoice_pdf.class.php:145
 #: include/ext/rash/template/beneficiary-input.php:90
@@ -16180,15 +16159,15 @@ msgstr "Total"
 
 #: include/ext/rash/template/beneficiary-input.php:304
 msgid "Tel médecin traitant"
-msgstr ""
+msgstr " This attending physician"
 
 #: include/ext/noalyss-timesheet/include/Export/csv_timesheet.class.php:98
 msgid "Temps heure"
-msgstr ""
+msgstr " Time hour"
 
 #: include/ext/noalyss-timesheet/include/Export/csv_timesheet.class.php:97
 msgid "Temps min."
-msgstr ""
+msgstr " Minimum time."
 
 #: include/ext/noalyss-timesheet/include/Export/csv_timesheet.class.php:99
 #, fuzzy
@@ -16201,7 +16180,7 @@ msgstr "Elapsed time"
 
 #: include/template/mail_parameter-input.php:38
 msgid "Test"
-msgstr ""
+msgstr " Test"
 
 #: include/ajax/ajax_email_setting.php:57
 #, fuzzy
@@ -16234,7 +16213,7 @@ msgstr "Text surrounded by"
 
 #: include/database.item.php:185
 msgid "Thierry Nancy"
-msgstr ""
+msgstr " Thierry Nancy"
 
 #: include/ajax/ajax_preference.php:95
 msgid "Thème"
@@ -16468,7 +16447,7 @@ msgstr "Total entries"
 #: include/template/impress_reconciliation.php:91
 #, php-format
 msgid "Total opération liée : %.2f Delta %.2f"
-msgstr ""
+msgstr " Total related operation: %.2f Delta %.2f"
 
 #: include/class/print_ledger_fin.class.php:77
 msgid "Total page"
@@ -16673,7 +16652,7 @@ msgstr "All entries"
 msgid ""
 "Toutes les requêtes sont enregistrées, les enregistrements peuvent devenir "
 "très volumineux."
-msgstr ""
+msgstr " All requests are logged, and the logs can become very large."
 
 #: include/template/ledger_search.php:142
 #: include/template/action_search.php:134
@@ -16883,7 +16862,7 @@ msgstr "The subject is mandatory"
 
 #: include/XMLDocument/error_message.class.php:79
 msgid "Type de société (SRL,ASBL,...)"
-msgstr ""
+msgstr "Type of company (SRL, ASBL,...)"
 
 #: include/balance_age.inc.php:53
 msgid "Type de tiers"
@@ -17002,7 +16981,7 @@ msgstr "Phone"
 
 #: include/class/noalyss_parameter_folder.class.php:248
 msgid "UBL21 Belgique"
-msgstr ""
+msgstr " UBL21 Belgium"
 
 #: include/ext/noalyss-portal-client/template/ajax_customer_login_add.php:37
 #: include/menu.inc.php:112
@@ -17015,11 +16994,11 @@ msgstr "A PDF by operation"
 
 #: include/class/tva_rate_mtable.class.php:470
 msgid "Un code d'exemption de TVA doit être fourni, voyez le manuel"
-msgstr ""
+msgstr " A VAT exemption code must be provided; see the manual."
 
 #: include/user_detail.inc.php:147
 msgid "Un email sera envoyé avec un lien pour initialiser 2FA avec OTP"
-msgstr ""
+msgstr " An email will be sent with a link to initiate 2FA with OTP."
 
 #: include/lib/message_javascript.php:99
 msgid "Un instant"
@@ -17150,7 +17129,7 @@ msgstr "Unknown type"
 
 #: include/ext/rash/template/beneficiary-input.php:360
 msgid "Urgent"
-msgstr ""
+msgstr " Urgent"
 
 #: html/user_login.php:134 include/audit_log.php:37
 #: include/ext/rash/class/Social_Worker_MTable.php:37
@@ -17302,11 +17281,11 @@ msgstr "Local admin"
 
 #: include/ext/rash/raw.php:126
 msgid "VA Crime Honneur"
-msgstr ""
+msgstr " VA Crime Honour"
 
 #: include/ext/rash/raw.php:120
 msgid "VA Eco"
-msgstr ""
+msgstr " VA Eco"
 
 #: include/ext/rash/raw.php:119
 #, fuzzy
@@ -17315,7 +17294,7 @@ msgstr "Unknown"
 
 #: include/ext/rash/raw.php:127
 msgid "VA Mariage Forcé"
-msgstr ""
+msgstr " VA Forced Marriage"
 
 #: include/ext/rash/raw.php:125
 #, fuzzy
@@ -17324,19 +17303,19 @@ msgstr "Autoreverse"
 
 #: include/ext/rash/raw.php:118
 msgid "VA Physique"
-msgstr ""
+msgstr " VA Physics"
 
 #: include/ext/rash/raw.php:122
 msgid "VA Psycho"
-msgstr ""
+msgstr " VA Psycho"
 
 #: include/ext/rash/raw.php:121
 msgid "VA Sexuel"
-msgstr ""
+msgstr " VA Sexual"
 
 #: include/ext/rash/raw.php:124
 msgid "VA Verbale"
-msgstr ""
+msgstr " VA Verbal"
 
 #: include/ext/rash/raw.php:113
 #, fuzzy
@@ -17350,7 +17329,7 @@ msgstr "Other"
 
 #: include/ext/rash/raw.php:110
 msgid "VF Eco"
-msgstr ""
+msgstr " VF Eco"
 
 #: include/ext/rash/raw.php:116
 #, fuzzy
@@ -17359,15 +17338,15 @@ msgstr "Unknown"
 
 #: include/ext/rash/raw.php:112
 msgid "VF Psycho"
-msgstr ""
+msgstr " VF Psycho"
 
 #: include/ext/rash/raw.php:111
 msgid "VF Sexuelle"
-msgstr ""
+msgstr "VF Sexual"
 
 #: include/ext/rash/raw.php:114
 msgid "VF Verbale"
-msgstr ""
+msgstr " VF Verbale"
 
 #: html/install.php:746
 #, php-format
@@ -17386,23 +17365,23 @@ msgstr "Other"
 
 #: include/ext/rash/raw.php:102
 msgid "VP Econo"
-msgstr ""
+msgstr " VP Econo"
 
 #: include/ext/rash/raw.php:103
 msgid "VP Physique"
-msgstr ""
+msgstr " VP Physics"
 
 #: include/ext/rash/raw.php:105
 msgid "VP Psycho"
-msgstr ""
+msgstr " VP Psycho"
 
 #: include/ext/rash/raw.php:104
 msgid "VP Sexuelle"
-msgstr ""
+msgstr " VP Sexual"
 
 #: include/ext/rash/raw.php:107
 msgid "VP Verbale"
-msgstr ""
+msgstr " VP Verbal"
 
 #: include/ext/amortis/include/amortissement_material_pdf.class.php:42
 msgid "Val. Comptable Net"
@@ -17470,7 +17449,7 @@ msgstr "View"
 
 #: include/database.item.php:171
 msgid "Validation d'un formulaire reçu depuis Internet"
-msgstr ""
+msgstr " Validation of a form received from the Internet"
 
 #: include/ext/import-advanced/template/operation_result.php:197
 msgid "Valide et non transfèré"
@@ -17579,6 +17558,8 @@ msgid ""
 "commentaires sont de simples informations, elles  ne changeront pas les "
 "heures saisies."
 msgstr ""
+" Breakdown with comments of your hours on this project code. These comments"
+" are simply informational and will not change the hours entered."
 
 #: include/ext/noalyss-timesheet/include/Export/csv_timesheet.class.php:101
 #, fuzzy
@@ -17634,7 +17615,7 @@ msgstr "Please reconnect from another tab or by clicking on the link"
 
 #: include/ext/rash/template/beneficiary-input.php:400
 msgid "Victime"
-msgstr ""
+msgstr " Victim"
 
 #: include/template/follow_up-display.php:121
 msgid "VideoConf"
@@ -17660,11 +17641,11 @@ msgstr "Adding others"
 
 #: include/ext/rash/raw.php:109
 msgid "Violence Familiale Physique"
-msgstr ""
+msgstr " Physical Domestic Violence"
 
 #: include/ext/rash/raw.php:101
 msgid "Violence Partenaire Inconnu "
-msgstr ""
+msgstr " Violence, Unknown Partner"
 
 #: include/ext/rash/template/beneficiary-input.php:393
 #, fuzzy
@@ -17678,7 +17659,7 @@ msgstr "Adding others"
 
 #: include/ext/rash/template/beneficiary-input.php:424
 msgid "Violences familiales"
-msgstr ""
+msgstr " Domestic violence"
 
 #: include/ext/noalyss-export/class/export/export.class.php:119
 msgid "Virgule"
@@ -17763,6 +17744,7 @@ msgid ""
 "Voulez-vous envoyer les emails grâce à un serveur SMTP ou en local avec "
 "sendmail"
 msgstr ""
+" Do you want to send emails via an SMTP server or locally with sendmail?"
 
 #: include/bank.inc.php:43 include/adm.inc.php:44 include/supplier.inc.php:44
 #: include/contact.inc.php:52 include/customer.inc.php:49
@@ -17960,6 +17942,8 @@ msgid ""
 "un document vide, ce qui vous permettra de saisir une opération sans "
 "document "
 msgstr ""
+" You can select multiple documents; if none are selected, an empty document"
+" will be created, allowing you to enter a transaction without a document."
 
 #: include/ajax/ajax_search_account_card.php:59
 msgid ""
@@ -18085,7 +18069,7 @@ msgstr "Service"
 
 #: include/database.item.php:174
 msgid "WebService Setting"
-msgstr ""
+msgstr " WebService Setting"
 
 #: include/database.item.php:175
 #, fuzzy
@@ -18099,7 +18083,7 @@ msgstr "Windows CP1252"
 
 #: include/class/acc_document.class.php:392
 msgid "XML"
-msgstr ""
+msgstr " XML"
 
 #: include/class/tva_rate_mtable.class.php:198
 #, fuzzy
@@ -18117,7 +18101,7 @@ msgstr "[%s]"
 
 #: include/ext/noalyss-timesheet/include/Admin/scheduler.class.php:103
 msgid "[sch83] Heure par semaine n'a pas été donné"
-msgstr ""
+msgstr " [sch83] Hours per week was not given"
 
 #: include/class/acc_ledger_sale.class.php:212
 msgid "] n'existe pas"
@@ -18172,7 +18156,7 @@ msgstr "Warning: by default, the accounting item Will Be"
 
 #: include/template/mail_parameter-input.php:85
 msgid "adresse  par défaut email  de l'expéditeur"
-msgstr ""
+msgstr " default sender's email address"
 
 #: include/class/acc_ledger_info.class.php:52
 msgid "appel incorrect"
@@ -18678,7 +18662,7 @@ msgstr "the template"
 
 #: include/ext/rash/template/schedule_watch-display_form_week.php:52
 msgid "le parent à la garde "
-msgstr ""
+msgstr " the parent with custody"
 
 #: include/lib/message_javascript.php:67
 msgid ""
@@ -18790,7 +18774,7 @@ msgstr "You must select at least one row"
 
 #: include/ext/rash/template/beneficiary-input.php:295
 msgid "médecin traitant"
-msgstr ""
+msgstr " general practitioner"
 
 #: include/class/acc_ledger_sale.class.php:194
 #: include/class/acc_ledger_sale.class.php:243
@@ -18873,7 +18857,7 @@ msgstr "Invalide "
 
 #: include/XMLDocument/xml_reader.class.php:592
 msgid "note"
-msgstr ""
+msgstr " note"
 
 #: include/ext/importbank/include/template/show_import.php:20
 msgid "num transfert"
@@ -18920,7 +18904,7 @@ msgstr "receipt #"
 
 #: include/ext/tva/template/ext_tva+display_detail_amount.php:40
 msgid "négatif"
-msgstr ""
+msgstr " negative"
 
 #: include/company.inc.php:72
 msgid "obligatoire"
@@ -19126,7 +19110,7 @@ msgstr "Ref"
 
 #: include/ext/noalyss-portal-client/include/nv-annonce.inc.php:31
 msgid "register : version too low "
-msgstr ""
+msgstr " register: version too low"
 
 #: html/install.php:448
 msgid "register_globals doit être à off"
@@ -19134,7 +19118,7 @@ msgstr "register_globals must be set to off"
 
 #: include/ext/rash/template/beneficiary-input.php:478
 msgid "remarque"
-msgstr ""
+msgstr " REMARK"
 
 #: include/class/print_ledger_fin.class.php:59
 msgid "report"
@@ -19172,7 +19156,7 @@ msgstr "Save"
 
 #: include/ext/noalyss-timesheet/include/Admin/scheduler.class.php:113
 msgid "sch121 : Aucune date de début pour cet utilisateur"
-msgstr ""
+msgstr " sch121: No start date for this user"
 
 #: include/ext/rash/template/schedule_watch-display_form_week.php:57
 #, fuzzy
@@ -19283,7 +19267,7 @@ msgstr "Status"
 #: include/ext/noalyss_document/template/document_load-display_recap.php:72
 #, php-format
 msgid "suivi [%s]"
-msgstr ""
+msgstr " tracking [%s]"
 
 #: include/ext/invoicing/include/invoice_send_mail.inc.php:184
 msgid "sujet"
@@ -19322,7 +19306,7 @@ msgstr "Tiers"
 
 #: include/ext/noalyss_document/template/document_load-display_table.php:81
 msgid "title"
-msgstr ""
+msgstr " title"
 
 #: include/template/form_ledger_detail.php:116
 #: include/template/predf_ledger_detail.php:23
@@ -19382,7 +19366,7 @@ msgstr "unknown type of ledger"
 
 #: include/ext/rash/raw.php:85
 msgid "urgent"
-msgstr ""
+msgstr " urgent"
 
 #: include/ajax/ajax_preference.php:264
 msgid "utf8"
@@ -19420,12 +19404,12 @@ msgstr "comma"
 
 #: include/database.item.php:179
 msgid "votre nom"
-msgstr ""
+msgstr " your name"
 
 #: include/ext/noalyss_document/ajax/ajax_validate_operation.php:144
 #, php-format
 msgid "voulez-vous que les opérations avant %s soient mises au %s ?"
-msgstr ""
+msgstr " Do you want the transactions before %s to be put into %s?"
 
 #: include/ajax/ajax_get_profile.php:95 include/ajax/ajax_get_profile.php:104
 msgid "vous confirmez"
