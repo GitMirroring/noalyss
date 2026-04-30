@@ -373,7 +373,7 @@ if ($sa == 'list')
 		<TABLE>
 			<tr>
 				<td><?php echo _('Nom')?> </TD>
-				<TD><INPUT TYPE="TEXT"  class="input_text"  VALUE="" NAME="FMOD_NAME"></TD>
+				<TD><INPUT TYPE="TEXT"  class="input_text"  VALUE="" NAME="FMOD_NAME" size="60"></TD>
 			</TR>
 			<TR>
 				<TD><?php echo _('Description')?></TD>
@@ -404,7 +404,14 @@ if ($sa == 'list')
 		<?php echo _("Effacement de toutes les donn&eacute;es des plugins")?>
 	</li>
         </ol>
-  <INPUT TYPE="SUBMIT" class="button" VALUE="<?php echo _("Ajout d'un modele")?>" >
+             <ul class="aligned-block">
+            <li>
+                 <INPUT TYPE="SUBMIT" class="button" VALUE="<?php echo _("Ajout d'un modele")?>" >
+            </li>
+            <li>
+                <INPUT TYPE=BUTTON class="button" VALUE="<?php echo _('Fermer'); ?>" onclick="$('folder_add_id').hide();return false;">
+            </li>
+        </ul>
 </form>
 </div>
 		<?php
