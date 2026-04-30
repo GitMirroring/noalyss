@@ -175,6 +175,13 @@ class Manage_Table_SQL
         $this->cssclass="inner_box";
         
     }
+    /**
+     * @brief returns an array of errors : key= column  name
+     * @return type
+     */
+    function get_aerror() {
+        return $this->aerror;
+    }
     function setCssClass($p_class) {
 		$this->cssclass=$p_class;
 	}
