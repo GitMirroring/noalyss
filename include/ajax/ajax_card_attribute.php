@@ -42,7 +42,7 @@ try
 }
 catch (Exception $ex)
 {
-    record_log("ACA01".$ex->getMessage().$ex->getTraceAsString());
+    record_log($ex);
 }
 
 if ($action=="enable_search")
