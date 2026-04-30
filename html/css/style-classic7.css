@@ -4391,3 +4391,10 @@ span.nb-round {
 .field_follow_up {
     background-color: var(--bg-white);
 }
+
+.inner_box textarea.itextarea,
+.inner_box2 textarea.itextarea
+{
+    width:100%;
+    margin:0;
+}

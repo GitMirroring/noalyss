@@ -1180,7 +1180,7 @@ function check()
     function input()
     {
         $nb_order=count($this->a_order);
-        echo "<table>";
+        echo "<table style=\"width:100%\">";
         for ($i=0; $i<$nb_order; $i++)
         {
             echo "<tr>";
