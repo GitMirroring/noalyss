@@ -50,6 +50,7 @@ class InvoiceUBL21Test extends TestCase {
     function testBuild_Data() {
         $cn = \Dossier::connect();
         $ublinvoice21 = new \Noalyss\XMLDocument\InvoiceUBL21($cn);
+        $this->assertTrue($ublinvoice21->get_data()==[],"Data is not empty");
     }
     
     /**
@@ -170,6 +171,6 @@ class InvoiceUBL21Test extends TestCase {
         $ublinvoice21->build_data(2);
         $customer = $ublinvoice21->get_data()['customer'];
          $a_error=$ublinvoice21->check_customer_data($customer['card_id']);
-        $this->assertTrue(count($a_error) ==6 , " nb of errors incorrect ".print_r($a_error,true));
+        $this->assertTrue(count($a_error) ==7 , " nb of errors incorrect ".print_r($a_error,true));
     }
 }

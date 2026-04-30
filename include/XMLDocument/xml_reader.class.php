@@ -532,33 +532,40 @@ abstract class XML_Reader
          */
         $pdf->setFont("DejaVu", "B", 12);
         $pdf->SetTextColor(0,0,127);
-        $pdf->write_cell(60, 4, _("Articles"));
+        $pdf->write_cell(50, 4, _("Articles"));
         $pdf->line_new(6);
         $pdf->SetTextColor(0,0,0);
         $pdf->setFont("DejaVu", "", 7);
         $result = $this->get_invoiceLine();
-        $pdf->write_cell(50, 4, _("Code"), border: 'B');
-        $pdf->write_cell(60, 4, _("Description"), border: 'B');
+        $pdf->write_cell(40, 4, _("Code"), border: 'B');
+        $pdf->write_cell(50, 4, _("Description"), border: 'B');
         $pdf->write_cell(20, 4, _("TVA"), border: 'B', align: 'R');
         $pdf->write_cell(20, 4, _("Prix unitaire"), border: 'B', align: 'R');
         $pdf->write_cell(20, 4, _("Quantité"), border: 'B', align: 'R');
         $pdf->write_cell(20, 4, _("Montant HT"), border: 'B', align: 'R');
+        $pdf->write_cell(20, 4, _("TVAC"), border: 'B', align: 'R');
         $pdf->line_new();
         
         $nb_inline = count($result);
         for ($i = 0; $i < $nb_inline; $i++)
         {
             if ( $result[$i]['description'] == '') {
-                $pdf->write_multi(110, 4, $result[$i]['name']);
+                $pdf->write_multi(90, 4, $result[$i]['name']);
             }else {
-                $pdf->write_multi(50, 4, $result[$i]['name']);
-                $pdf->write_multi(60, 4, $result[$i]['description']);
+                $pdf->write_multi(40, 4, $result[$i]['name']);
+                $pdf->write_multi(50, 4, $result[$i]['description']);
             }
             $pdf->write_cell(20, 4, $result[$i]['tva_percent'], align: 'R');
             //$pdf->write_cell(5, 4, $result[$i]['tva_id']);
             $pdf->write_cell(20, 4, $result[$i]['unit_price'], align: 'R');
             $pdf->write_cell(20, 4, $result[$i]['quantity'], align: 'R');
             $pdf->write_cell(20, 4, nbm($result[$i]['amount']), align: 'R');
+            /// @var $t (float) amount VAT included
+            $t= bcmul($result[$i]['amount'],
+                    bcdiv($result[$i]['tva_percent'],100,4),4);
+            $t=bcadd($result[$i]["amount"],$t,4);
+            $t=round($t,2);
+            $pdf->write_cell(20, 4, nbm($t), align: 'R');
             $pdf->line_new();
         }
         $pdf->line_new(10);

@@ -1233,9 +1233,29 @@ div.topmenu {
     position:absolute;
     text-align:left;
     z-index:1;
-    width:480px;
-    width:30rem;
+    width:100%;
     height:auto;
+}
+
+@media (min-width: 576px) {
+
+}
+/* MeDium */
+@media (min-width: 768px) {
+    #add_todo_list , div.add_todo_list{
+      
+    } 
+}
+/* LarGe */
+@media (min-width: 992px) {
+    #add_todo_list , div.add_todo_list {
+        width:480px;
+        width:30rem;
+    }
+}
+/* eXtraLarge */
+@media (min-width: 1200px) {
+
 }
 div.welcome {
 
@@ -3072,7 +3092,6 @@ span.warning {
  }
  li.tab_row_selected {
      display:block;
-     width:96%;
      background: #C2E3FC; /* Old browsers */
      background: -moz-linear-gradient(top, #C2E3FC 0%, #6393c1 100%); /* FF3.6+ */
      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#C2E3FC), color-stop(100%,#6393c1)); /* Chrome,Safari4+ */
@@ -3171,6 +3190,9 @@ margin-left: 2px;
      border-color: #879ed4;
      border-width: 1px;
      border-style: solid;
+    border-radius: 10px;
+    padding: 20px 15px 15px 20px;
+    margin: 20px 15px 15px 15px;
  }
 span.tab_row {
     font-style: italic;

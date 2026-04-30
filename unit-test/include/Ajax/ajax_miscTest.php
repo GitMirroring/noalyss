@@ -147,8 +147,9 @@ class Ajax_MiscTest extends TestCase
         );
 
         $_REQUEST = $_POST = $_GET = $query;
+        
         ob_start();
-        require NOALYSS_HOME . '/fid.php';
+        include NOALYSS_HOME . '/fid.php';
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -156,10 +157,41 @@ class Ajax_MiscTest extends TestCase
 {"flabel":"e_march4_label","name":"Inserted by PHPUNIT-Ajax_MiscTest:createCard_MA1 ","ftva_id":"e_march4_tva_id","tva_id":"210A","fPrice_sale":"e_march4_price","sell":"0","fPrice_purchase":"e_march4_price","buy":"0","answer":"ok"}
 EOF;
 
-        $this->assertEquals($expected, $content, "Incorrect answer");
+        $this->assertEquals($expected, $content, "Incorrect answer $content");
 
         // clean card
         $this->cleanCard($fiche->id);
+    }
+    
+    public function testComputeQRCODE()
+    {
+        $_POST['secret']="QJPJXHOJ77B76WYEFURCSHRMVI7JC7FBRJA2QH34T4SXANVQUDYA";
+        $_POST['action']="qr_refresh";
+        ob_start();
+        include NOALYSS_HOME."/compute.php";
+        $x= ob_get_contents();
+        ob_end_clean();
+        $this->assertTrue($x==floatval($x),"Invalid return $x");
+    }
+    public function testCompute1()
+    {
+        $_POST=$_REQUEST=$_GET=array (
+        'gDossier' => DOSSIER,
+        'c'=>'PORA',
+        't'=>1,
+        'p'=>600,
+        'q'=>1,
+        'n'=>0,
+        'other_tax_id' => -1
+      );
+        
+        ob_start();
+        include NOALYSS_HOME."/compute.php";
+        $content = ob_get_contents();
+        ob_end_clean();
+        $expected='{"ctl":0,"htva":600,"tva":126,"tvac":"726.0000","other_tax":0}'."\n";
+
+        $this->assertEquals($expected, $content, "Incorrect answer $content");
     }
 
 }
