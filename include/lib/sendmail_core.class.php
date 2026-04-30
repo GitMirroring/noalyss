@@ -52,6 +52,7 @@ class Sendmail_Core
                             // for postfix, it should be "-f {$this->from}" for the Return-Path
     protected $phpmailer;   //!< PHPMailer object;
     protected $blind_copy;   //!< email of blind copy (list of emails separated by comma)
+    protected $reply_to; //!< reply to 
                                    
     function __construct()
     {
@@ -231,7 +232,9 @@ class Sendmail_Core
         {
              $this->phpmailer->addBCC($a_blind_copy[$i]);
         }
-        
+        if ( ! empty ($this->reply_to)) {
+            $this->phpmailer->addReplyTo($this->reply_to);
+        }
         $this->phpmailer->preSend();
        
     }
