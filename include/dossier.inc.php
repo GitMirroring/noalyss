@@ -344,7 +344,7 @@ if ( $sa == 'list' )
                  <TABLE>
                  <TR>
                  <TD><?php echo _('Nom du dossier');
-    ?></td><td>  <INPUT TYPE="TEXT" class="input_text" NAME="DATABASE"> </TD>
+    ?></td><td>  <INPUT TYPE="TEXT" class="input_text" NAME="DATABASE" SIZE="60"> </TD>
                                          </TR><TR>
                                          <TD><?php echo _('Description');
     ?></td><td>  <TEXTAREA  class="input_text"  COLS="60" ROWS="2" NAME="DESCRIPTION" ></TEXTAREA> </TD>
@@ -366,12 +366,16 @@ if ( $sa == 'list' )
     ?></td><td>  <?php   echo $template;
     ?> </TD></TR>
     <TR><TD><?php echo _('Année')?> </TD><TD><input  class="input_text"  type="text" size=4 name="YEAR" value=<?php  echo '"'.$m_date.'"'; ?>></TD></TR>
-    <TR>
-    <TD> <INPUT TYPE=SUBMIT class="button" VALUE="<?php echo _('Creation Dossier'); ?>"> </TD>
-                                              <td>
-    </td>
-    </TR>
     </TABLE>
+        <ul class="aligned-block">
+            <li>
+                <INPUT TYPE=SUBMIT class="button" VALUE="<?php echo _('Creation Dossier'); ?>"> 
+            </li>
+            <li>
+                <INPUT TYPE=SUBMIT class="button" VALUE="<?php echo _('Fermer'); ?>" onclick="$('folder_add_id').hide();return false;">
+            </li>
+        </ul>
+
     </FORM>
     <?php
 
