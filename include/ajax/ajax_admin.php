@@ -230,6 +230,7 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
         echo HtmlInput::hidden('action', 'dossier_mgt');
         echo HtmlInput::hidden('d', $dos->get_parameter("id"));
         echo _('Nom').' : ';
+        $wText->size=60;
         echo $wText->input('name', $dos->get_parameter('name'));
         echo '<br>';
         $wDesc=new ITextArea();
@@ -334,6 +335,7 @@ if (in_array($op, array('modele_drop', 'modele_modify', 'folder_modify', 'folder
                 "select mod_desc from modeledef where ".
                 " mod_id=$1", array($dossier));
         $wText=new IText();
+        $wText->size=60;
         echo 'Nom : '.$wText->input('name', $name);
         $wDesc=new ITextArea();
         $wDesc->heigh=5;
