@@ -53,7 +53,7 @@ if ($http->post("action","string","xx")=="qr_refresh") {
         echo $authenticator->compute_code($secret);
          
      } catch (Exception $exc) {
-         record_log("refresh BarCode invalide");
+         record_log($exc);
      }
     return;
 
