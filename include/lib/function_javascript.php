@@ -2785,7 +2785,7 @@ EOF;
     echo js_include('noalyss_checkbox.js');
     echo js_include('tinymce/tinymce.min.js');
     
-     if (DEBUGNOALYSS > 1) {
+     if (DEBUGNOALYSS > 0) {
          echo js_include('noalyss_debug.js');
      }
     echo '<script src="export.php?loadjs=message"  type="text/javascript" charset="utf-8"></script>';

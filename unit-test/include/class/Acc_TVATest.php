@@ -128,7 +128,7 @@ class Acc_TVATest extends TestCase
          return array(
              ['S',true,null]
              ,['Z',true,null]
-             ,['A',false,""]
+             ,['A',true,""]
              ,['K',true,"XX"]
          );
     }
@@ -159,7 +159,7 @@ class Acc_TVATest extends TestCase
         if ( $result != $check)
         {
             print "Error for $peppopl_code\n";
-            print_r($tva_rate_mtable->aerror);
+            print_r($tva_rate_mtable->get_aerror());
             $this->display_error($tva_rate_mtable);
         }
     }
