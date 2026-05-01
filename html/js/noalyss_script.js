@@ -4313,7 +4313,7 @@ function event_display_detail(p_dossier, p_detail) {
 function event_display_main(p_dossier) {
     try {
         waiting_box();
-        var dgbox = "situation_div";
+        var dgbox = "so_event_main_id";
         var queryString = {gDossier: p_dossier, op: 'event_display_detail', 'what': "main_display"};
         var action = new Ajax.Request(
             "ajax_misc.php",
