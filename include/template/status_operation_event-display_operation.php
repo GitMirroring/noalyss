@@ -29,6 +29,7 @@ echo HtmlInput::title_box($p_title, $this->dialog_box_id,"close","","y")
             <table class="result">
                 <tr>
                     <th><?php echo _('Date')?></th>
+                    <th><?php echo _('Ech.')?></th>
                     <th><?php echo _('Code Interne')?></th>
                     <th><?php echo _('Pièce')?></th>
                     <th><?php echo _('Tiers')?></th>
@@ -55,6 +56,9 @@ echo HtmlInput::title_box($p_title, $this->dialog_box_id,"close","","y")
                     <tr class="<?php echo (($i%2)==0)?'odd':'even';?>">
                         <td>
                             <?php echo smaller_date(format_date($p_array[$i]['jr_date']) );?>
+                        </td>
+                        <td>
+                            <?php echo smaller_date(format_date($p_array[$i]['jr_ech']) );?>
                         </td>
                         <td>
                             <?php echo HtmlInput::detail_op($p_array[$i]['jr_id'], $p_array[$i]['jr_internal']) ?>
