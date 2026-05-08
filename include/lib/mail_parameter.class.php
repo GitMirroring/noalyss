@@ -137,6 +137,31 @@ class Mail_Parameter
      */
     function save()
     {
+        if ( $this->smtp_replyto!="" && filter_var($this->smtp_replyto, FILTER_VALIDATE_EMAIL) == false)
+        {
+            throw new \Exception (_("adresse réponse invalide"),140); ;
+        }
+        if ( $this->smtp_from!="" && filter_var($this->smtp_from, FILTER_VALIDATE_EMAIL) == false)
+        {
+           throw new \Exception (_("adresse expéditeur invalide"),146); 
+        }
+        if ( $this->smtp_type=="sendmail" && defined("ALLOWED_EMAIL_DOMAIN")) 
+        {
+            $a_allowed=explode(",", ALLOWED_EMAIL_DOMAIN);
+            if ($this->smtp_replyto !="" ) {
+                list($m,$domain)=explode("@",$this->smtp_replyto);
+                if (!in_array($domain, $a_allowed)) {
+                   throw new \Exception (_("adresse réponse invalide"),153); 
+                }
+            }
+            if ($this->smtp_from !="" ) {
+                 list($m,$domain)=explode("@",$this->smtp_from);
+                if (!in_array($domain, $a_allowed)) {
+                   throw new \Exception (_("adresse expéditeur invalide"),160); 
+                }
+            }
+        }
+        
         foreach (self::PARAMETER as $key)
         {
             $id = $this->cn->get_value("select pe_id from parm_mail_server 
@@ -235,13 +260,17 @@ class Mail_Parameter
         $this->smtp_auth=1;
         
     }
-    public static function Factory(\Database $cnx,$reply_to="", $blind_copy="")
+    public static function Factory(\Database $cnx,$reply_to="", $blind_copy="",$mail_setting=MAIL_SETTING_NOALYSS)
     {
+        
         $mail_parameter=new Mail_Parameter($cnx,MAIL_SETTING_NOALYSS);
         if ( $mail_parameter->smtp_type=="sendmail") {
-            return new \Sendmail($mail_parameter->smtp_replyto,$mail_parameter->smtp_replyto);
+            $mail=new \Sendmail();
+            $mail->setReplyTo($reply_to)->setBlindCopy($blind_copy);
+            return $mail;
         } elseif ($mail_parameter->smtp_type=="smtp") {
             $phpmail= new SMTPMail($mail_parameter);
+            $phpmail->setReplyTo($reply_to)->setBlindCopy($blind_copy);
             return $phpmail;
         }
         

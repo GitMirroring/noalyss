@@ -74,7 +74,40 @@ class Sendmail_Core
         $this->afile=[];
         
     }
-    public function getSupplemental_param()
+    public function getMailto()
+    {
+        return $this->mailto;
+    }
+
+    public function getBlindCopy()
+    {
+        return $this->blind_copy;
+    }
+
+    public function getReplyTo()
+    {
+        return $this->reply_to;
+    }
+
+    public function setMailto($mailto)
+    {
+        $this->mailto = $mailto;
+        return $this;
+    }
+
+    public function setBlindCopy($blind_copy)
+    {
+        $this->blind_copy = $blind_copy;
+        return $this;
+    }
+
+    public function setReplyTo($reply_to)
+    {
+        $this->reply_to = $reply_to;
+        return $this;
+    }
+
+        public function getSupplemental_param()
     {
         return $this->supplemental_param;
     }
