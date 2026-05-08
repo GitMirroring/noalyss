@@ -4946,7 +4946,15 @@ Noalyss.prototype.save_config_smtp = function ()
                             reconnect();
                             return;
                         }
-                        let json = req.evalJSON();
+                        let json = req.responseJSON;
+                            try {
+                                let json=req.responseJSON;
+                                if (json['status']=='NOK') {
+                                    smoke.alert(json['error']);
+                                }
+                        }catch (e) {
+                            console.error(e)
+                        }
 
 
                     }
@@ -4963,9 +4971,11 @@ Noalyss.prototype.parameter_display_smtp = function ()
     if ($F("smtp_type") == 'smtp') {
         $("smtp_config_div").style.display = "grid";
         $('btn_save1').hide();
+        $('info_snd').hide();
     } else {
         $("smtp_config_div").hide();
         $('btn_save1').show();
+        $('info_snd').show();
 
     }
 };
