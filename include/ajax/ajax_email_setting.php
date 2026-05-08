@@ -75,10 +75,11 @@ if ( $op2 == "save_config_smtp")
                 );
         $mail_parameter->from_post();
         $mail_parameter->save();
-        echo 'OK';
+        echo json_response(["status"=>"OK"])  ;
     } catch (Exception $exc) {
         \record_log($exc);
-        echo 'NOK';
+        echo json_response(["status"=>"NOK","error"=>$exc->getMessage()])  ;
+        
     }
     return;
 }

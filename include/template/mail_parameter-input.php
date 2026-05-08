@@ -80,7 +80,17 @@ $show=($this->smtp_type=="sendmail")?"none":"grid";
                     value="sendmail">Sendmail</option>
             </select>
         </div>
-         
+            <?php $show2=($this->smtp_type == 'sendmail') ? "none" : "block" ;?>    
+          <p id="info_snd" style="display:<?=$show2?>" class="text-muted">
+                
+            <?php
+             if ( defined('ALLOWED_EMAIL_DOMAIN') )
+            {
+                printf("Domaine accepté %s:",ALLOWED_EMAIL_DOMAIN);
+
+            }
+            ?>
+            </p>
         <div>
             <label for="smtp_from"><?= _("adresse  par défaut email  de l'expéditeur") ?></label>
         </div>
