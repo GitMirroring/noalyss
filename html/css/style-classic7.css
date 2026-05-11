@@ -2797,6 +2797,16 @@ td.selectedmenu {
     font-size: max(150%,1.5rem) !important;
    font-variant:regular;
     background-color:transparent;
+     margin-top:0;
+         border-color: navy;
+    border-style: double;
+    font-style:normal;
+     border-color: #879ed4;
+    border-style: solid;
+    font-style:normal;
+    border-radius:5px;
+    border-width:1px;
+     background-color:#dee4eb;
 }
 /* SM */
 @media (min-width: 576px) {
@@ -2812,14 +2822,14 @@ td.selectedmenu {
 
 }
 /* XL */
-@media (min-width: 1200px) {
+@media (min-width: 1300px) {
 #gestion_title {
     float:right;
     margin-right: 5%;
     font-size:150%;
     font-variant: small-caps;
     padding: 13px 20px 13px 20px;
-    margin-top:20px;
+    margin-top:0;
     background-color:#dee4eb;
     color:navy;
     font-size: max(150%,1.5rem) !important;
