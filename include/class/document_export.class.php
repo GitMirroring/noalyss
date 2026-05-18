@@ -347,7 +347,8 @@ class Document_Export
         $receipt=clean_filename($file[0]['jr_pj_number']);
         $receipt=noalyss_str_replace('.','-',$receipt);
         $filename=$receipt.'-'.$filename;
-
+        $filename=str_replace(".PDF",".pdf",$filename);
+        
         $cn->start();
         $cn->lo_export($file[0]['jr_pj'], $this->store_convert.'/'.$filename);
         $cn->commit();
