@@ -282,9 +282,9 @@ td.tool a.mtitle:hover {
      color: navy !important;
  }
  #module .nav-pills a.nav-link {
-     border:1px solid blue;
+     border:1px solid navy;
      margin:1px;
-     border-radius: 0px;
+     border-radius: 3px;
      font-size: 75%;
      color:navy !important;
 
@@ -331,9 +331,10 @@ td.tool a.mtitle:hover {
         border:1px solid transparent;
  }
  #module .nav-item-active , #module .nav-item-active > a.nav-link{
-     background-color: #5d90cd ;
-     color:white !important;
-     border: 0px solid black;
+    background-color: #5d90cd ;
+    color:white !important;
+    border: 1px solid transparent;
+    border-radius: 3px;
  }
  /* animate module : sliding */
  #module .nav-item-module {
