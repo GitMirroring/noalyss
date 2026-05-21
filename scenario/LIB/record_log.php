@@ -42,7 +42,13 @@ function x()
 
 try {
     x();
+
 } catch (\Exception $e) {
 record_log($e);
-
+tracedebug("log",$e);
 }
+    printf("tracedebug in sys_get_temp_dir() = %s", sys_get_temp_dir());
+?>
+<p>
+    Check file in noalyss/log
+    </p>
