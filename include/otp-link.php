@@ -45,6 +45,12 @@ require_once __DIR__ . '/constant.php';
      height:auto;
      margin-left:10px;
 }
+#main_dv {
+    
+    display:flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
 /** small **/
 @media (min-width : 576px) {
     #logo_id {
@@ -74,6 +80,9 @@ require_once __DIR__ . '/constant.php';
     #logo_id {
       
        
+    }
+    #main_dv{
+        flex-direction: row;
     }
 } 
 div.content {
@@ -126,7 +135,7 @@ form {
 }
 </style>
    <img id="logo_id" src="image/logo10000.png" >
-<div class="content" style="display:flex;flex-direction: row;justify-content: space-evenly;">
+<div id="main_dv" class="content" >
 <?php
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
