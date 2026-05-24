@@ -5123,6 +5123,65 @@ VAT_Code.prototype.filter_country=function()
         return false;
     }
 }
+
+/**
+ * Class for Output Html_Tab
+ * @param {type} element_visible
+ * @returns {undefined}
+ */
+Output_Html_Tab = function (class_tab, class_tab_selected, internal_name)
+{
+    this.class_tab = class_tab;
+    this.class_tab_selected = class_tab_selected;
+    this.internal_name=internal_name;
+    this.a_element = document.getElementsByClassName("css"+internal_name)
+    console.debug(this.a_element)
+    if (this.a_element.length == 0) {
+        console.error(`Output_Html_Tab tabs with class [${element_class}] not found`)
+    }
+    this.menu_visible=0
+}
+Output_Html_Tab.prototype.show = function (element_visible)
+{
+     console.debug(this.a_element)
+     console.debug(this.a_element.length)
+     for (let x = 0; x  < this.a_element.length;x++)
+     {
+        var element=this.a_element[x];
+        console.debug(`element loop ${element.id} visible is ${element_visible}`  )
+        if (element.id != "tab"+element_visible ) {
+            console.debug(element.id.substring(3,element.id.length));
+
+            id$("div" + element.id.substring(3,element.id.length)).hide();
+            element.addClassName(this.class_tab)
+        } else {
+            id$("div" + element_visible).show();
+            element.addClassName(this.class_tab_selected)
+            element.removeClassName(this.class_tab)
+        }
+    };
+}
+
+Output_Html_Tab.prototype.show_menu=function ()
+{
+    
+    if ( this.menu_visible == 0)
+    { 
+        id$('mn'+this.internal_name).show();
+        this.menu_visible=1
+        return;
+    }
+    id$('mn'+this.internal_name).hide();
+    this.menu_visible = 0
+    
+}
+Output_Html_Tab.prototype.show_item=function (element_visible)
+{
+    this.show(element_visible);
+    id$('bt'+this.internal_name).innerText = id$("li_"+this.internal_name+"_"+element_visible).innerText;
+    id$('mn'+this.internal_name).hide()
+    this.menu_visible =0
+}
 var noalyss=new Noalyss();
 
 var bookmark=new Bookmark();
