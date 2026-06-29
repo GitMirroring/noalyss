@@ -1394,8 +1394,6 @@ function record_log(...$a_message)
 {
     $date= date ('Y-m-d');
     // variable: $handle_log resource on log file ,
-    $handle_log=fopen(NOALYSS_BASE."/log/noalyss-{$date}.log","a+");
-
     if ( isset ($_SERVER['REMOTE_ADDR']) ) error_log(sprintf("origin %s\n",$_SERVER['REMOTE_ADDR']));
     if ( isset ($_SERVER['HTTP_USER_AGENT']) ) error_log(sprintf("agent  %s\n",$_SERVER['HTTP_USER_AGENT']));
     foreach ($a_message as $p_message )
@@ -1409,8 +1407,8 @@ function record_log(...$a_message)
                 error_log("noalyss exception Trace ".$exc->getTraceAsString(),0);
                 error_log("------ ",0);
                 $exc=$exc->getPrevious();
-                if ($exc != null )fwrite ($handle_log,"*********************** Previous  *********************** \n");
-            } while ($exc != null);
+                if ($exc != null )error_log ("*********************** Previous  *********************** \n");
+                } while ($exc != null);
         }   elseif ( gettype ($var) == 'object' && get_class($var)=='DOMDocument')
             {
                 $var->formatOutput=true;
@@ -1421,9 +1419,10 @@ function record_log(...$a_message)
     
     error_log("noalyss GET [".json_encode($_GET,0,10)."]");
     error_log("_POST [".json_encode($_POST,0,10)."]",0);
+    $handle_log=fopen(NOALYSS_BASE."/log/noalyss-{$date}.log","a+");
     
-    if ($handle_log == false ) return;
-    
+    if ($handle_log == false )    { return;}
+        
     $now=date ('Y-m-d H:i:s');
     fwrite ($handle_log,str_repeat("=", 80)."\n");
     if ( isset ($_SERVER['REMOTE_ADDR']) )    fwrite($handle_log,sprintf("origin %s\n",$_SERVER['REMOTE_ADDR']));
@@ -1451,20 +1450,20 @@ function record_log(...$a_message)
                 if ($exc != null )fwrite ($handle_log,"*********************** Previous  *********************** \n");
             } while ($exc != null);
         } elseif ( gettype ($var) == 'object' && get_class($var)=='DOMDocument')
-          {
-              $var->formatOutput=true;
-              $output.=$var->saveXML() .PHP_EOL;
-          } else {
+            {
+                $var->formatOutput=true;
+                $output.=$var->saveXML() .PHP_EOL;
+            } else {
             fwrite($handle_log,"noalyss".var_export($p_message,true));
             fwrite ($handle_log,"\n");
             
         }
     }
-            
+    
     fwrite ($handle_log,str_repeat("=", 80)."\n");
     fclose($handle_log);
+        
 }
-
 if(!function_exists('tracedebug')) {
   function tracedebug($file,...$a_var) {
 
