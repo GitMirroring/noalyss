@@ -4409,3 +4409,42 @@ span.nb-round {
     width:100%;
     margin:0;
 }
+/**
+ * dropdown menu for TAB
+ */
+ul.nav-tab {
+   padding:5px;
+   margin:0px;
+   
+   background-color:#36649724;
+    
+}
+ul.nav-tab li{
+    list-style: none;
+    display:block;
+}
+
+ul.nav-tab li a{
+    padding-left:10px;
+    text-align: center;
+    text-decoration:none;
+    width: 100%;
+    display: block;
+}
+ul.nav-tab li a:hover,ul.nav-tab li:hover{
+        text-align: center;
+    width: 100%;
+    display: block;
+    background: linear-gradient(to bottom, #C2E3FC 0%,#6393c1 100%); /* W3C */
+    width:100%;
+    color: #00008B;
+    text-decoration:none;
+}
+button.nav-button {
+    display:block;
+    background: #36649724;
+    color: navy;
+    border:1px #879ed4 solid;
+    font-weight: bold;
+    width:100%;
+}

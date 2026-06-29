@@ -91,13 +91,7 @@ ob_end_clean();
 $out=new Output_Html_Tab();
 $out->add($tabs);
 $out->add($tag_group);
+$out->setDefault_tab('tg');
 $out->output();
 $obj_manage->create_js_script();
 ?>
-<script>
-    $('divtg').show();
-    $('tabtg').className = 'tabs_selected';
-    $('divgrp_tg').hide();
-    $('tabgrp_tg').className = 'tabs';
-    var o_tagGroup=new TagGroup();
-</script>

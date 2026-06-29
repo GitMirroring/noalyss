@@ -1424,16 +1424,21 @@ function record_log(...$a_message)
         error_log("noalyss GET [".json_encode($_GET,0,10)."]");
         error_log("_POST [".json_encode($_POST,0,10)."]",0);
     } else {
-        /**
-         * write in syslog  
-         */
-        if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
+         if ( isset ($_SERVER['REMOTE_ADDR']) )   error_log(sprintf("origin %s\n",$_SERVER['REMOTE_ADDR']));
+        if  ( isset ($_SERVER['HTTP_USER_AGENT']) ) error_log(sprintf("agent  %s\n",$_SERVER['HTTP_USER_AGENT']));
+           foreach ($a_message as $p_message )
+           {
+            /*
+             * write in syslog  
+             */
+            if ( gettype ($p_message) == "object" && method_exists($p_message,"getTraceAsString") == 1) {
 
-            error_log("noalyss exception ".$p_message->getMessage(),0);
-            error_log("noalyss exception".$p_message->getTraceAsString(),0);
-        } else {
-            error_log("noalyss".var_export($p_message,true),0);
+                error_log("noalyss exception ".$p_message->getMessage(),0);
+                error_log("noalyss exception".$p_message->getTraceAsString(),0);
+                } else {
+                error_log("noalyss".var_export($p_message,true),0);
 
+            	}
         }
         
         $now=date ('Y-m-d H:i:s');

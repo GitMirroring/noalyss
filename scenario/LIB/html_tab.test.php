@@ -27,7 +27,7 @@ if (!defined('ALLOWED'))
  * @brief  Test of Html_Tab and Output_Html_Tab
  */
 
-
+printf("<h1>%s</h1>","Mode TAB");
 $tab = new Html_Tab('tab1',_("Titre 1"));
 $tab->set_mode('link');
 $tab->set_link("test.php?".
@@ -73,6 +73,106 @@ $output = new Output_Html_Tab;
 $output->add($tab);
 $output->add($tab2);
 $output->add($tab3);
+$output->menu();
+
+$output->output();
+printf("<h1>%s</h1>","Mode ROW");
+$tab = new Html_Tab('tab1x',_("Titre 1"));
+$tab->set_mode('link');
+$tab->set_link("test.php?".
+    http_build_query([ "gDossier"=>Dossier::id(),
+        "script"=>"html_tab.test.php",
+        "a"=>1,
+        "b"=>2]));
+$tab2 = new Html_Tab('tab2x',_("Titre 2"));
+$tab2->set_content(""
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2");
+$tab3 = new Html_Tab('tab3x',_("Titre 3"));
+$tab3->set_content('<p >'
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        .'</p>'
+        );
+
+$output = new Output_Html_Tab; 
+$output->set_mode("row");
+$output->add($tab);
+$output->add($tab2);
+$output->add($tab3);
 
 
 $output->output();
+
+printf("<h1>%s</h1>","Mode Accordeon");
+$tab = new Html_Tab('tab1acc',_("Titre 1"));
+$tab->set_mode('link');
+$tab->set_link("test.php?".
+    http_build_query([ "gDossier"=>Dossier::id(),
+        "script"=>"html_tab.test.php",
+        "a"=>1,
+        "b"=>2]));
+$tab2 = new Html_Tab('tab2acc',_("Titre 2"));
+$tab2->set_content(""
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2"
+        . "<br> Très longue chaine HTML pour 2");
+$tab3 = new Html_Tab('tab3acc',_("Titre 3"));
+$tab3->set_content('<p >'
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        . "<br> Très longue chaine HTML pour 3"
+        .'</p>'
+        );
+
+$output = new Output_Html_Tab; 
+$output->set_mode("accordeon");
+$output->add($tab);
+$output->add($tab2);
+$output->add($tab3);
+
+
+$output->output();
+

@@ -97,8 +97,9 @@ class Output_Html_Tab
     private $class_anchor; //! CSS class for the A tag (anchor) default empty
     private $class_div; //! CSS class for the DIV containing the UL default empty
     private $class_content_div; //! CSS class for the DIV with content, default empty
-    private $class_comment ; //! CSS class for the comment default "tabs"
-    
+    private $class_comment ; //!< CSS class for the comment default "tabs"
+    private $internal_name; //!< internal name, use to create unique ID of HTML element like button , js variable...
+    private $default_tab; //!< (string) tab open when at loading page nothing is selected
     /**
      *@example html_tab.test.php
      */
@@ -113,6 +114,8 @@ class Output_Html_Tab
         $this->class_div="";
         $this->class_content_div="";
         $this->class_comment="tabs";
+        $this->internal_name=uniqid("tab");
+        $this->default_tab="";
     }
     /**
      * @brief CSS class for the comment default "tabs"
@@ -309,25 +312,16 @@ class Output_Html_Tab
 
             return $r;
         }
+        if ( $mode =="tab") return "";
         for ($i =0 ; $i < $nb;$i++)
         {
-            if ($mode=="tab") {
-
-                if ( $this->a_tabs[$i]->get_id() != $p_not_hidden) {
-                    $r .= sprintf("$('div%s').hide();",$this->a_tabs[$i]->get_id() );
-                    $r .= sprintf("$('tab%s').className='%s';",$this->a_tabs[$i]->get_id(),$this->class_tab );
-                } else {
-                    $r .= sprintf("$('div%s').show();",$p_not_hidden );
-                    $r .= sprintf("$('tab%s').className='%s';",$p_not_hidden ,$this->class_tab_selected);
-
-                }
-            } elseif ($mode=="row") {
-                if ( $this->a_tabs[$i]->get_id() != $p_not_hidden) {
-                    $r .= sprintf("Effect.BlindUp('div%s',{duration : 0.7});",$this->a_tabs[$i]->get_id() );
-                    $r .= sprintf("$('tab%s').className='%s';",$this->a_tabs[$i]->get_id(),$this->class_tab );
-                } else {
-                    $r .= sprintf("Effect.SlideDown('div%s',{duration : 0.7});",$p_not_hidden );
-                    $r .= sprintf("$('tab%s').className='%s';",$p_not_hidden ,$this->class_tab_selected);
+                if ($mode=="row") {
+                    if ( $this->a_tabs[$i]->get_id() != $p_not_hidden) {
+                        $r .= sprintf("Effect.BlindUp('div%s',{duration : 0.7});",$this->a_tabs[$i]->get_id() );
+                        $r .= sprintf("$('tab%s').className='%s';",$this->a_tabs[$i]->get_id(),$this->class_tab );
+                    } else {
+                        $r .= sprintf("Effect.SlideDown('div%s',{duration : 0.7});",$p_not_hidden );
+                        $r .= sprintf("$('tab%s').className='%s';",$p_not_hidden ,$this->class_tab_selected);
 
                 }
             }   else {
@@ -359,13 +353,15 @@ class Output_Html_Tab
         {
             return;
         }
-        printf('<div class="%s">',$this->class_div);
+        printf('<div class="%s ">',$this->class_div);
         printf ( '<ul class="%s">',$this->class_tab_main);
         $mode=$this->get_mode();
         for ($i=0; $i<$nb; $i++)
         {
-            printf ('<li id="tab%s" class="%s">',
-                    $this->a_tabs[$i]->get_id(),$this->class_tab);
+            printf ('<li id="tab%s" class="%s css%s">',
+                    $this->a_tabs[$i]->get_id()
+                    ,$this->class_tab
+                    ,$this->internal_name);
             switch ($this->a_tabs[$i]->get_mode())
             {
                 case 'link':
@@ -395,7 +391,9 @@ class Output_Html_Tab
                     break;
                 case 'static':
                     // show one , hide other except for accordeon
-                    $script=$this->build_js($this->a_tabs[$i]->get_id());
+                    $script=sprintf("%s.show('%s')"
+                            ,$this->internal_name
+                            ,$this->a_tabs[$i]->get_id());
                     if  ($mode != 'accordeon')  {
                         printf('<a class="%s" onclick="%s">', $this->class_anchor,$script);
                     } else {
@@ -408,7 +406,6 @@ class Output_Html_Tab
                         );
 
                     echo '</a>';
-                    $script=$this->build_js($this->a_tabs[$i]->get_id());
 
                     break;
                 default:
@@ -433,8 +430,118 @@ class Output_Html_Tab
             }
 
         }
+        $r  = sprintf("var %s=new Output_Html_Tab('%s','%s','%s');"
+                                    ,$this->internal_name
+                                    ,$this->class_tab
+                                    ,$this->class_tab_selected
+                                    ,$this->internal_name
+                );
+        if ( $this->default_tab!="") {
+           $r.=sprintf("%s.show('%s');"
+                   ,$this->internal_name
+                   ,$this->default_tab) ;
+        }
+        print create_script($r);
+
     }
-    private function print_div($p_index)
+    function menu()
+    {
+      if ($this->mode != "row" && $this->mode != "tab") return "";
+        
+        $nb=count($this->a_tabs);
+        $this->default_tab = ($this->default_tab=="")?$this->a_tabs[0]->get_title():$this->default_tab;
+        printf("<button onclick=\"%s.show_menu();return false;\" id=\"bt%s\"class=\"nav-button\">%s</button>"
+                ,$this->internal_name
+                ,$this->internal_name
+                ,$this->default_tab);
+        printf ("<ul id=\"mn%s\" class=\"nav-tab\" style=\"display:none\">",$this->internal_name);
+        for ($i=0;$i<$nb;$i++)
+        {
+            switch ($this->a_tabs[$i]->get_mode())
+            {
+                case 'static':
+                    $a=sprintf("%s.show_item('%s')"
+                                ,$this->internal_name
+                                ,$this->a_tabs[$i]->get_id());
+                     $script=sprintf('<a onclick="%s" href="javascript:void(0)" alt="%s">%s</a>'
+                        ,$a
+                        ,$this->a_tabs[$i]->get_title()
+                        ,$this->a_tabs[$i]->get_title()
+                    );
+                    break;
+                case 'link':
+                    $script = sprintf ('<a class="%s" id="%s" href="%s">',
+                            $this->class_anchor,
+                            $this->a_tabs[$i]->get_id(),
+                            $this->a_tabs[$i]->get_link());
+                    
+                    $script.=sprintf('<span class="title_%s"> %s </span>',
+                        $this->get_class_tab(),
+                        $this->a_tabs[$i]->get_title()
+                        );
+                    $script.='</a>';
+
+                    break;
+                case 'ajax':
+                    $script = printf('<a class="%s" id="%s" onclick="%s">', 
+                            $this->class_anchor,
+                            $this->a_tabs[$i]->get_id(),
+                            $this->a_tabs[$i]->get_link());
+                    $script.=sprintf ('<span class="title_%s"> %s </span>',
+                        $this->get_class_tab(),
+                        $this->a_tabs[$i]->get_title()
+                        );
+
+                    $script.=$this->a_tabs[$i]->get_title();
+                    $script.='</a>';
+                    break;
+                default:
+                    throw new Exception('Invalide mode ');
+            }
+            printf ('<li id="li_%s_%s">'
+                        ,$this->internal_name
+                        ,$this->a_tabs[$i]->get_id()
+                    );
+            print $script;
+                    
+            print '</li>';
+        }
+        printf("</ul>");
+    }
+    public function getA_tabs()
+    {
+        return $this->a_tabs;
+    }
+
+    public function getInternal_name()
+    {
+        return $this->internal_name;
+    }
+
+    public function getDefault_tab()
+    {
+        return $this->default_tab;
+    }
+
+    public function setA_tabs($a_tabs)
+    {
+        $this->a_tabs = $a_tabs;
+        return $this;
+    }
+
+    public function setInternal_name($internal_name)
+    {
+        $this->internal_name = $internal_name;
+        return $this;
+    }
+
+    public function setDefault_tab($default_tab)
+    {
+        $this->default_tab = $default_tab;
+        return $this;
+    }
+
+        private function print_div($p_index)
     {
         $class="";
         if ( $this->get_mode() == "row" ) {
@@ -449,6 +556,6 @@ class Output_Html_Tab
                             $class);
         echo $this->a_tabs[$p_index]->get_content();
         echo '</div>';
-
+        
     }
 }
